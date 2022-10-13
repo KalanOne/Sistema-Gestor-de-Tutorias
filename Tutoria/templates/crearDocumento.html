@@ -1,0 +1,32 @@
+{% extends 'Plantilla.html' %} {% block content %}
+<div class="container">
+  <h3 class="mt-4">Elije el documento a elaborar</h3>
+  <select
+    class="rounded form-select form-select-sm"
+    name="Documentos"
+    id="documentos"
+  >
+    <option value="2022P1">Reporte Semestral</option>
+    <option value="2022P2">Reporte Grupal</option>
+    <option value="2022P3">Diagnostico Institucional de Tutorias</option>
+  </select>
+  <form action="">
+    <div class="form-group w-25 mt-5">
+      <input
+        type="text"
+        class="form-control"
+        id="nombre"
+        placeholder="Nombre de quien lo elabora"
+      />
+    </div>
+
+    <div class="form-group mt-3">
+      <textarea class="form-control" id="contenido" rows="6"></textarea>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+      <button class="btn btn-primary me-md-2" type="button">Enviar</button>
+    </div>
+  </form>
+</div>
+{% endblock content %}

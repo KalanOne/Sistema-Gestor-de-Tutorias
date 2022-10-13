@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creación de cuestionarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+</head>
+
+<body style="background-color: #F3F4F6;">
+    <header class="p-3  text-white" style="background-color:#1B396A">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <object data="Logo-TecNM.svg" width="62.5" height="50" class="bi me-2" role="img"
+                        aria-label="Tecnologico de Mexico"></object>
+                </a>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                </ul>
+                <div class="text-end my-sm-2 my-md-0">
+                    <a class="navbar-brand" href="#">Sistema de Gestion de Tutorias</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenuOpciones"
+                aria-controls="navMenuOpciones" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenuOpciones">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#"><i class="bi bi-house"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Documentación</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Creación de usuario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Creación de documento</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Creación de cuestionario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Perfil</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}       
+    <br>
+    <div class="container p-3">
+        <div class="row">
+            <div class="col-12 mb-3">
+                <h3>Elige el tipo de respuesta que quieres para tu cuestionario </h3>
+            </div>
+            <div class="row">
+                <div class="col-5 mb-5">
+                    <select name="respuestas" id="respuestas">
+                        <option value="1">1.Bueno 2.Regular 3.Malo</option>
+                        <option value="2">1.Satisfecho 2.Indeciso 3.Insatisfecho</option>
+                        <option value="3">1.Verdadero 2.Falso</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <h3>Preguntas</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5 mb-2">
+                    <h4>Escribe tu pregunta</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-10 mb-3">
+                    <input class="w-100" type="text" name="pregunta" id="pregunta">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4 mb-5">
+                    <input type="button" value="Agregar" style="background-color: #1B396A;" class="text-white">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-3">
+                    <input type="button" value="Enviar" style="background-color: #1B396A;" class="text-white">
+                </div>
+                <div class="col-1"></div>
+                <div class="col-3">
+                    <input type="button" value="Subir cuestionario" style="background-color: #1B396A;" class="text-white">
+                </div>
+                <div class="col-2"></div>
+            </div>
+            
+        </div>
+    </div>
+
+   
+    {% endblock content %}
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

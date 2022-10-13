@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil Tutorado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+</head>
+
+<body style="background-color: #F3F4F6;">
+    <header class="p-3  text-white" style="background-color:#1B396A">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <object data="Logo-TecNM.svg" width="62.5" height="50" class="bi me-2" role="img"
+                        aria-label="Tecnologico de Mexico"></object>
+                </a>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                </ul>
+                <div class="text-end my-sm-2 my-md-0">
+                    <a class="navbar-brand" href="#">Sistema de Gestion de Tutorias</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenuOpciones"
+                aria-controls="navMenuOpciones" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenuOpciones">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#"><i class="bi bi-house"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Ayuda Psicológica</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Crédito complementario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Perfil</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}
+    
+    <div class="container p-1">
+        <div class="row">
+            <div class="col-md-2 m-2 text-center">
+                <br>
+                <div><img src="icono.png" class="rounded-circle img-fluid m-1" style="background-color: #D9D9D9;" alt="..."></div>
+                <br>
+            
+                <input type="button" class="btn btn-sm btn-primary text-center m-1" style="background-color:#1B396A" 
+                value="Actualizar contraseña">
+            </div>
+            <div class="col-md-9 fw-semibold">
+                <div class="container">
+                    <div class="row text-white text-center" style="background-color:#1B396A">
+                        <h4>Información Personal</h4>
+                    </div>
+                    <div class="row">
+                        <div class="container" style="background-color:#D9D9D9">
+                            <div class="row text">
+                                <div class="col-3" style="text-align: right;">
+                                              Nombre:
+                                </div>
+                                <div class="col-8"> 
+                                    Alan García Díaz
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3" style="text-align: right;">
+                                    Domicilio:
+                                </div>
+                                <div class="col-8"> 
+                                    Cuartel Militar
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3 " style="text-align: right;">
+                                    Teléfono:
+                                </div>
+                                <div class="col-8"> 
+                                    443 581 5700
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3" style="text-align: right;">
+                                    Correo Personal:
+                                </div>
+                                <div class="col-8"> 
+                                    kalanone@gmail.com
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3" style="text-align: right;">
+                                    Nombre del padre/madre/tutor:
+                                </div>
+                                <div class="col-8 text-center"> 
+                                    Ruth
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-3" style="text-align: right;">
+                                    Teléfono del padre/madre/tutor:
+                                </div>
+                                <div class="col-8 text-center" > 
+                                    443 213 4350
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-md-12 fw-semibold">
+                        <div class="container">
+                            <div class="row text-white text-center" style="background-color:#1B396A">
+                                <h4>Información Académica</h4>
+                            </div>
+                            <div class="row">
+                                <div class="container" style="background-color:#D9D9D9">
+                                    <div class="row">
+                                        <div class="col-3" style="text-align: right;">
+                                            No. de Control:
+                                        </div>
+                                        <div class="col-8"> 
+                                            19121027
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-3" style="text-align: right;">
+                                            Grupo:
+                                        </div>
+                                        <div class="col-8"> 
+                                            A
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-3" style="text-align: right;">
+                                            Carrera:
+                                        </div>
+                                        <div class="col-8"> 
+                                            ISC
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-3" style="text-align: right;">
+                                            Semestre:
+                                        </div>
+                                        <div class="col-8"> 
+                                            1
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-3" style="text-align: right;">
+                                            Correo institucional:
+                                        </div>
+                                        <div class="col-8"> 
+                                            19121027@morelia.tecnm.mx
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                  </div>
+            </div>
+        </div> 
+
+    </div>
+    
+    
+    
+{% endblock content %}
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
