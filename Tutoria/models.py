@@ -180,6 +180,72 @@ class Cuestionario(models.Model):
         ordering= ['id']
 
 
+class GrupoRespuesta(models.Model):
+    grupoRespuesta = models.CharField(max_length=100)
+
+    def Mostrar(self):
+        return "{}".format(self.grupoRespuesta)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'GrupoRespuesta'
+        verbose_name_plural= 'GrupoRespuesta'
+        db_table= 'grupoRespuesta'
+        ordering= ['id']
+
+
+class Pregunta(models.Model):
+    pregunta = models.CharField(max_length=100)
+    idGrupoRespuesta = models.ForeignKey('GrupoRespuesta', on_delete=models.CASCADE)
+    def Mostrar(self):
+        return "{}".format(self.pregunta)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'Pregunta'
+        verbose_name_plural= 'Preguntas'
+        db_table= 'pregunta'
+        ordering= ['id']
+
+
+class Respuesta(models.Model):
+    respuesta = models.CharField(max_length=100)
+    idGrupoRespuesta = models.ForeignKey('GrupoRespuesta', on_delete=models.CASCADE)
+    def Mostrar(self):
+        return "{}".format(self.respuesta)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'Respuesta'
+        verbose_name_plural= 'Respuestas'
+        db_table= 'respuesta'
+        ordering= ['id']
+
+
+class RespuestaContestada(models.Model):
+    idCuestionario = models.ForeignKey('Cuestionario', on_delete=models.CASCADE)
+    idPregunta = models.ForeignKey('Pregunta', on_delete=models.CASCADE)
+    idRespuesta = models.ForeignKey('Respuesta', on_delete=models.CASCADE)
+    idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
+    def Mostrar(self):
+        return "{} - {} - {} - {}".format(self.idCuestionario, self.idPregunta, self.idRespuesta, self.idTutorado)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'RespuestaContestada'
+        verbose_name_plural= 'RespuestasContestadas'
+        db_table= 'respuestaContestada'
+        ordering= ['id']
+
+
 class PIT(models.Model):
     folio = models.CharField(max_length=50)
     ruta = models.CharField(max_length=300, blank = True, null = True)
@@ -344,21 +410,21 @@ class Motivo(models.Model):
 class Cita(models.Model):
     folio = models.CharField(max_length=50)
     fecha = models.DateField()
-    horaInicio = models.TimeField()
-    horaFinal = models.TimeField()
-    horaCanalizacion = models.TimeField()
+    horaInicio = models.TimeField(null = True, blank = True)
+    horaFinal = models.TimeField(null = True, blank = True)
+    horaCanalizacion = models.TimeField(null = True, blank = True)
     lugar = models.CharField(max_length=50)
-    descripcion = models.CharField(max_length=300)
+    descripcion = models.CharField(max_length=300, null = True, blank = True)
     idMotivo = models.ForeignKey('Motivo', on_delete=models.CASCADE)
     idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
-    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
-    idPersonalMed = models.ForeignKey('PersonalMed', on_delete=models.CASCADE)
+    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE, null = True, blank = True)
+    idPersonalMed = models.ForeignKey('PersonalMed', on_delete=models.CASCADE, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
     idOrden = models.ForeignKey('Orden', on_delete=models.CASCADE)
     
 
     def Mostrar(self):
-        return "{} - {}".format(self.nombre, self.fechaLimite)
+        return "{} - {}".format(self.folio)
 
     def __str__(self):
         return self.Mostrar()
