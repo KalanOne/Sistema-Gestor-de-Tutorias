@@ -1,4 +1,7 @@
+from pyexpat import model
 from django.db import models
+from django.utils.timezone import now
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -20,7 +23,7 @@ class Estado(models.Model):
 
 class Institucion(models.Model):
     nombreInstitucion = models.CharField(max_length=100)
-    ruta = models.CharField(max_length=300)
+    ruta = models.CharField(max_length=300, blank = True, null = True)
 
     def Mostrar(self):
         return "{}".format(self.nombreInstitucion)
@@ -39,7 +42,7 @@ class Grupo(models.Model):
     grupo = models.CharField(max_length=100)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
-    idEstado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+    idEstado = models.ForeignKey(Estado, on_delete=models.CASCADE, null = True, blank = True)
 
     def Mostrar(self):
         return "{}".format(self.grupo)
@@ -96,10 +99,11 @@ class Tutorado(models.Model):
     telefono = models.CharField(max_length=10)
     correoPersonal = models.EmailField(max_length = 254)
     semestre = models.PositiveIntegerField()
-    idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE)
+    idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE, null = True, blank = True)
     idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
-    idPadreMadreTutor = models.ForeignKey('PadreMadreTutor', on_delete=models.CASCADE)
+    idPadreMadreTutor = models.ForeignKey('PadreMadreTutor', on_delete=models.CASCADE, null = True, blank = True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def Mostrar(self):
         return "{} - {}".format(self.correoPersonal, self.semestre)
@@ -154,3 +158,22 @@ class PersonalMed(models.Model):
         db_table= 'personalMed'
         ordering= ['id']
 
+class Cuestionario(models.Model):
+    nombre = models.CharField(max_length=100)
+    fechaPublicado = models.DateField(default=now, editable=False)
+    fechaLimite = models.DateField()
+    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
+    idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE)
+    idEstado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+
+    def Mostrar(self):
+        return "{} - {}".format(self.nombre, self.fechaLimite)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'Cuestionario'
+        verbose_name_plural= 'Cuestionarios'
+        db_table= 'cuestionario'
+        ordering= ['id']

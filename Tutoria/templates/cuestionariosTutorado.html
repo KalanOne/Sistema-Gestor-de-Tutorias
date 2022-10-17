@@ -1,0 +1,39 @@
+{% extends 'layout/basicCNMenu.html' %} {% load static %}
+
+{% block content %}       
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-5">
+            <h1 class="text-center h1">
+                Mis cuestionarios
+            </h1>
+        </div>
+    </div>
+
+    {% for cuestionario in cuestionarios %}
+        <div class="row mb-3">
+            <div class="col-12 col-md-2"></div>
+            <div class="col-12 col-md-8" id="cuestionario">
+                <div class="row p-1 rounded-top" style="background-color:#1B396A">
+                    <h5 class="text-center text-white">{{ cuestionario.nombre }}</h5>
+                </div>
+                <div class="row py-1 bg-white rounded-bottom">
+                    <p>Fecha límite: {{cuestionario.fechaLimite}}</p>
+                    <p>Publicado: {{cuestionario.fechaPublicado}}</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a class="btn btn-primary" href="{% url 'realizarCuestionarioTutorado' cuestionario.id %}" role="button">Contestar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-2"></div>
+        </div>
+    {% endfor %}    
+</div>
+{% endblock content %}
+
+{% block JS %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdn.rawgit.com/JacobLett/bootstrap4-latest/504729ba/bootstrap-4-latest.min.js"></script>
+    <script src="{% static 'JS/cuestionarioTutorado.js' %}"></script>
+{% endblock JS %}
