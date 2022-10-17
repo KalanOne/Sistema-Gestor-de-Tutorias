@@ -70,7 +70,7 @@ def cuestionariosTutorado(request):
     return render(request, 'cuestionariosTutorado.html', {
         'gruops': request.user.groups.all(),
         'title': 'Cuestionarios',
-        'cuestionarios': Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__lte = fecha.strftime("%Y-%m-%d"))
+        'cuestionarios': Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__gte = fecha.strftime("%Y-%m-%d"), idEstado = 1)
     })
 
 

@@ -1,0 +1,94 @@
+Estados:
+
+    Cuestionario:
+        Activo
+        Inactivo
+        Cerrado
+    
+    Grupo:
+        Activo
+        Inactivo
+        Cerrado
+    
+    Cita:
+        Espera
+        Citado
+        Alta (Si se atendio)
+        Baja (No se atendio)
+
+    Credito complementario:
+        Espera
+        Aceptado
+        Rechazado
+
+    PIT:
+        Aceptado
+    
+    PAT:
+        Espera
+        Aceptado
+        Rechazado
+
+    Diagnostico institucional:
+        Aceptado
+
+    Reporte semestral grupal:
+        Espera
+        Aceptado
+        Rechazado
+
+    Reporte semestral departamento:
+        Espera
+        Aceptado
+        Rechazado
+
+    Reporte institucional:
+        Aceptado
+
+Grupo de respuestas:
+
+    1:
+        No
+        Si
+    
+    2:
+        No
+        Tal vez
+        Si
+
+    3:
+        Desacuerdo
+        Indeciso
+        Acuerdo
+
+    4:
+        Muy desacuerdo
+        Desacuerdo
+        Indeciso
+        Acuerdo
+        Muy de acuerdo
+
+    5:
+        Mal
+        Bien
+
+    6:
+        Mal
+        Mas o menos
+        Bien
+
+    7:
+        Muy mal
+        Mal
+        Mas o menos
+        Bien
+        Muy bien
+
+    8:
+        Nunca
+        Casi nunca
+        Pocas veces
+        De vez en cuando
+        Seguido
+        Casi siempre
+        Siempre
