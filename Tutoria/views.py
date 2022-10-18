@@ -5,6 +5,9 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import Cuestionario, Tutorado, Grupo
+from django.utils.timezone import now
+import datetime
 
 # Create your views here.
 
@@ -49,8 +52,25 @@ def inicioSesion(request):
 @login_required
 def paginaInicio(request):
     return render(request, 'paginaInicio.html', {
-        'grupos': request.user.groups.all(),
+        'gruops': request.user.groups.all(),
         'title': 'Página de inicio'
+    })
+
+@login_required
+def cierreSesion(request):
+    logout(request)
+    return redirect('inicioSesion')
+
+@login_required
+@group_required('Tutorado')
+def cuestionariosTutorado(request):
+    tutorado = Tutorado.objects.get(user_id = request.user.id)
+    fecha = datetime.datetime.now()
+    print(tutorado.idGrupo.id)
+    return render(request, 'cuestionariosTutorado.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Cuestionarios',
+        'cuestionarios': Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__gte = fecha.strftime("%Y-%m-%d"), idEstado = 1)
     })
 
 
@@ -61,7 +81,7 @@ def Documentacion(request):
 
 
 @login_required
-def pruebas(request):
+def prueba(request):
     return render(request, 'prueba.html', {
         'groups': request.user.groups.all()
     })
