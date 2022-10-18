@@ -125,6 +125,7 @@ class PersonalTec(models.Model):
     edificio = models.CharField(max_length=100)
     idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null = True, blank = True)
 
     def Mostrar(self):
         return "{} - {}".format(self.correoPersonal, self.edificio)
@@ -145,6 +146,7 @@ class PersonalMed(models.Model):
     correoPersonal = models.EmailField(max_length = 254)
     edificio = models.CharField(max_length=100)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null = True, blank = True)
 
     def Mostrar(self):
         return "{} - {}".format(self.correoPersonal, self.edificio)
