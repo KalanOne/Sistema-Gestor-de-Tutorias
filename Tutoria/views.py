@@ -11,6 +11,7 @@ import datetime
 
 # Create your views here.
 
+#Vistas para login, logout y pagina principal para todos los usuarios
 def group_required(*group_names):
     """ Grupos, checar si pertenece a grupo """
 
@@ -21,7 +22,6 @@ def group_required(*group_names):
             return False
     # Si no se pertenece al grupo, redirigir a /prohibido/
     return user_passes_test(check, login_url='inicioSesion')
-
 
 def inicioSesion(request):
     if request.method == 'GET':
@@ -61,6 +61,10 @@ def cierreSesion(request):
     logout(request)
     return redirect('inicioSesion')
 
+
+
+
+#Vistas para el perfil de tutorados
 @login_required
 @group_required('Tutorado')
 def cuestionariosTutorado(request):
@@ -73,53 +77,13 @@ def cuestionariosTutorado(request):
         'cuestionarios': Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__gte = fecha.strftime("%Y-%m-%d"), idEstado = 1)
     })
 
-
 @login_required
-@group_required('Tutor')
-def Documentacion(request):
-    return render(request, 'Documentacion.html')
-
-
-@login_required
-def prueba(request):
-    return render(request, 'prueba.html', {
-        'groups': request.user.groups.all()
+@group_required('Tutorado')
+def perfilTutorado(request):
+    return render(request, 'perfilTutorado.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Perfil'
     })
-
-
-@login_required
-def verDocumentacion(request):
-    return render(request, 'verDocumentacion.html')
-
-
-@login_required
-def crearDocumento(request):
-    return render(request, 'crearDocumento.html')
-
-
-@login_required
-def perfilTodos(request):
-    return render(request, 'perfilTodos.html')
-
-
-def a2(request):
-    return render(request, 'Creacion_usuarios_tutores.html')
-
-
-def a3(request):
-    return render(request, 'creacionCuestionarios.html')
-
-
-def a4(request):
-    return render(request, 'crear_cuestionario.html')
-
-
-def a5(request):
-    return render(request, 'Credito complementario Tutorado Vista General.html')
-
-
-def a6(request):
-    return render(request, 'Listado_Grupos_Tutor.html')
 
 @login_required
 @group_required('Tutorado')
@@ -129,32 +93,76 @@ def miscitas(request):
         'title': 'Ayuda Psicologica'
     })
 
+def a12(request):
+    return render(request, 'Realizar cuestionario Tutorado.html')
 
 def a8(request):
     return render(request, 'Perfil Tutorado Contra.html')
 
-@login_required
-@group_required('Tutorado')
-def perfilTutorado(request):
-    return render(request, 'perfilTutorado.html',{
-        'gruops': request.user.groups.all(),
-        'title': 'Perfil'
-    })
-
-
 def a10(request):
     return render(request, 'Principal Tutorado.html')
 
+def a5(request):
+    return render(request, 'Credito complementario Tutorado Vista General.html')
+
+
+
+
+#vistas para todos los perfiles menos el de tutorado
+@login_required
+@group_required('Tutor')
+def Documentacion(request):
+    return render(request, 'Documentacion.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Documentacion'
+    })
+
+@login_required
+def verDocumentacion(request):
+    return render(request, 'verDocumentacion.html')
+
+@login_required
+def crearDocumento(request):
+    return render(request, 'crearDocumento.html')
+
+@login_required
+def perfilTodos(request):
+    return render(request, 'perfilTodos.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Grupos'
+    })
+
+def a2(request):
+    return render(request, 'Creacion_usuarios_tutores.html')
+
+@login_required
+@group_required('Tutor')
+def crearCuestionario(request):
+    return render(request, 'crear_cuestionario.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Grupos'
+    })
+
+@login_required
+@group_required('Tutor')
+def gruposTutor(request):
+    return render(request, 'Listado_Grupos_Tutor.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Grupos'
+    })
 
 def a11(request):
     return render(request, 'psicologo dar citas.html')
-
-
-def a12(request):
-    return render(request, 'Realizar cuestionario Tutorado.html')
-
 
 def a13(request):
     return render(request, 'reporte_semestral_tutor.html')
 
 
+
+
+#pruebas
+@login_required
+def prueba(request):
+    return render(request, 'prueba.html', {
+        'groups': request.user.groups.all()
+    })

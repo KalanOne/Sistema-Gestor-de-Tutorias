@@ -19,77 +19,103 @@
   </head>
 
   <body style="background-color: #f3f4f6">
-    <header class="p-3  text-white" style="background-color:#1B396A">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    
-                    <img src = "{% static 'LOGO_TECNM.png' %}" height="50" class="bi me-2">
-                </a>
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                </ul>
-                <div class="text-end my-sm-2 my-md-0">
-                    <a class="navbar-brand text-wrap" href="#">Sistema de Gestion de Tutorias</a>
-                </div>
-            </div>
+    <header class="p-3 text-white" style="background-color: #1b396a">
+      <div class="container">
+        <div
+          class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+        >
+          <a
+            href="#"
+            class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
+          >
+            <img
+              src="{% static 'LOGO_TECNM.png' %}"
+              height="50"
+              class="bi me-2"
+            />
+          </a>
+          <ul
+            class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"
+          ></ul>
+          <div class="text-end my-sm-2 my-md-0">
+            <a class="navbar-brand text-wrap" href="#"
+              >Sistema de Gestion de Tutorias</a
+            >
+          </div>
         </div>
+      </div>
     </header>
     <nav class="navbar navbar-expand-lg mb-5" style="background-color: #e3f2fd">
-        <div class="container">
-            <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navMenuOpciones"
-            aria-controls="navMenuOpciones"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-            >
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navMenuOpciones">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'paginaInicio' %}"
-                        ><i class="bi bi-house"></i></a>
-                    </li>
-                    {% for group in gruops %}
-                        {% if group.name  == 'Tutorado' %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'cuestionariosTutorado' %}">Cuestionarios</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'miscitas' %}">Ayuda Psicologica</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'perfilTutorado' %}">Perfil</a>
-                            </li>
-                        {% else %}
-                            {% if group.name  == 'Tutor' %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="# {# {% url 'documentos' %} #}">Documentos</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="# {# {% url 'gruposTutor' %} #}">Grupos</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="# {# {% url 'crearCuestionario' %} #}">Crear cuestionario</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="# {# {% url 'resultadosCuestionarios' %} #}">Resultados de cuestionarios</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="# {# {% url 'perfilPersonalTec' %} #}">Perfil</a>
-                                </li>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="text-end my-sm-2 my-md-0">
-                <a href="{% url 'cierreSesion' %}" class="nav-link"><i class="bi bi-box-arrow-left"></i></a>
-            </div>
+      <div class="container">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navMenuOpciones"
+          aria-controls="navMenuOpciones"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenuOpciones">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="{% url 'paginaInicio' %}"
+                ><i class="bi bi-house"></i
+              ></a>
+            </li>
+            {% for group in gruops %} {% if group.name == 'Tutorado' %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'cuestionariosTutorado' %}"
+                >Cuestionarios</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'miscitas' %}"
+                >Ayuda Psicologica</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'perfilTutorado' %}">Perfil</a>
+            </li>
+            {% else %} {% if group.name == 'Tutor' %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'documentos' %}">Documentos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gruposTutor' %}">Grupos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'crearCuestionario' %}"
+                >Crear cuestionario</a
+              >
+            </li>
+            {% comment %} de momento la pantalla de ver resultados no esta creada asi que redirige a la pantalla cuestionario {% endcomment %}
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="{% url 'crearCuestionario' %}"
+                >Resultados de cuestionarios</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'perfilTodos' %}"
+                >Perfil</a
+              >
+            </li>
+            {% endif %} {% endif %} {% endfor %}
+          </ul>
         </div>
+        <div class="text-end my-sm-2 my-md-0">
+          <a href="{% url 'cierreSesion' %}" class="nav-link"
+            ><i class="bi bi-box-arrow-left"></i
+          ></a>
+        </div>
+      </div>
     </nav>
 
     {% block content %}{% endblock content %}
