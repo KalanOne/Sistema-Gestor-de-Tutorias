@@ -12,5 +12,7 @@ urlpatterns = [
     path('verDocumentacion/', views.verDocumentacion, name = 'verDocumentacion'),
     path('crearDocumento/', views.crearDocumento, name = 'crearDocumento'),
     path('perfilTodos/', views.perfilTodos, name = 'perfilTodos'),
+    path('perfilTutorado/', views.perfilTutorado, name = 'perfilTutorado'),
     path('prueba/', views.prueba, name = 'Prueba'),
+    path('miscitas/', views.miscitas, name = 'miscitas'),
 ]

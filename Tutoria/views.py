@@ -121,17 +121,25 @@ def a5(request):
 def a6(request):
     return render(request, 'Listado_Grupos_Tutor.html')
 
-
-def a7(request):
-    return render(request, 'miscitas.html')
+@login_required
+@group_required('Tutorado')
+def miscitas(request):
+    return render(request, 'miscitas.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Ayuda Psicologica'
+    })
 
 
 def a8(request):
     return render(request, 'Perfil Tutorado Contra.html')
 
-
-def a9(request):
-    return render(request, 'perfilTutorado.html')
+@login_required
+@group_required('Tutorado')
+def perfilTutorado(request):
+    return render(request, 'perfilTutorado.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Perfil'
+    })
 
 
 def a10(request):
