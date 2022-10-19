@@ -1,0 +1,78 @@
+{% extends 'layout/basicCNMenu.html' %}{% block content %}
+<div class="container">
+  <div class="row vh-705 justify-content-center rounded mt-4">
+    <div class="col-10">
+      <div class="row">
+        <div class="col">
+          <p style="font-size: x-large">
+            Elije el tipo de respuesta que quieres para el cuestionario
+          </p>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-8">
+          <select class="form-select" aria-label="Default select example">
+            <option selected>Seleccione una opcion</option>
+            <option value="1">1.-Bueno 2.-Malo 3.-Regular</option>
+            <option value="2">1.-Concuerdo 2.-En desacuerdo 3.-Neutral</option>
+            <option value="3">1.-Si 2.-No</option>
+          </select>
+        </div>
+      </div>
+      <div class="row mt-5 mb-2">
+        <div class="col">
+          <p style="font-size: x-large">Preguntas</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <p style="font-size: x-large">Escribe tu pregunta</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-11">
+          <input type="text" class="form-control" id="pregunta" />
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-5"></div>
+        <div class="col-6">
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="background-color: #1b396a"
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
+      <div class="row mt-6">
+        <div class="col-1"></div>
+        <div class="col-4">
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="background-color: #1b396a"
+          >
+            Enviar
+          </button>
+        </div>
+        <div class="col-3"></div>
+        <div class="col-3">
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="background-color: #1b396a"
+          >
+            Subir cuestionario
+          </button>
+        </div>
+      </div>
+      <br />
+
+      <br />
+    </div>
+  </div>
+</div>
+{% endblock content %}

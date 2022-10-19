@@ -1,0 +1,70 @@
+    {% extends 'layout/basicCNMenu.html' %}{% block content %}
+    <div class="container">
+        <div class="row vh-705 justify-content-center rounded mt-4">       
+           
+            <div class="col-10 " >
+                <div class="row" >
+                    <div class="col-1"></div>
+                    <div class="col-10 h-25" >
+                        <h1 class="text-center h1 mt-5 " style="color: black;">Ayuda psicologica</h1><br>
+                    </div>
+                </div>
+                <br><br>
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                        <input type="button" class="form-control text-center" id="motivo" value="Solicitar cita" style="background-color: #1B396A; color: white;">
+                    </div>
+                </div>                   
+                <div class="row mt-5 mb-2 table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                              <th scope="row" style="background-color:#1B396A;color: white;">Citas agendadas</th>
+                            </tr>
+                          </thead>
+                        <thead>
+                          <tr>
+                            <th scope="col" style="background-color:#5D79DB;color: white;">Nombre del alumno</th>
+                            <th scope="col" style="background-color:#5D79DB;color: white;">Fecha de solicitud</th>
+                            <th scope="col" style="background-color:#5D79DB;color: white;">Fecha de asiganacion</th>
+                            <th scope="col" style="background-color:#5D79DB;color: white;">Fecha de cita</th>
+                            <th scope="col" style="background-color:#5D79DB;color: white;">Hora</th>
+                            <th scope="col" style="background-color:#5D79DB;color: white;">Lugar</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row" style="background-color:#D9D9D9;">Roberto Gonzales Lopez</th>
+                            <td style="background-color:#D9D9D9;">15/10/2022</td>
+                            <td style="background-color:#D9D9D9;">15/10/2022</td>
+                            <td style="background-color:#D9D9D9;">15/10/2022</td>
+                            <td style="background-color:#D9D9D9;">2:00PM</td>
+                            <td style="background-color:#D9D9D9;">Edificio I</td>
+                          </tr>
+                          <tr>
+                            <th scope="row" style="background-color:#D9D9D9;">Alan Garcia Diaz</th>
+                            <td style="background-color:#D9D9D9;">15/10/2022</td>
+                            <td style="background-color:#D9D9D9;">15/10/2022</td>
+                            <td style="background-color:#D9D9D9;">15/10/2022</td>
+                            <td style="background-color:#D9D9D9;">3:00PM</td>
+                            <td style="background-color:#D9D9D9;">Edificio I</td>
+                          </tr>
+                          <tr>
+                            <th scope="row" style="background-color:#D9D9D9;">Diego Ruiz Ayala</th>
+                            <td style="background-color:#D9D9D9;">15/10/2022</td>
+                            <td style="background-color:#D9D9D9;">15/10/2022</td>
+                            <td style="background-color:#D9D9D9;">15/10/2022</td>
+                            <td style="background-color:#D9D9D9;">4:00PM</td>
+                            <td style="background-color:#D9D9D9;">Edificio I</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+                <br>
+                  
+                <br>             
+            </div>
+        </div>
+    </div>
+    {% endblock content %}
