@@ -1,14 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
-from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Cuestionario, Tutorado, Grupo
-from django.utils.timezone import now
+from .models import *
+from .forms import *
 import datetime
-
 # Create your views here.
 
 #Vistas para login, logout y pagina principal para todos los usuarios
