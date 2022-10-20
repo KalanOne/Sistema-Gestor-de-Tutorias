@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -76,48 +77,19 @@ def cuestionariosTutorado(request):
 @login_required
 @group_required('Tutorado')
 def perfilTutorado(request):
-    if request.method == 'GET':
-        usuario=request.user
-        tutorado=Tutorado.objects.filter(user_id=request.user.id)
-        if(tutorado.exists()):
-            tutorado=Tutorado.objects.get(user_id=request.user.id)
-            padremadretutor=PadreMadreTutor.objects.filter(id=tutorado.id)
-            if(padremadretutor.exists()):
-                padremadretutor=PadreMadreTutor.objects.get(id=tutorado.id)
-                usuarioform=UserForm(usuario=usuario,usando=True)
-                perfiltutoradoform=perfilTutoradoForm(tutorado=tutorado,usando=True)
-                padremadretutorform=PadreMadreTutorForm(padremadretutor=padremadretutor,usando=True)
-                return render(request, 'perfilTutorado.html',{
-                    'gruops': request.user.groups.all(),
-                    'title': 'Perfil',
-                    'formPerfilTutorado':perfiltutoradoform,
-                    'formpadremadretutor':padremadretutorform,
-                    'formusuario':usuarioform
-                })
-            else:
-                usuarioform=UserForm(usuario=usuario,usando=True)
-                perfiltutoradoform=perfilTutoradoForm(tutorado=tutorado,usando=True)
-                padremadretutorform=PadreMadreTutorForm(padremadretutor=padremadretutor,usando=False)
-                return render(request, 'perfilTutorado.html',{
-                    'gruops': request.user.groups.all(),
-                    'title': 'Perfil',
-                    'formPerfilTutorado':perfiltutoradoform,
-                    'formpadremadretutor':padremadretutorform,
-                    'formusuario':usuarioform
-                })
-        else:
-                usuarioform=UserForm(usuario=usuario,usando=True)
-                perfiltutoradoform=perfilTutoradoForm(tutorado=tutorado,usando=False)
-                padremadretutorform=PadreMadreTutorForm(padremadretutor=padremadretutor,usando=False)
-                return render(request, 'perfilTutorado.html',{
-                    'gruops': request.user.groups.all(),
-                    'title': 'Perfil',
-                    'formPerfilTutorado':perfiltutoradoform,
-                    'formpadremadretutor':padremadretutorform,
-                    'formusuario':usuarioform
-                })
-    else:       
-        print("hola")
+    usuario=get_object_or_404(User, id=request.user.id)
+    tutorado=get_object_or_404(Tutorado, user_id=request.user.id)
+    padremadretutor=get_object_or_404(PadreMadreTutor, id=tutorado.idPadreMadreTutor_id)
+    usuarioform=UserForm(instance=usuario)
+    PerfilTutoradoform=PerfilTutoradoForm(instance=tutorado)
+    padremadretutorform=PadreMadreTutorForm(instance=padremadretutor) 
+    return render(request, 'perfilTutorado.html',{
+        'title': 'Ayuda Psicologica',
+        'formusuario': usuarioform,
+        'formPerfilTutorado': PerfilTutoradoform,
+        'formpadremadretutor': padremadretutorform
+    })
+
 
 @login_required
 @group_required('Tutorado')
