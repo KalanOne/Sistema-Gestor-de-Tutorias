@@ -78,18 +78,44 @@ def cuestionariosTutorado(request):
 def perfilTutorado(request):
     if request.method == 'GET':
         usuario=request.user
-        tutorado=Tutorado.objects.get(user_id=request.user.id)
-        padremadretutor=PadreMadreTutor.objects.get(id=tutorado.id)
-        usuarioform=UserForm(usuario=usuario,usando=True)
-        perfiltutoradoform=perfilTutoradoForm(tutorado=tutorado,usando=True)
-        padremadretutorform=PadreMadreTutorForm(padremadretutor=padremadretutor,usando=True)
-        return render(request, 'perfilTutorado.html',{
-            'gruops': request.user.groups.all(),
-            'title': 'Perfil',
-            'formPerfilTutorado':perfiltutoradoform,
-            'formpadremadretutor':padremadretutorform,
-            'formusuario':usuarioform
-        })
+        tutorado=Tutorado.objects.filter(user_id=request.user.id)
+        if(tutorado.exists()):
+            tutorado=Tutorado.objects.get(user_id=request.user.id)
+            padremadretutor=PadreMadreTutor.objects.filter(id=tutorado.id)
+            if(padremadretutor.exists()):
+                padremadretutor=PadreMadreTutor.objects.get(id=tutorado.id)
+                usuarioform=UserForm(usuario=usuario,usando=True)
+                perfiltutoradoform=perfilTutoradoForm(tutorado=tutorado,usando=True)
+                padremadretutorform=PadreMadreTutorForm(padremadretutor=padremadretutor,usando=True)
+                return render(request, 'perfilTutorado.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Perfil',
+                    'formPerfilTutorado':perfiltutoradoform,
+                    'formpadremadretutor':padremadretutorform,
+                    'formusuario':usuarioform
+                })
+            else:
+                usuarioform=UserForm(usuario=usuario,usando=True)
+                perfiltutoradoform=perfilTutoradoForm(tutorado=tutorado,usando=True)
+                padremadretutorform=PadreMadreTutorForm(padremadretutor=padremadretutor,usando=False)
+                return render(request, 'perfilTutorado.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Perfil',
+                    'formPerfilTutorado':perfiltutoradoform,
+                    'formpadremadretutor':padremadretutorform,
+                    'formusuario':usuarioform
+                })
+        else:
+                usuarioform=UserForm(usuario=usuario,usando=True)
+                perfiltutoradoform=perfilTutoradoForm(tutorado=tutorado,usando=False)
+                padremadretutorform=PadreMadreTutorForm(padremadretutor=padremadretutor,usando=False)
+                return render(request, 'perfilTutorado.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Perfil',
+                    'formPerfilTutorado':perfiltutoradoform,
+                    'formpadremadretutor':padremadretutorform,
+                    'formusuario':usuarioform
+                })
     else:       
         print("hola")
 
