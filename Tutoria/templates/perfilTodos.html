@@ -32,24 +32,24 @@
           <div class="container" style="background-color: #d9d9d9">
             <div class="row text">
               <div class="col-3" style="text-align: right">Nombre:</div>
-              <div class="col-8">Alan García Díaz</div>
+              <div class="col-8">{{formusuario.first_name}}</div>
             </div>
             <br />
             <div class="row">
               <div class="col-3" style="text-align: right">Domicilio:</div>
-              <div class="col-8">Cuartel Militar</div>
+              <div class="col-8">{{formperfilPersonalTec.domicilio}}</div>
             </div>
             <br />
             <div class="row">
               <div class="col-3" style="text-align: right">Teléfono:</div>
-              <div class="col-8">443 581 5700</div>
+              <div class="col-8">{{formperfilPersonalTec.telefono}}</div>
             </div>
             <br />
             <div class="row">
               <div class="col-3" style="text-align: right">
                 Correo Personal:
               </div>
-              <div class="col-8">kalanone@gmail.com</div>
+              <div class="col-8">{{formperfilPersonalTec.correoPersonal}}</div>
             </div>
           </div>
         </div>
@@ -70,19 +70,21 @@
                   <div class="col-3" style="text-align: right">
                     Correo Institucional:
                   </div>
-                  <div class="col-8">Tutor@morelia.tecnm.mx</div>
+                  <div class="col-8">{{formusuario.email}}</div>
                 </div>
                 <br />
                 <div class="row">
                   <div class="col-3" style="text-align: right">
                     Departamento:
                   </div>
-                  <div class="col-8">ISC</div>
+                  <div class="col-8">
+                    {{formdepartamentoacademico.departamentoAcademico}}
+                  </div>
                 </div>
                 <br />
                 <div class="row">
                   <div class="col-3" style="text-align: right">Edificio:</div>
-                  <div class="col-8">I</div>
+                  <div class="col-8">{{formperfilPersonalTec.edificio}}</div>
                 </div>
               </div>
             </div>

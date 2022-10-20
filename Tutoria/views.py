@@ -77,17 +77,27 @@ def cuestionariosTutorado(request):
 @login_required
 @group_required('Tutorado')
 def perfilTutorado(request):
+    #obtener objetos
     usuario=get_object_or_404(User, id=request.user.id)
     tutorado=get_object_or_404(Tutorado, user_id=request.user.id)
     padremadretutor=get_object_or_404(PadreMadreTutor, id=tutorado.idPadreMadreTutor_id)
+    grupo=get_object_or_404(Grupo, id=tutorado.idGrupo_id)
+    departamentoacademico=get_object_or_404(DepartamentoAcademico, id=tutorado.idDepartamentoAcademico_id)
+
+    #autorellenar forms con el instance
     usuarioform=UserForm(instance=usuario)
-    PerfilTutoradoform=PerfilTutoradoForm(instance=tutorado)
+    perfilTutoradoform=PerfilTutoradoForm(instance=tutorado)
     padremadretutorform=PadreMadreTutorForm(instance=padremadretutor) 
+    grupoform=GrupoForm(instance=grupo)
+    departamentoacademicoform=DepartamentoAcademicoForm(instance=departamentoacademico)
     return render(request, 'perfilTutorado.html',{
-        'title': 'Ayuda Psicologica',
+        'gruops': request.user.groups.all(),
+        'title': 'Perfil',
         'formusuario': usuarioform,
-        'formPerfilTutorado': PerfilTutoradoform,
-        'formpadremadretutor': padremadretutorform
+        'formPerfilTutorado': perfilTutoradoform,
+        'formpadremadretutor': padremadretutorform,
+        'formgrupo': grupoform,
+        'formdepartamentoacademico': departamentoacademicoform
     })
 
 
@@ -133,9 +143,21 @@ def crearDocumento(request):
 
 @login_required
 def perfilTodos(request):
+    #obtener objetos
+    usuario=get_object_or_404(User, id=request.user.id)
+    personaltec=get_object_or_404(PersonalTec, user_id=request.user.id)
+    departamentoacademico=get_object_or_404(DepartamentoAcademico, id=personaltec.idDepartamentoAcademico_id)
+
+    #autorellenar forms con el instance
+    usuarioform=UserForm(instance=usuario)
+    perfilPersonalTecform=PerfilPersonalTecForm(instance=personaltec)
+    departamentoacademicoform=DepartamentoAcademicoForm(instance=departamentoacademico)
     return render(request, 'perfilTodos.html',{
         'gruops': request.user.groups.all(),
-        'title': 'Grupos'
+        'title': 'Perfil',
+        'formusuario': usuarioform,
+        'formperfilPersonalTec': perfilPersonalTecform,
+        'formdepartamentoacademico': departamentoacademicoform
     })
 
 def a2(request):
