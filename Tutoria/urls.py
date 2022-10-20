@@ -10,8 +10,8 @@ urlpatterns = [
     #urls de tutorado
     path('Tutorado/Cuestionarios/', views.cuestionariosTutorado, name='cuestionariosTutorado'),
     path('Tutorado/Cuestionarios/Realizar/<int:cuestionario_id>', views.cuestionariosTutorado, name='realizarCuestionarioTutorado'),
-    path('Perfil/Tutorado', views.perfilTutorado, name = 'perfilTutorado'),
-    path('Citas/Tutorado', views.miscitas, name = 'miscitas'),
+    path('Tutorado/Perfil', views.perfilTutorado, name = 'perfilTutorado'),
+    path('Tutorado/Citas', views.miscitas, name = 'miscitas'),
 
     #urls para todos menos el tutorado
     path('Documentacion/', views.Documentacion, name = 'documentos'),
