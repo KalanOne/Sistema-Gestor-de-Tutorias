@@ -76,10 +76,22 @@ def cuestionariosTutorado(request):
 @login_required
 @group_required('Tutorado')
 def perfilTutorado(request):
-    return render(request, 'perfilTutorado.html',{
-        'gruops': request.user.groups.all(),
-        'title': 'Perfil'
-    })
+    if request.method == 'GET':
+        usuario=request.user
+        tutorado=Tutorado.objects.get(user_id=request.user.id)
+        padremadretutor=PadreMadreTutor.objects.get(id=tutorado.id)
+        usuarioform=UserForm(usuario=usuario,usando=True)
+        perfiltutoradoform=perfilTutoradoForm(tutorado=tutorado,usando=True)
+        padremadretutorform=PadreMadreTutorForm(padremadretutor=padremadretutor,usando=True)
+        return render(request, 'perfilTutorado.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Perfil',
+            'formPerfilTutorado':perfiltutoradoform,
+            'formpadremadretutor':padremadretutorform,
+            'formusuario':usuarioform
+        })
+    else:       
+        print("hola")
 
 @login_required
 @group_required('Tutorado')
