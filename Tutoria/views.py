@@ -80,15 +80,23 @@ def perfilTutorado(request):
     #obtener objetos
     usuario=get_object_or_404(User, id=request.user.id)
     tutorado=get_object_or_404(Tutorado, user_id=request.user.id)
-    padremadretutor=get_object_or_404(PadreMadreTutor, id=tutorado.idPadreMadreTutor_id)
-    grupo=get_object_or_404(Grupo, id=tutorado.idGrupo_id)
     departamentoacademico=get_object_or_404(DepartamentoAcademico, id=tutorado.idDepartamentoAcademico_id)
+
+    try:
+        padremadretutor=PadreMadreTutor.objects.get(id=tutorado.idPadreMadreTutor_id)
+        padremadretutorform=PadreMadreTutorForm(instance=padremadretutor) 
+    except:
+        padremadretutorform=PadreMadreTutorForm() 
+    
+    try:
+        grupo=Grupo.objects.get(id=tutorado.idGrupo_id)
+        grupoform=GrupoForm(instance=grupo)
+    except:
+        grupoform=GrupoForm()
 
     #autorellenar forms con el instance
     usuarioform=UserForm(instance=usuario)
     perfilTutoradoform=PerfilTutoradoForm(instance=tutorado)
-    padremadretutorform=PadreMadreTutorForm(instance=padremadretutor) 
-    grupoform=GrupoForm(instance=grupo)
     departamentoacademicoform=DepartamentoAcademicoForm(instance=departamentoacademico)
     return render(request, 'perfilTutorado.html',{
         'gruops': request.user.groups.all(),
@@ -112,8 +120,13 @@ def miscitas(request):
 def a12(request):
     return render(request, 'Realizar cuestionario Tutorado.html')
 
-def a8(request):
-    return render(request, 'Perfil Tutorado Contra.html')
+@login_required
+@group_required('Tutorado')
+def cambiarPassword(request):
+    return render(request, 'PerfilTutoradoContra.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Cambiar Contraseña'
+    })
 
 def a10(request):
     return render(request, 'Principal Tutorado.html')
@@ -184,6 +197,14 @@ def a11(request):
 
 def a13(request):
     return render(request, 'reporte_semestral_tutor.html')
+
+@login_required
+@group_required('Tutor')
+def cambiarPasswordTutor(request):
+    return render(request, 'PerfilTutoradoContra.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Cambiar Contraseña'
+    })
 
 
 

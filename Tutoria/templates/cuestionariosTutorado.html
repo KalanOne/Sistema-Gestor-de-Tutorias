@@ -22,7 +22,8 @@
                     <p>Fecha límite: {{cuestionario.fechaLimite}}</p>
                     <p>Publicado: {{cuestionario.fechaPublicado}}</p>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a class="btn btn-primary" href="{% url 'realizarCuestionarioTutorado' cuestionario.id %}" role="button">Contestar</a>
+                        <a class="btn btn-primary" role="button">Contestar</a>
+                        {% comment %} <a class="btn btn-primary" href="{% url 'realizarCuestionarioTutorado' cuestionario.id %}" role="button">Contestar</a> {% endcomment %}
                     </div>
                 </div>
             </div>

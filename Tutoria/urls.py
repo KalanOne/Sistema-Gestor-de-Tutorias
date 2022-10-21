@@ -12,6 +12,7 @@ urlpatterns = [
     path('Tutorado/Cuestionarios/Realizar/<int:cuestionario_id>', views.cuestionariosTutorado, name='realizarCuestionarioTutorado'),
     path('Tutorado/Perfil', views.perfilTutorado, name = 'perfilTutorado'),
     path('Tutorado/Citas', views.miscitas, name = 'miscitas'),
+    path('Tutorado/CambioPassword', views.cambiarPassword, name = 'cambiarPassword'),
 
     #urls para todos menos el tutorado
     path('Documentacion/', views.Documentacion, name = 'documentos'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('perfilTodos/', views.perfilTodos, name = 'perfilTodos'),
     path('gruposTutor/', views.gruposTutor, name = 'gruposTutor'),
     path('crearCuestionario/', views.crearCuestionario, name = 'crearCuestionario'),
+    path('Tutor/CambioPassword', views.cambiarPasswordTutor, name = 'cambiarPasswordTutor'),
     
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),
