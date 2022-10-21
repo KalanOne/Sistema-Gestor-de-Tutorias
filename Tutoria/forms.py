@@ -8,6 +8,7 @@ class UserForm(forms.ModelForm):
         model = User
         fields = '__all__'
         widgets = {
+            'username': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'}),
             'first_name': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'}),
             'last_name': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'}),
             'email': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'}),
