@@ -1,4 +1,4 @@
-{% extends 'layout/basicCNMenu.html' %}{% block content %}
+{% extends 'layout/basicCNMenu.html' %}{% load static %} {% block content %}
 
 <form action="">
   {% csrf_token %}
@@ -15,6 +15,12 @@
           />
         </div>
         <br />
+        <a
+          class="btn btn-sm btn-primary text-center m-1"
+          href="{% url 'editarInformacion' %}"
+          style="background-color: #1b396a"
+          >Editar Información</a
+        >
         <a
           class="btn btn-sm btn-primary text-center m-1"
           href="{% url 'cambiarPassword' %}"
@@ -34,7 +40,7 @@
             <div class="container py-3" style="background-color: #d9d9d9">
               <div class="row text">
                 <div class="col-3" style="text-align: right">Nombre:</div>
-                <div class="col-8">{{formusuario.first_name}}</div>
+                <div class="col-8">{{formusuario.first_name}}{{formusuario.last_name}}</div>
               </div>
               <br />
               <div class="row">
@@ -59,7 +65,7 @@
                   Nombre del padre/madre/tutor:
                 </div>
                 <div class="col-8 text-center">
-                  {{formpadremadretutor.nombre}}
+                  {{formpadremadretutor.nombre}}{{formpadremadretutor.apellidos}}
                 </div>
               </div>
               <br />
@@ -125,4 +131,8 @@
     </div>
   </div>
 </form>
-{% endblock content %}
+{% endblock content %} {% block JS %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.rawgit.com/JacobLett/bootstrap4-latest/504729ba/bootstrap-4-latest.min.js"></script>
+<script src="{% static 'JS/perfilTutorado.js' %}"></script>
+{% endblock JS %}

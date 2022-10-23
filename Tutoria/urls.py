@@ -13,6 +13,7 @@ urlpatterns = [
     path('Tutorado/Perfil', views.perfilTutorado, name = 'perfilTutorado'),
     path('Tutorado/Citas', views.misCitasTutorado, name = 'misCitasTutorado'),
     path('Tutorado/CambioPassword', views.cambiarPassword, name = 'cambiarPassword'),
+    path('Tutorado/EditarInformacion', views.editarInformacion, name = 'editarInformacion'),
 
     #urls para todos menos el tutorado
     path('Documentacion/', views.Documentacion, name = 'documentos'),

@@ -1,0 +1,90 @@
+{% extends 'layout/basicCNMenu.html' %}{% load static %} {% block content %}
+
+<form method="POST" id="formeditar">
+  {% csrf_token %}
+  <div class="container p-1">
+    <div class="row">
+      <div class="col-1"></div>
+      <div class="col-10 fw-semibold">
+        <div class="container">
+          <div
+            class="row text-white text-center py-1"
+            style="background-color: #1b396a"
+          >
+            <h4>Información Personal</h4>
+          </div>
+          <div class="row">
+            <div class="container py-3" style="background-color: #d9d9d9">
+              <div class="row">
+                <div class="col-3" style="text-align: right">Nombre:</div>
+                <div class="col-8">{{formusuario.first_name}}</div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-3" style="text-align: right">Apellidos:</div>
+                <div class="col-8">{{formusuario.last_name}}</div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-3" style="text-align: right">Domicilio:</div>
+                <div class="col-8">{{formPerfilTutorado.domicilio}}</div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-3" style="text-align: right">Teléfono:</div>
+                <div class="col-8">{{formPerfilTutorado.telefono}}</div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-3" style="text-align: right">
+                  Correo Personal:
+                </div>
+                <div class="col-8">{{formPerfilTutorado.correoPersonal}}</div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-3" style="text-align: right">
+                  Nombre del padre/madre/tutor:
+                </div>
+                <div class="col-8 text-center">
+                  {{formpadremadretutor.nombre}}
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-3" style="text-align: right">
+                  Apellidos del padre/madre/tutor:
+                </div>
+                <div class="col-8 text-center">
+                  {{formpadremadretutor.apellidos}}
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-3" style="text-align: right">
+                  Teléfono del padre/madre/tutor:
+                </div>
+                <div class="col-8 text-center">
+                  {{formpadremadretutor.telefono}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
+          <a
+            class="btn btn-sm btn-danger text-center m-1"
+            href="{% url 'perfilTutorado' %}"
+            >Cancelar</a
+          >
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock content %} {% block JS %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.rawgit.com/JacobLett/bootstrap4-latest/504729ba/bootstrap-4-latest.min.js"></script>
+<script src="{% static 'JS/editarinformacionTuto.js' %}"></script>
+{% endblock JS %}

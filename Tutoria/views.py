@@ -126,19 +126,36 @@ def perfilTutorado(request):
     try:
         padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
         padremadretutorform = PadreMadreTutorForm(instance = padremadretutor) 
+        for fieldname in padremadretutorform.fields:
+            padremadretutorform.fields[fieldname].disabled = True
     except:
         padremadretutorform = PadreMadreTutorForm() 
+        for fieldname in padremadretutorform.fields:
+            padremadretutorform.fields[fieldname].disabled = True
     
     try:
         grupo = Grupo.objects.get(id = tutorado.idGrupo_id)
         grupoform = GrupoForm(instance = grupo)
+        for fieldname in grupoform.fields:
+            grupoform.fields[fieldname].disabled = True
     except:
         grupoform = GrupoForm()
+        for fieldname in grupoform.fields:
+            grupoform.fields[fieldname].disabled = True
 
     #autorellenar forms con el instance
     usuarioform = UserForm(instance = usuario)
+    for fieldname in usuarioform.fields:
+        usuarioform.fields[fieldname].disabled = True
+
     perfilTutoradoform = PerfilTutoradoForm(instance = tutorado)
+    for fieldname in perfilTutoradoform.fields:
+        perfilTutoradoform.fields[fieldname].disabled = True
+
     departamentoacademicoform = DepartamentoAcademicoForm(instance = departamentoacademico)
+    for fieldname in departamentoacademicoform.fields:
+        departamentoacademicoform.fields[fieldname].disabled = True
+        
     return render(request, 'perfilTutorado.html',{
         'gruops': request.user.groups.all(),
         'title': 'Perfil',
@@ -150,6 +167,45 @@ def perfilTutorado(request):
         'formdepartamentoacademico': departamentoacademicoform
     })
 
+
+@login_required
+@group_required('Tutorado')
+def editarInformacion(request):
+
+    tutorado = Tutorado.objects.get(user_id = request.user.id)
+    if tutorado.idGrupo is None:
+        cuentaGrupo = 0
+    else:
+        cuentaGrupo = 1
+
+    if request.method == 'POST':
+        print('se quiere enviar algo')
+        return redirect('perfilTutorado')
+    else:
+        print('se va a mostrar algo')
+       
+        #obtener objetos
+        usuario = User.objects.get(id = request.user.id)
+        tutorado = Tutorado.objects.get(user_id = request.user.id)
+
+        try:
+            padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
+            padremadretutorform = PadreMadreTutorForm(instance = padremadretutor) 
+        except:
+            padremadretutorform = PadreMadreTutorForm() 
+
+        #autorellenar forms con el instance
+        usuarioform = UserForm(instance = usuario)
+        perfilTutoradoform = PerfilTutoradoForm(instance = tutorado)
+
+    return render(request, 'editarInformacion.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Perfil',
+            'cuentaGrupo': cuentaGrupo,
+            'formusuario': usuarioform,
+            'formPerfilTutorado': perfilTutoradoform,
+            'formpadremadretutor': padremadretutorform,
+        })
 
 @login_required
 @group_required('Tutorado')
@@ -216,9 +272,16 @@ def enviarCuestionarioTutorado(request, cuestionario_id):
 @login_required
 @group_required('Tutorado')
 def cambiarPassword(request):
+    tutorado = Tutorado.objects.get(user_id = request.user.id)
+    if tutorado.idGrupo is None:
+        cuentaGrupo = 0
+    else:
+        cuentaGrupo = 1
+
     return render(request, 'PerfilTutoradoContra.html',{
         'gruops': request.user.groups.all(),
-        'title': 'Cambiar Contraseña'
+        'title': 'Cambiar Contraseña',
+        'cuentaGrupo': cuentaGrupo
     })
 
 def a10(request):
