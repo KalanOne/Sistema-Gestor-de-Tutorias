@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
 from .forms import *
 import datetime
+from django.contrib.auth.models import User
 # Create your views here.
 
 #Vistas para login, logout y pagina principal para todos los usuarios
@@ -17,7 +18,7 @@ def group_required(*group_names):
             return True
         else:
             return False
-    # Si no se pertenece al grupo, redirigir a /prohibido/
+    # Si no se pertenece al grupo, redirigir a pagina principal
     return user_passes_test(check, login_url='inicioSesion')
 
 def inicioSesion(request):
@@ -48,10 +49,25 @@ def inicioSesion(request):
 
 @login_required
 def paginaInicio(request):
-    return render(request, 'paginaInicio.html', {
-        'gruops': request.user.groups.all(),
-        'title': 'Página de inicio'
-    })
+    if request.user.groups.filter(name__in=['Tutorado']).exists():
+        tutorado = Tutorado.objects.get(user_id = request.user.id)
+        if tutorado.idGrupo is None:
+            return render(request, 'paginaInicio.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Página de inicio',
+                'cuentaGrupo': 0
+            })
+        else:
+            return render(request, 'paginaInicio.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Página de inicio',
+                'cuentaGrupo': 1
+            })
+    else:
+        return render(request, 'paginaInicio.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Página de inicio'
+        })
 
 @login_required
 def cierreSesion(request):
@@ -59,48 +75,55 @@ def cierreSesion(request):
     return redirect('inicioSesion')
 
 
-
-
 #Vistas para el perfil de tutorados
 @login_required
 @group_required('Tutorado')
 def cuestionariosTutorado(request):
     tutorado = Tutorado.objects.get(user_id = request.user.id)
+    if tutorado.idGrupo is None:
+        return redirect('paginaInicio')
     fecha = datetime.datetime.now()
     print(tutorado.idGrupo.id)
     return render(request, 'cuestionariosTutorado.html', {
         'gruops': request.user.groups.all(),
         'title': 'Cuestionarios',
-        'cuestionarios': Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__gte = fecha.strftime("%Y-%m-%d"), idEstado = 1)
+        'cuentaGrupo': 1,
+        'cuestionarios': Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__gte = fecha.strftime("%Y-%m-%d"))
     })
 
 @login_required
 @group_required('Tutorado')
 def perfilTutorado(request):
     #obtener objetos
-    usuario=get_object_or_404(User, id=request.user.id)
-    tutorado=get_object_or_404(Tutorado, user_id=request.user.id)
-    departamentoacademico=get_object_or_404(DepartamentoAcademico, id=tutorado.idDepartamentoAcademico_id)
+    usuario = User.objects.get(id = request.user.id)
+    tutorado = Tutorado.objects.get(user_id = request.user.id)
+    departamentoacademico = DepartamentoAcademico.objects.get(id = tutorado.idDepartamentoAcademico_id)
+    
+    if tutorado.idGrupo is None:
+        cuentaGrupo = 0
+    else:
+        cuentaGrupo = 1
 
     try:
-        padremadretutor=PadreMadreTutor.objects.get(id=tutorado.idPadreMadreTutor_id)
-        padremadretutorform=PadreMadreTutorForm(instance=padremadretutor) 
+        padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
+        padremadretutorform = PadreMadreTutorForm(instance = padremadretutor) 
     except:
-        padremadretutorform=PadreMadreTutorForm() 
+        padremadretutorform = PadreMadreTutorForm() 
     
     try:
-        grupo=Grupo.objects.get(id=tutorado.idGrupo_id)
-        grupoform=GrupoForm(instance=grupo)
+        grupo = Grupo.objects.get(id = tutorado.idGrupo_id)
+        grupoform = GrupoForm(instance = grupo)
     except:
-        grupoform=GrupoForm()
+        grupoform = GrupoForm()
 
     #autorellenar forms con el instance
-    usuarioform=UserForm(instance=usuario)
-    perfilTutoradoform=PerfilTutoradoForm(instance=tutorado)
-    departamentoacademicoform=DepartamentoAcademicoForm(instance=departamentoacademico)
+    usuarioform = UserForm(instance = usuario)
+    perfilTutoradoform = PerfilTutoradoForm(instance = tutorado)
+    departamentoacademicoform = DepartamentoAcademicoForm(instance = departamentoacademico)
     return render(request, 'perfilTutorado.html',{
         'gruops': request.user.groups.all(),
         'title': 'Perfil',
+        'cuentaGrupo': cuentaGrupo,
         'formusuario': usuarioform,
         'formPerfilTutorado': perfilTutoradoform,
         'formpadremadretutor': padremadretutorform,
@@ -111,14 +134,40 @@ def perfilTutorado(request):
 
 @login_required
 @group_required('Tutorado')
-def miscitas(request):
+def misCitasTutorado(request):
+    tutorado = Tutorado.objects.get(user_id = request.user.id)
+    if tutorado.idGrupo is None:
+        cuentaGrupo = 0
+    else:
+        cuentaGrupo = 1
     return render(request, 'miscitas.html',{
         'gruops': request.user.groups.all(),
-        'title': 'Ayuda Psicologica'
+        'title': 'Ayuda Psicologica',
+        'cuentaGrupo': cuentaGrupo
     })
 
-def a12(request):
-    return render(request, 'Realizar cuestionario Tutorado.html')
+@login_required
+@group_required('Tutorado')
+def enviarCuestionarioTutorado(request, cuestionario_id):
+    tutorado = Tutorado.objects.get(user_id = request.user.id)
+    if tutorado.idGrupo is None:
+        return redirect('paginaInicio')
+    else:
+        try:
+            cuestionario = Cuestionario.objects.get(id = cuestionario_id)
+        except:
+            return redirect('paginaInicio')
+        if tutorado.idGrupo_id == cuestionario.idGrupo_id:
+            cuentaGrupo = 1
+            return render(request, 'enviarCuestionarioTutorado.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Enviar cuestionario',
+                'cuentaGrupo': cuentaGrupo,
+                'cuestionario': cuestionario,
+                'form': EnviarCuestionario
+            })
+        else:
+            return redirect('paginaInicio')
 
 @login_required
 @group_required('Tutorado')

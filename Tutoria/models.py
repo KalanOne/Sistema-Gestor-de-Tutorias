@@ -165,6 +165,7 @@ class Cuestionario(models.Model):
     nombre = models.CharField(max_length=100)
     fechaPublicado = models.DateField(default=now, editable=False)
     fechaLimite = models.DateField()
+    ruta = models.CharField(max_length=300, null = True, blank = True)
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
     idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
@@ -179,6 +180,24 @@ class Cuestionario(models.Model):
         verbose_name= 'Cuestionario'
         verbose_name_plural= 'Cuestionarios'
         db_table= 'cuestionario'
+        ordering= ['id']
+
+class CuestionarioContestado(models.Model):
+    ruta = models.CharField(max_length=300)
+    idCuestionario = models.ForeignKey('Cuestionario', on_delete=models.CASCADE)
+    idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
+    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
+
+    def Mostrar(self):
+        return "{} - {} - {}".format(self.idTutorado, self.idCuestionario, self.ruta)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'CuestionarioContestado'
+        verbose_name_plural= 'CuestionarioContestados'
+        db_table= 'CuestionarioContestado'
         ordering= ['id']
 
 

@@ -9,9 +9,9 @@ urlpatterns = [
 
     #urls de tutorado
     path('Tutorado/Cuestionarios/', views.cuestionariosTutorado, name='cuestionariosTutorado'),
-    path('Tutorado/Cuestionarios/Realizar/<int:cuestionario_id>', views.cuestionariosTutorado, name='realizarCuestionarioTutorado'),
+    path('Tutorado/Cuestionarios/Enviar/<int:cuestionario_id>', views.enviarCuestionarioTutorado, name='enviarCuestionarioTutorado'),
     path('Tutorado/Perfil', views.perfilTutorado, name = 'perfilTutorado'),
-    path('Tutorado/Citas', views.miscitas, name = 'miscitas'),
+    path('Tutorado/Citas', views.misCitasTutorado, name = 'misCitasTutorado'),
     path('Tutorado/CambioPassword', views.cambiarPassword, name = 'cambiarPassword'),
 
     #urls para todos menos el tutorado

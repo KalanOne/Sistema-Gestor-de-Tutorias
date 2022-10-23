@@ -67,3 +67,6 @@ class PerfilPersonalTecForm(forms.ModelForm):
             'correoPersonal': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'}),
             'edificio': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'})
         }
+
+class EnviarCuestionario(forms.Form):
+    file = forms.FileField(label='Sube tu archivo', required=False)
