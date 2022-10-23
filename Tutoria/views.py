@@ -1,3 +1,5 @@
+from distutils.log import error
+from this import d
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import AuthenticationForm
@@ -20,6 +22,16 @@ def group_required(*group_names):
             return False
     # Si no se pertenece al grupo, redirigir a pagina principal
     return user_passes_test(check, login_url='inicioSesion')
+
+def guardarArchivo(file, ruta):
+    try:
+        with open(ruta, 'xb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+        return True
+    except:
+        print('Aqui me paro 33')
+        return False
 
 def inicioSesion(request):
     if request.method == 'GET':
@@ -83,12 +95,19 @@ def cuestionariosTutorado(request):
     if tutorado.idGrupo is None:
         return redirect('paginaInicio')
     fecha = datetime.datetime.now()
+    cuestionarios = Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__gte = fecha.strftime("%Y-%m-%d"))
+    for cuestionario in cuestionarios.iterator():
+        try:
+            respondido = CuestionarioContestado.objects.get(idCuestionario_id = cuestionario.id, idTutorado_id = tutorado.id)
+            cuestionarios.delete(cuestionario)
+        except:
+            print("Pasa")
     print(tutorado.idGrupo.id)
     return render(request, 'cuestionariosTutorado.html', {
         'gruops': request.user.groups.all(),
         'title': 'Cuestionarios',
         'cuentaGrupo': 1,
-        'cuestionarios': Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__gte = fecha.strftime("%Y-%m-%d"))
+        'cuestionarios': cuestionarios
     })
 
 @login_required
@@ -158,14 +177,39 @@ def enviarCuestionarioTutorado(request, cuestionario_id):
         except:
             return redirect('paginaInicio')
         if tutorado.idGrupo_id == cuestionario.idGrupo_id:
-            cuentaGrupo = 1
-            return render(request, 'enviarCuestionarioTutorado.html', {
-                'gruops': request.user.groups.all(),
-                'title': 'Enviar cuestionario',
-                'cuentaGrupo': cuentaGrupo,
-                'cuestionario': cuestionario,
-                'form': EnviarCuestionario
-            })
+            try:
+                respondido = CuestionarioContestado.objects.get(idCuestionario_id = cuestionario.id, idTutorado_id = tutorado.id)
+                return redirect('paginaInicio')
+            except:
+                if request.method == 'GET':
+                    cuentaGrupo = 1
+                    return render(request, 'enviarCuestionarioTutorado.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Enviar cuestionario',
+                        'cuentaGrupo': cuentaGrupo,
+                        'cuestionario': cuestionario,
+                        'form': EnviarCuestionario
+                    })
+                else:
+                    form = EnviarCuestionario(request.POST, request.FILES)
+                    if form.is_valid():
+                        ruta1 = '/static/' + tutorado.idInstitucion.nombreInstitucion + '/' + tutorado.idDepartamentoAcademico.departamentoAcademico + '/' + tutorado.idGrupo.grupo + '/' + str(tutorado.id) + '_' + str(cuestionario_id) + '_' + now().strftime("%Y-%m-%d") + '.pdf'
+                        respuesta = guardarArchivo(request.FILES['file'], ruta1)
+                        if respuesta:
+                            ruta2 = tutorado.idInstitucion.nombreInstitucion + '/' + tutorado.idDepartamentoAcademico.departamentoAcademico + '/' + tutorado.idGrupo.grupo + '/' + str(tutorado.id) + '_' + str(cuestionario_id) + '_' + now().strftime("%Y-%m-%d") + '.pdf'
+                            cuestionarioContestado = CuestionarioContestado(ruta = ruta2, idCuestionario_id = cuestionario_id, idTutorado_id = tutorado.id)
+                            cuestionarioContestado.save()
+                            return redirect('paginaInicio')
+                        else:
+                            cuentaGrupo = 1
+                            return render(request, 'enviarCuestionarioTutorado.html', {
+                                'gruops': request.user.groups.all(),
+                                'title': 'Enviar cuestionario',
+                                'cuentaGrupo': cuentaGrupo,
+                                'cuestionario': cuestionario,
+                                'form': EnviarCuestionario,
+                                'error': 'Error al enviar el archivo, por favor intentelo de nuevo'
+                            })
         else:
             return redirect('paginaInicio')
 

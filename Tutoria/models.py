@@ -186,7 +186,6 @@ class CuestionarioContestado(models.Model):
     ruta = models.CharField(max_length=300)
     idCuestionario = models.ForeignKey('Cuestionario', on_delete=models.CASCADE)
     idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
 
     def Mostrar(self):
         return "{} - {} - {}".format(self.idTutorado, self.idCuestionario, self.ruta)

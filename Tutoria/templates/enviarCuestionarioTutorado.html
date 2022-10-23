@@ -10,7 +10,7 @@
                 {{ cuestionario.nombre }}
             </h1>
             Archivo: <a href="{% static cuestionario.ruta %}" download=""><i class="bi bi-download mx-2"></i></a>
-            <form method="post">
+            <form method="post" enctype = "multipart/form-data">
                 {% csrf_token %}
                 {{ form|crispy }}
                 {% if error is not none %}

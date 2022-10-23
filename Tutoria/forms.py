@@ -69,4 +69,4 @@ class PerfilPersonalTecForm(forms.ModelForm):
         }
 
 class EnviarCuestionario(forms.Form):
-    file = forms.FileField(label='Sube tu archivo', required=False)
+    file = forms.FileField(label='Sube tu archivo', required=False, widget=forms.FileInput(attrs={'accept' : 'application/pdf'}))
