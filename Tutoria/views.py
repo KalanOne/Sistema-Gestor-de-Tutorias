@@ -269,7 +269,10 @@ def editarInformacion(request):
                 post.save()
         except:
             #obtenemos id del siguiente tutor que se va a registrar
-            next_tutor = PadreMadreTutor.objects.order_by('-id').first().id + 1
+            try:
+                next_tutor = PadreMadreTutor.objects.order_by('-id').first().id + 1
+            except:
+                next_tutor=1
             
             #obtenemos datos del formulario para despues registrar un nuevo tutor
             nombre=request.POST['nombre']
