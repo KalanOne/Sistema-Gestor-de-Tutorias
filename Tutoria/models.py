@@ -77,7 +77,7 @@ class DepartamentoAcademico(models.Model):
 class PadreMadreTutor(models.Model):
     nombre = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    telefono = models.CharField(max_length=10)
+    telefonotutor = models.CharField(max_length=10)
 
     def Mostrar(self):
         return "{}, {}".format(self.apellidos, self.nombre)

@@ -161,33 +161,87 @@ def perfilTutorado(request):
 @login_required
 @group_required('Tutorado')
 def editarInformacion(request):
-
+    #obtener tutorado
     tutorado = Tutorado.objects.get(user_id = request.user.id)
     if tutorado.idGrupo is None:
         cuentaGrupo = 0
     else:
         cuentaGrupo = 1
+           
+    #obtener objetos
+    usuario = User.objects.get(id = request.user.id)
+    tutorado = Tutorado.objects.get(user_id = request.user.id)
 
+    #crear formulario de padremadretutor si existe o no
+    try:
+        padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
+        padremadretutorform = PadreMadreTutorForm(instance = padremadretutor) 
+    except:
+        padremadretutorform = PadreMadreTutorForm() 
+
+    #autorellenar forms con el instance
+    usuarioform = UserForm(instance = usuario)
+    perfilTutoradoform = PerfilTutoradoForm(instance = tutorado)
+    
+    #acciones para cuando se mande el form
     if request.method == 'POST':
-        print('se quiere enviar algo')
-        return redirect('perfilTutorado')
-    else:
-        print('se va a mostrar algo')
-       
-        #obtener objetos
-        usuario = User.objects.get(id = request.user.id)
-        tutorado = Tutorado.objects.get(user_id = request.user.id)
+        
+        #se crean formularios con los datos que ya tiene para despues solo modificar los que se manda por post
+        usuarioformpost=UserForm()
+        usuarioformpost=usuarioform
+        perfilTutoradoformpost=PerfilTutoradoForm()
+        perfilTutoradoformpost=perfilTutoradoform
 
+        #valida si el form que se lleno anteriormente es valido y se modifican los valores recibido en post
+        if usuarioformpost.is_valid:
+            post=usuarioformpost.save(commit=False)
+            post.first_name=request.POST['first_name']
+            post.last_name=request.POST['last_name']
+            post.save()
+            
         try:
-            padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
-            padremadretutorform = PadreMadreTutorForm(instance = padremadretutor) 
+            #se intenta obtener el objeto PadreMadreTutor para saber si existe o no
+            padremadretutorPost = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
+
+            padremadretutorformpost=PadreMadreTutorForm() 
+            padremadretutorformpost=padremadretutorform
+
+            #valida si el form que se lleno anteriormente es valido y se modifican los valores recibido en post
+            if padremadretutorformpost.is_valid:
+                post=padremadretutorformpost.save(commit=False)
+                post.nombre=request.POST['nombre']
+                post.apellidos=request.POST['apellidos']
+                post.telefonotutor=request.POST['telefonotutor']
+                post.save()
+
+            #valida si el form que se lleno anteriormente es valido y se modifican los valores recibido en post
+            if perfilTutoradoformpost.is_valid:
+                post=perfilTutoradoformpost.save(commit=False)
+                post.domicilio=request.POST['domicilio']
+                post.telefono=request.POST['telefono']
+                post.correoPersonal=request.POST['correoPersonal']
+                post.save()
         except:
-            padremadretutorform = PadreMadreTutorForm() 
+            #obtenemos id del siguiente tutor que se va a registrar
+            next_tutor = PadreMadreTutor.objects.order_by('-id').first().id + 1
+            
+            #obtenemos datos del formulario para despues registrar un nuevo tutor
+            nombre=request.POST['nombre']
+            apellidos=request.POST['apellidos']
+            telefonotutor=request.POST['telefonotutor']
+            pmt=PadreMadreTutor.objects.create(nombre=nombre,apellidos=apellidos,telefonotutor=telefonotutor)
 
-        #autorellenar forms con el instance
-        usuarioform = UserForm(instance = usuario)
-        perfilTutoradoform = PerfilTutoradoForm(instance = tutorado)
+            #valida si el form que se lleno anteriormente es valido y se modifican los valores recibido en post
+            if perfilTutoradoformpost.is_valid:
+                post=perfilTutoradoformpost.save(commit=False)
+                post.domicilio=request.POST['domicilio']
+                post.telefono=request.POST['telefono']
+                post.correoPersonal=request.POST['correoPersonal']
+                post.idPadreMadreTutor_id=next_tutor
+                post.save()
 
+        return redirect('perfilTutorado')
+    
     return render(request, 'editarInformacion.html',{
             'gruops': request.user.groups.all(),
             'title': 'Perfil',

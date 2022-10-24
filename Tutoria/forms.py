@@ -36,7 +36,7 @@ class PadreMadreTutorForm(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={'class':'form-control', 'id':'PadreMadreTutor_nombre'}),
             'apellidos': forms.TextInput(attrs={'class':'form-control', 'id':'PadreMadreTutor_apellidos', 'hidden':'true'}),
-            'telefono': forms.TextInput(attrs={'class':'form-control', 'id':'PadreMadreTutor_telefono'})
+            'telefonotutor': forms.TextInput(attrs={'class':'form-control', 'id':'PadreMadreTutor_telefono'})
         }
 
 
