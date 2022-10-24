@@ -11,10 +11,10 @@ class UserForm(forms.ModelForm):
         model = User
         fields = '__all__'
         widgets = {
-            'username': forms.TextInput(attrs={'class':'form-control', 'id':'User_username',}),
-            'first_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_first_name'}),
-            'last_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_last_name', 'hidden':'true'}),
-            'email': forms.TextInput(attrs={'class':'form-control', 'id':'User_email'}),
+            'username': forms.TextInput(attrs={'class':'form-control', 'id':'User_username','required':'true'}),
+            'first_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_first_name','required':'true'}),
+            'last_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_last_name', 'hidden':'true','required':'true'}),
+            'email': forms.TextInput(attrs={'class':'form-control', 'id':'User_email','required':'true'}),
         }
 
 class PerfilTutoradoForm(forms.ModelForm):
