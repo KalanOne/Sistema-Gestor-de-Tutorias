@@ -19,9 +19,15 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% endif %}
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                </div>
+                {% if contestado == true %}
+                    <div class="alert alert-success" role="alert">
+                        <div>Ya has contestado este cuestionario</div>
+                    </div>
+                {% else %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                {% endif %}
             </form>
         </div>
         <div class="col-12 col-md-2"></div>

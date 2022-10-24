@@ -86,13 +86,6 @@ def cuestionariosTutorado(request):
         return redirect('paginaInicio')
     fecha = datetime.datetime.now()
     cuestionarios = Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__gte = fecha.strftime("%Y-%m-%d"))
-    for cuestionario in cuestionarios.iterator():
-        try:
-            respondido = CuestionarioContestado.objects.get(idCuestionario_id = cuestionario.id, idTutorado_id = tutorado.id)
-            cuestionarios.delete(cuestionario)
-        except:
-            print("Pasa")
-    print(tutorado.idGrupo.id)
     return render(request, 'cuestionariosTutorado.html', {
         'gruops': request.user.groups.all(),
         'title': 'Cuestionarios',
@@ -157,6 +150,59 @@ def perfilTutorado(request):
         'formdepartamentoacademico': departamentoacademicoform
     })
 
+@login_required
+@group_required('Tutorado')
+def enviarCuestionarioTutorado(request, cuestionario_id):
+    tutorado = Tutorado.objects.get(user_id = request.user.id)
+    if tutorado.idGrupo is None:
+        return redirect('paginaInicio')
+    else:
+        try:
+            cuestionario = Cuestionario.objects.get(id = cuestionario_id)
+        except:
+            return redirect('paginaInicio')
+        if tutorado.idGrupo_id == cuestionario.idGrupo_id:
+            try:
+                respondido = CuestionarioContestado.objects.get(idCuestionario_id = cuestionario.id, idTutorado_id = tutorado.id)
+                return render(request, 'enviarCuestionarioTutorado.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Enviar cuestionario',
+                    'cuentaGrupo': cuentaGrupo,
+                    'cuestionario': cuestionario,
+                    'form': EnviarCuestionario,
+                    'contestado' : True
+                })
+            except:
+                if request.method == 'GET':
+                    cuentaGrupo = 1
+                    return render(request, 'enviarCuestionarioTutorado.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Enviar cuestionario',
+                        'cuentaGrupo': cuentaGrupo,
+                        'cuestionario': cuestionario,
+                        'form': EnviarCuestionario
+                    })
+                else:
+                    form = EnviarCuestionario(request.POST, request.FILES)
+                    if form.is_valid():
+                        try:
+                            modeloEnvio = form.save(commit = False)
+                            modeloEnvio.idTutorado_id = tutorado.id
+                            modeloEnvio.idCuestionario_id = cuestionario_id
+                            modeloEnvio.save()
+                            return redirect('paginaInicio')
+                        except:
+                            cuentaGrupo = 1
+                            return render(request, 'enviarCuestionarioTutorado.html', {
+                                'gruops': request.user.groups.all(),
+                                'title': 'Enviar cuestionario',
+                                'cuentaGrupo': cuentaGrupo,
+                                'cuestionario': cuestionario,
+                                'form': EnviarCuestionario,
+                                'error': 'Error al enviar el archivo, por favor intentelo de nuevo'
+                            })
+        else:
+            return redirect('paginaInicio')
 
 @login_required
 @group_required('Tutorado')
@@ -264,62 +310,6 @@ def misCitasTutorado(request):
         'title': 'Ayuda Psicologica',
         'cuentaGrupo': cuentaGrupo
     })
-
-@login_required
-@group_required('Tutorado')
-def enviarCuestionarioTutorado(request, cuestionario_id):
-    tutorado = Tutorado.objects.get(user_id = request.user.id)
-    if tutorado.idGrupo is None:
-        return redirect('paginaInicio')
-    else:
-        try:
-            cuestionario = Cuestionario.objects.get(id = cuestionario_id)
-        except:
-            return redirect('paginaInicio')
-        if tutorado.idGrupo_id == cuestionario.idGrupo_id:
-            try:
-                respondido = CuestionarioContestado.objects.get(idCuestionario_id = cuestionario.id, idTutorado_id = tutorado.id)
-                return redirect('paginaInicio')
-            except:
-                if request.method == 'GET':
-                    cuentaGrupo = 1
-                    return render(request, 'enviarCuestionarioTutorado.html', {
-                        'gruops': request.user.groups.all(),
-                        'title': 'Enviar cuestionario',
-                        'cuentaGrupo': cuentaGrupo,
-                        'cuestionario': cuestionario,
-                        'form': EnviarCuestionario
-                    })
-                else:
-                    print("Inicio de subida")
-                    form = EnviarCuestionario(request.POST, request.FILES)
-                    print("Validaremos a continuacion")
-                    if form.is_valid():
-                        try:
-                            print("Paso 1:")
-                            modeloEnvio = form.save(commit = False)
-                            print("Paso 2:")
-                            modeloEnvio.idTutorado_id = tutorado.id
-                            print("Paso 3:")
-                            modeloEnvio.idCuestionario_id = cuestionario_id
-                            print("Paso 4:")
-                            print(str(modeloEnvio.archivo))
-                            modeloEnvio.save()
-                            print("Se guardo")
-                            return redirect('paginaInicio')
-                        except:
-                            print("Efe")
-                            cuentaGrupo = 1
-                            return render(request, 'enviarCuestionarioTutorado.html', {
-                                'gruops': request.user.groups.all(),
-                                'title': 'Enviar cuestionario',
-                                'cuentaGrupo': cuentaGrupo,
-                                'cuestionario': cuestionario,
-                                'form': EnviarCuestionario,
-                                'error': 'Error al enviar el archivo, por favor intentelo de nuevo'
-                            })
-        else:
-            return redirect('paginaInicio')
 
 @login_required
 @group_required('Tutorado')
