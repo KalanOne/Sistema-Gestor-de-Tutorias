@@ -181,7 +181,7 @@ class Cuestionario(models.Model):
         ordering= ['id']
 
 class CuestionarioContestado(models.Model):
-    archivo = models.FileField(upload_to = 'Respuestas/Cuestionarios/%Y/%m/%d/%H/%M/%S')
+    archivo = models.FileField(upload_to = 'Respuestas/Cuestionarios/%Y/%m/%d')
     idCuestionario = models.ForeignKey('Cuestionario', on_delete=models.CASCADE)
     idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
 

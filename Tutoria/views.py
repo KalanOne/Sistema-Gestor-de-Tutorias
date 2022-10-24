@@ -164,13 +164,15 @@ def enviarCuestionarioTutorado(request, cuestionario_id):
         if tutorado.idGrupo_id == cuestionario.idGrupo_id:
             try:
                 respondido = CuestionarioContestado.objects.get(idCuestionario_id = cuestionario.id, idTutorado_id = tutorado.id)
+                contestado = 1
+                cuentaGrupo = 1
                 return render(request, 'enviarCuestionarioTutorado.html', {
                     'gruops': request.user.groups.all(),
                     'title': 'Enviar cuestionario',
                     'cuentaGrupo': cuentaGrupo,
                     'cuestionario': cuestionario,
                     'form': EnviarCuestionario,
-                    'contestado' : True
+                    'contestado' : contestado
                 })
             except:
                 if request.method == 'GET':
@@ -180,7 +182,8 @@ def enviarCuestionarioTutorado(request, cuestionario_id):
                         'title': 'Enviar cuestionario',
                         'cuentaGrupo': cuentaGrupo,
                         'cuestionario': cuestionario,
-                        'form': EnviarCuestionario
+                        'form': EnviarCuestionario,
+                        'contestado' : 0
                     })
                 else:
                     form = EnviarCuestionario(request.POST, request.FILES)
@@ -199,7 +202,8 @@ def enviarCuestionarioTutorado(request, cuestionario_id):
                                 'cuentaGrupo': cuentaGrupo,
                                 'cuestionario': cuestionario,
                                 'form': EnviarCuestionario,
-                                'error': 'Error al enviar el archivo, por favor intentelo de nuevo'
+                                'error': 'Error al enviar el archivo, por favor intentelo de nuevo',
+                                'contestado' : 0
                             })
         else:
             return redirect('paginaInicio')
