@@ -1,3 +1,6 @@
+from cProfile import label
+from dataclasses import fields
+from pyexpat import model
 from django import forms
 from django.forms import Widget
 from .models import *
@@ -67,5 +70,14 @@ class PerfilPersonalTecForm(forms.ModelForm):
             'edificio': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_edificio'})
         }
 
-class EnviarCuestionario(forms.Form):
-    file = forms.FileField(label='Sube tu archivo', required=False, widget=forms.FileInput(attrs={'accept' : 'application/pdf'}))
+class EnviarCuestionario(forms.ModelForm):
+    # file = forms.FileField(label='Sube tu archivo', required=False, widget=forms.FileInput(attrs={'accept' : 'application/pdf'}))
+    class Meta:
+        model = CuestionarioContestado
+        fields = {'archivo'}
+        labels = {
+            'archivo': ('Sube tu archivo'),
+        }
+        widgets = {
+            'archivo': forms.FileInput(attrs={'accept' : 'application/pdf'}),
+        }

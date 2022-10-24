@@ -23,16 +23,6 @@ def group_required(*group_names):
     # Si no se pertenece al grupo, redirigir a pagina principal
     return user_passes_test(check, login_url='inicioSesion')
 
-def guardarArchivo(file, ruta):
-    try:
-        with open(ruta, 'xb+') as destination:
-            for chunk in file.chunks():
-                destination.write(chunk)
-        return True
-    except:
-        print('Aqui me paro 33')
-        return False
-
 def inicioSesion(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
@@ -247,16 +237,24 @@ def enviarCuestionarioTutorado(request, cuestionario_id):
                         'form': EnviarCuestionario
                     })
                 else:
+                    print("Inicio de subida")
                     form = EnviarCuestionario(request.POST, request.FILES)
+                    print("Validaremos a continuacion")
                     if form.is_valid():
-                        ruta1 = '/static/' + tutorado.idInstitucion.nombreInstitucion + '/' + tutorado.idDepartamentoAcademico.departamentoAcademico + '/' + tutorado.idGrupo.grupo + '/' + str(tutorado.id) + '_' + str(cuestionario_id) + '_' + now().strftime("%Y-%m-%d") + '.pdf'
-                        respuesta = guardarArchivo(request.FILES['file'], ruta1)
-                        if respuesta:
-                            ruta2 = tutorado.idInstitucion.nombreInstitucion + '/' + tutorado.idDepartamentoAcademico.departamentoAcademico + '/' + tutorado.idGrupo.grupo + '/' + str(tutorado.id) + '_' + str(cuestionario_id) + '_' + now().strftime("%Y-%m-%d") + '.pdf'
-                            cuestionarioContestado = CuestionarioContestado(ruta = ruta2, idCuestionario_id = cuestionario_id, idTutorado_id = tutorado.id)
-                            cuestionarioContestado.save()
+                        try:
+                            print("Paso 1:")
+                            modeloEnvio = form.save(commit = False)
+                            print("Paso 2:")
+                            modeloEnvio.idTutorado_id = tutorado.id
+                            print("Paso 3:")
+                            modeloEnvio.idCuestionario_id = cuestionario_id
+                            print("Paso 4:")
+                            print(str(modeloEnvio.archivo))
+                            modeloEnvio.save()
+                            print("Se guardo")
                             return redirect('paginaInicio')
-                        else:
+                        except:
+                            print("Efe")
                             cuentaGrupo = 1
                             return render(request, 'enviarCuestionarioTutorado.html', {
                                 'gruops': request.user.groups.all(),

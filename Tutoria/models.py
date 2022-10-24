@@ -1,4 +1,3 @@
-from pyexpat import model
 from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -182,12 +181,12 @@ class Cuestionario(models.Model):
         ordering= ['id']
 
 class CuestionarioContestado(models.Model):
-    ruta = models.CharField(max_length=300)
+    archivo = models.FileField(upload_to = 'Respuestas/Cuestionarios/%Y/%m/%d/%H/%M/%S')
     idCuestionario = models.ForeignKey('Cuestionario', on_delete=models.CASCADE)
     idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
 
     def Mostrar(self):
-        return "{} - {} - {}".format(self.idTutorado, self.idCuestionario, self.ruta)
+        return "{} - {} - {}".format(self.idTutorado_id, self.idCuestionario_id, self.archivo)
 
     def __str__(self):
         return self.Mostrar()
@@ -195,7 +194,7 @@ class CuestionarioContestado(models.Model):
     class Meta:
         verbose_name= 'CuestionarioContestado'
         verbose_name_plural= 'CuestionarioContestados'
-        db_table= 'CuestionarioContestado'
+        db_table= 'cuestionarioContestado'
         ordering= ['id']
 
 
