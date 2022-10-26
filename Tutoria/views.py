@@ -368,8 +368,17 @@ def perfilTodos(request):
 
     #autorellenar forms con el instance
     usuarioform=UserForm(instance=usuario)
+    for fieldname in usuarioform.fields:
+        usuarioform.fields[fieldname].disabled = True
+
     perfilPersonalTecform=PerfilPersonalTecForm(instance=personaltec)
+    for fieldname in perfilPersonalTecform.fields:
+        perfilPersonalTecform.fields[fieldname].disabled = True
+
     departamentoacademicoform=DepartamentoAcademicoForm(instance=departamentoacademico)
+    for fieldname in departamentoacademicoform.fields:
+        departamentoacademicoform.fields[fieldname].disabled = True
+
     return render(request, 'perfilTodos.html',{
         'gruops': request.user.groups.all(),
         'title': 'Perfil',
