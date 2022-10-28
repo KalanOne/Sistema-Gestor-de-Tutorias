@@ -1,70 +1,98 @@
-    {% extends 'layout/basicCNMenu.html' %}{% block content %}
+{% extends 'layout/basicCNMenu.html' %}{% block content %}
     <div class="container">
-        <div class="row vh-705 justify-content-center rounded mt-4">       
-           
-            <div class="col-10 " >
-                <div class="row" >
-                    <div class="col-1"></div>
-                    <div class="col-10 h-25" >
-                        <h1 class="text-center h1 mt-5 " style="color: black;">Ayuda psicologica</h1><br>
-                    </div>
-                </div>
-                <br><br>
-                <div class="row">
-                    <div class="col-3"></div>
-                    <div class="col-6">
-                        <input type="button" class="form-control text-center" id="motivo" value="Solicitar cita" style="background-color: #1B396A; color: white;">
-                    </div>
-                </div>                   
-                <div class="row mt-5 mb-2 table">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                              <th scope="row" style="background-color:#1B396A;color: white;">Citas agendadas</th>
-                            </tr>
-                          </thead>
-                        <thead>
-                          <tr>
-                            <th scope="col" style="background-color:#5D79DB;color: white;">Nombre del alumno</th>
-                            <th scope="col" style="background-color:#5D79DB;color: white;">Fecha de solicitud</th>
-                            <th scope="col" style="background-color:#5D79DB;color: white;">Fecha de asiganacion</th>
-                            <th scope="col" style="background-color:#5D79DB;color: white;">Fecha de cita</th>
-                            <th scope="col" style="background-color:#5D79DB;color: white;">Hora</th>
-                            <th scope="col" style="background-color:#5D79DB;color: white;">Lugar</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row" style="background-color:#D9D9D9;">Roberto Gonzales Lopez</th>
-                            <td style="background-color:#D9D9D9;">15/10/2022</td>
-                            <td style="background-color:#D9D9D9;">15/10/2022</td>
-                            <td style="background-color:#D9D9D9;">15/10/2022</td>
-                            <td style="background-color:#D9D9D9;">2:00PM</td>
-                            <td style="background-color:#D9D9D9;">Edificio I</td>
-                          </tr>
-                          <tr>
-                            <th scope="row" style="background-color:#D9D9D9;">Alan Garcia Diaz</th>
-                            <td style="background-color:#D9D9D9;">15/10/2022</td>
-                            <td style="background-color:#D9D9D9;">15/10/2022</td>
-                            <td style="background-color:#D9D9D9;">15/10/2022</td>
-                            <td style="background-color:#D9D9D9;">3:00PM</td>
-                            <td style="background-color:#D9D9D9;">Edificio I</td>
-                          </tr>
-                          <tr>
-                            <th scope="row" style="background-color:#D9D9D9;">Diego Ruiz Ayala</th>
-                            <td style="background-color:#D9D9D9;">15/10/2022</td>
-                            <td style="background-color:#D9D9D9;">15/10/2022</td>
-                            <td style="background-color:#D9D9D9;">15/10/2022</td>
-                            <td style="background-color:#D9D9D9;">4:00PM</td>
-                            <td style="background-color:#D9D9D9;">Edificio I</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                </div>
-                <br>
-                  
-                <br>             
+        <div class="row">
+            <div class="col-12 mb-5">
+                <h1 class="text-center h1">
+                    Ayuda psicologica
+                </h1>
             </div>
         </div>
+        <div class="row mb-5">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 d-grid gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSolicitudCita" style="background-color: #1B396A;">
+                    Solicitar ayuda
+                </button>
+
+                <div class="modal fade" id="modalSolicitudCita" tabindex="-1" aria-labelledby="modalSolicitudCitaLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Solicitar ayuda psicológica</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected>Motivo</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="10" style="background-color: #1B396A;" class="rounded-top text-center text-white">Citas agendadas</th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr style="background-color: #e3f2fd;">
+                            <th scope="col">#</th>
+                            <th scope="col">Fecha de solicitud</th>
+                            <th scope="col">Fecha de asignación</th>
+                            <th scope="col">Fecha de cita</th>
+                            <th scope="col">Rango de atención</th>
+                            <th scope="col">Lugar de atención</th>
+                            <th scope="col">Hora de atención</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-secondary">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>20/10/2022</td>
+                            <td>21/10/2022</td>
+                            <td>22/10/2022</td>
+                            <td>13:00 - 18:00</td>
+                            <td>Edificio AG cubículo de psicólogo</td>
+                            <td>14:15</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>20/10/2022</td>
+                            <td>21/10/2022</td>
+                            <td>22/10/2022</td>
+                            <td>13:00 - 18:00</td>
+                            <td>Edificio AG cubículo de psicólogo</td>
+                            <td>14:15</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>20/10/2022</td>
+                            <td>21/10/2022</td>
+                            <td>22/10/2022</td>
+                            <td>13:00 - 18:00</td>
+                            <td>Edificio AG cubículo de psicólogo</td>
+                            <td>14:15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-1"></div>   
+        </div>
     </div>
-    {% endblock content %}
+{% endblock content %}
