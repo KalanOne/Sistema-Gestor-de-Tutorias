@@ -81,3 +81,14 @@ class EnviarCuestionario(forms.ModelForm):
         widgets = {
             'archivo': forms.FileInput(attrs={'accept' : 'application/pdf'}),
         }
+
+class GrupoForm(forms.ModelForm):
+    class Meta:
+        model = Grupo
+        fields = '__all__'
+        widgets = {
+            'grupo': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_grupo'}),
+            'idInstitucion': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_idInstitucion'}),
+            'idPersonalTec': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_idPersonalTec'}),
+            'idEstado': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_idEstado'})
+        }

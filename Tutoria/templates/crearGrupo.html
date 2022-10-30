@@ -1,0 +1,6 @@
+{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}
+<div class="container">
+    {% csrf_token %}
+    {{formgrupo}}
+</div>
+{% endblock content %}

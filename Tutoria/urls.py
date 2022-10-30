@@ -23,6 +23,9 @@ urlpatterns = [
     path('gruposTutor/', views.gruposTutor, name = 'gruposTutor'),
     path('crearCuestionario/', views.crearCuestionario, name = 'crearCuestionario'),
     path('Tutor/CambioPassword', views.cambiarPasswordTutor, name = 'cambiarPasswordTutor'),
+
+    path('CoordinadorDepartamental/listaTutor', views.listaTutor, name = 'listaTutor'),
+    path('CoordinadorDepartamental/crearGrupo/<int:Tutor>', views.crearGrupo, name = 'crearGrupo'),
     
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),

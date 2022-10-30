@@ -99,6 +99,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'perfilTodos' %}">Perfil</a>
                         </li>
+                    {% else %}
+                        {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
+                            </li>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             {% endfor %}

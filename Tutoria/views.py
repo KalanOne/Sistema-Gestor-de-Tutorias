@@ -421,6 +421,45 @@ def cambiarPasswordTutor(request):
     })
 
 
+# Coordinador de Tutoria del Departamento Académico
+@login_required
+@group_required('Coordinador de Tutoria del Departamento Académico')
+def listaTutor(request):
+    try:
+        coordinador=get_object_or_404(PersonalTec, user_id=request.user.id)
+        tutores = PersonalTec.objects.filter(idDepartamentoAcademico_id=coordinador.idDepartamentoAcademico_id, idInstitucion_id=coordinador.idInstitucion_id)
+        lista=[]
+        lista_tutor=[]
+        for tutor in tutores:
+            usuario=get_object_or_404(User, id=tutor.user_id)
+            if usuario.groups.filter(name__in=['Tutor']):
+                lista=[tutor,usuario]
+                lista_tutor.append(lista)
+
+        return render(request, 'listaTutor.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Listar Tutores',
+            'tutores': lista_tutor,
+        })
+
+    except:
+        return render(request, 'listaTutor.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Listar Tutores'
+        })
+
+    
+@login_required
+@group_required('Coordinador de Tutoria del Departamento Académico')
+def crearGrupo(request, Tutor):
+    grupoform=GrupoForm()
+    return render(request, 'crearGrupo.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Crear Grupo',
+        'formgrupo': grupoform
+    })
+
+
 
 
 #pruebas
