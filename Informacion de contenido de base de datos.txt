@@ -118,7 +118,7 @@ Motivo:
     
     Médico:
         Dolor de cabeza
-        Dolor de ojos
+        Dolor de ojo
         Dolor de brazo
         Dolor de estómago
         Dolor de pierna
