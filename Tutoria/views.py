@@ -310,7 +310,6 @@ def editarInformacion(request):
 def misCitasTutorado(request):
     tutorado = Tutorado.objects.get(user_id = request.user.id)
     citasTutorado = Cita.objects.filter(idTutorado_id = tutorado.id)
-    print(citasTutorado.count)
     personalMed = PersonalMed.objects.filter(idInstitucion_id = tutorado.idInstitucion_id)
     ordenes = Orden.objects.get(nombreOrden = 'Psicológico')
     motivos = Motivo.objects.filter(idOrden_id = ordenes.id)
