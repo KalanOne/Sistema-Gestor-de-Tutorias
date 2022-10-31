@@ -434,13 +434,13 @@ class Cita(models.Model):
     horaInicio = models.TimeField(null = True, blank = True)
     horaFinal = models.TimeField(null = True, blank = True)
     horaCanalizacion = models.TimeField(null = True, blank = True)
-    lugar = models.CharField(max_length=50)
+    lugar = models.CharField(max_length=50, null = True, blank = True)
     descripcion = models.TextField(null = True, blank = True)
     idMotivo = models.ForeignKey('Motivo', on_delete=models.CASCADE)
     idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE, null = True, blank = True)
     idPersonalMed = models.ForeignKey('PersonalMed', on_delete=models.CASCADE, null = True, blank = True)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
+    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
     idOrden = models.ForeignKey('Orden', on_delete=models.CASCADE)
     
 

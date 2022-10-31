@@ -312,18 +312,65 @@ def misCitasTutorado(request):
     citasTutorado = Cita.objects.filter(idTutorado_id = tutorado.id)
     print(citasTutorado.count)
     personalMed = PersonalMed.objects.filter(idInstitucion_id = tutorado.idInstitucion_id)
+    ordenes = Orden.objects.get(nombreOrden = 'Psicológico')
+    motivos = Motivo.objects.filter(idOrden_id = ordenes.id)
+    form = SolicitudCitaFormTutorado()
+    form.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]
     if tutorado.idGrupo is None:
         cuentaGrupo = 0
     else:
         cuentaGrupo = 1
-    return render(request, 'miscitas.html',{
-        'gruops': request.user.groups.all(),
-        'title': 'Ayuda Psicologica',
-        'cuentaGrupo': cuentaGrupo,
-        'citas': citasTutorado,
-        'personalMeds': personalMed,
-        'form': SolicitudCitaFormTutorado
-    })
+
+    if request.method == 'GET':
+        return render(request, 'miscitas.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Ayuda Psicologica',
+            'cuentaGrupo': cuentaGrupo,
+            'citas': citasTutorado,
+            'personalMeds': personalMed,
+            'form': form
+        })
+    else:
+        formsolicitud = SolicitudCitaFormTutorado(request.POST)
+        if formsolicitud.is_valid():
+            try:
+                estadosCitas = Estado.objects.get(estado = 'Espera')
+                nuevaSolicitud = formsolicitud.save(commit = False)
+                nuevaSolicitud.folio = request.user.username + '-' + datetime.datetime.now().strftime("%Y/%m/%d") + '-' + request.user.username
+                nuevaSolicitud.idTutorado_id = tutorado.id
+                nuevaSolicitud.idOrden_id = ordenes.id
+                nuevaSolicitud.idEstado_id = estadosCitas.id
+                nuevaSolicitud.save()
+                return render(request, 'miscitas.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Ayuda Psicologica',
+                    'cuentaGrupo': cuentaGrupo,
+                    'citas': citasTutorado,
+                    'personalMeds': personalMed,
+                    'form': form,
+                    'exito': 'Solicitud creada con éxito'
+                })
+            except:
+                return render(request, 'miscitas.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Ayuda Psicologica',
+                    'cuentaGrupo': cuentaGrupo,
+                    'citas': citasTutorado,
+                    'personalMeds': personalMed,
+                    'form': form,
+                    'error': 'No se ha podido procesar la solicitud'
+                })
+        else:
+            return render(request, 'miscitas.html',{
+                'gruops': request.user.groups.all(),
+                'title': 'Ayuda Psicologica',
+                'cuentaGrupo': cuentaGrupo,
+                'citas': citasTutorado,
+                'personalMeds': personalMed,
+                'form': form,
+                'error': 'No se ha podido procesar la solicitud'
+            })
+
 
 @login_required
 @group_required('Tutorado')

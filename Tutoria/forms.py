@@ -94,8 +94,8 @@ class SolicitudCitaFormTutorado(forms.ModelForm):
         fields = {'idMotivo', 'descripcion'}
         labels = {
             'idMotivo': ('Motivo'),
-            'descripcion': ('Descripción')
+            'descripcion': ('Descripción (Opcional)')
         }
         widgets = {
-            'descripcion': forms.Textarea(attrs={'rows' : 5}),
+            'descripcion': forms.Textarea(attrs={'rows' : 5})
         }

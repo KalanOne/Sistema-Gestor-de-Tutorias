@@ -1,11 +1,26 @@
 {% extends 'layout/basicCNMenu.html' %}{% block content %} {% load crispy_forms_tags %}
     <div class="container">
-        <div class="row">
-            <div class="col-12 mb-5">
+        <div class="row mb-5">
+            <div class="col-12">
                 <h1 class="text-center h1">
                     Ayuda psicologica
                 </h1>
             </div>
+        </div>
+        <div class="row">
+            {% if error is not none %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <div>{{ error }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>                
+            {% endif %}
+
+            {% if exito is not none %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <div>{{ exito }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
         </div>
         <div class="row mb-5">
             <div class="col-md-3"></div>
@@ -39,66 +54,68 @@
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-10">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th colspan="10" style="background-color: #1B396A;" class="rounded-top text-center text-white">Citas agendadas</th>
-                        </tr>
-                    </thead>
-                    <thead>
-                        <tr style="background-color: #e3f2fd;">
-                            <th scope="col">#</th>
-                            <th scope="col">Fecha de solicitud</th>
-                            <th scope="col">Fecha de asignación</th>
-                            <th scope="col">Fecha de cita</th>
-                            <th scope="col">Rango de atención</th>
-                            <th scope="col">Lugar de atención</th>
-                            <th scope="col">Hora de atención</th>
-                            <th scope="col">Personal Médico</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-secondary">
-                        {% for cita in citas %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
-                                <th scope="row">1</th>
-                                <td>{{ cita.fechaSolicitud }}</td>
-                                <td>{{ cita.fechaAsignacion }}</td>
-                                <td>{{ cita.fechaCita }}</td>
-                                <td>{{ cita.horaInicio }} - {{ cita.horaFinal }}</td>
-                                <td>{{ cita.lugar }}</td>
-                                <td>{{ cita.horaCanalizacion }}</td>
-                                <td>{{ cita.idPersonalMed.user.first_name }} {{ cita.idPersonalMed.user.last_name }}</td>
+                                <th colspan="10" style="background-color: #1B396A;" class="rounded-top text-center text-white">Citas agendadas</th>
                             </tr>
-                        {% endfor %}
-                        {% comment %} <tr>
-                            <th scope="row">1</th>
-                            <td>20/10/2022</td>
-                            <td>21/10/2022</td>
-                            <td>22/10/2022</td>
-                            <td>13:00 - 18:00</td>
-                            <td>Edificio AG cubículo de psicólogo</td>
-                            <td>14:15</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>20/10/2022</td>
-                            <td>21/10/2022</td>
-                            <td>22/10/2022</td>
-                            <td>13:00 - 18:00</td>
-                            <td>Edificio AG cubículo de psicólogo</td>
-                            <td>14:15</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>20/10/2022</td>
-                            <td>21/10/2022</td>
-                            <td>22/10/2022</td>
-                            <td>13:00 - 18:00</td>
-                            <td>Edificio AG cubículo de psicólogo</td>
-                            <td>14:15</td>
-                        </tr> {% endcomment %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <thead>
+                            <tr style="background-color: #e3f2fd;">
+                                <th scope="col">#</th>
+                                <th scope="col">Motivo</th>
+                                <th scope="col">Fecha de solicitud</th>
+                                <th scope="col">Fecha de asignación</th>
+                                <th scope="col">Fecha de cita</th>
+                                <th scope="col">Rango de atención</th>
+                                <th scope="col">Lugar de atención</th>
+                                <th scope="col">Hora de atención</th>
+                                <th scope="col">Personal Médico</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-secondary">
+                            {% for cita in citas %}
+                                <tr>
+                                    <th scope="row">{{ cita.id }}</th>
+                                    <td>{{ cita.idMotivo.nombre }}</td>
+                                    <td>{{ cita.fechaSolicitud }}</td>
+                                    {% if cita.fechaAsignacion is none %}
+                                        <td>Aun asigada</td>
+                                        <td>Aun asigada</td>
+                                        <td>Aun asigada</td>
+                                        <td>Aun asigada</td>
+                                    {% else %}
+                                        <td>{{ cita.fechaAsignacion }}</td>
+                                        <td>{{ cita.fechaCita }}</td>
+                                        <td>{{ cita.horaInicio }} - {{ cita.horaFinal }}</td>
+                                        <td>{{ cita.lugar }}</td>
+                                    {% endif %}
+                                    {% if cita.horaCanalizacion is none %}
+                                        <td>Aun no canalizado</td>
+                                    {% else %}
+                                        <td>{{ cita.horaCanalizacion }}</td>
+                                    {% endif %}
+                                    {% if cita.fechaAsignacion is none %}
+                                        <td>Aun asigada</td>
+                                    {% else %}
+                                        <td>{{ cita.idPersonalMed.user.first_name }} {{ cita.idPersonalMed.user.last_name }}</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            {% comment %} <tr>
+                                <th scope="row">1</th>
+                                <td>20/10/2022</td>
+                                <td>21/10/2022</td>
+                                <td>22/10/2022</td>
+                                <td>13:00 - 18:00</td>
+                                <td>Edificio AG cubículo de psicólogo</td>
+                                <td>14:15</td>
+                            </tr> {% endcomment %}
+                        </tbody>
+                    </table>
+                </div>
+                
             </div>
             <div class="col-md-1"></div>   
         </div>
