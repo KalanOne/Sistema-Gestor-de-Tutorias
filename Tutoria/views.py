@@ -16,7 +16,8 @@ def group_required(*group_names):
     """ Grupos, checar si pertenece a grupo """
 
     def check(user):
-        if user.groups.filter(name__in=group_names).exists() | user.is_superuser:
+        # if user.groups.filter(name__in=group_names).exists() | user.is_superuser:
+        if user.groups.filter(name__in=group_names).exists():
             return True
         else:
             return False
@@ -308,6 +309,9 @@ def editarInformacion(request):
 @group_required('Tutorado')
 def misCitasTutorado(request):
     tutorado = Tutorado.objects.get(user_id = request.user.id)
+    citasTutorado = Cita.objects.filter(idTutorado_id = tutorado.id)
+    print(citasTutorado.count)
+    personalMed = PersonalMed.objects.filter(idInstitucion_id = tutorado.idInstitucion_id)
     if tutorado.idGrupo is None:
         cuentaGrupo = 0
     else:
@@ -315,7 +319,10 @@ def misCitasTutorado(request):
     return render(request, 'miscitas.html',{
         'gruops': request.user.groups.all(),
         'title': 'Ayuda Psicologica',
-        'cuentaGrupo': cuentaGrupo
+        'cuentaGrupo': cuentaGrupo,
+        'citas': citasTutorado,
+        'personalMeds': personalMed,
+        'form': SolicitudCitaFormTutorado
     })
 
 @login_required

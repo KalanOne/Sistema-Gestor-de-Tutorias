@@ -180,6 +180,7 @@ class Cuestionario(models.Model):
         db_table= 'cuestionario'
         ordering= ['id']
 
+
 class CuestionarioContestado(models.Model):
     archivo = models.FileField(upload_to = 'Respuestas/Cuestionarios/%Y/%m/%d')
     idCuestionario = models.ForeignKey('Cuestionario', on_delete=models.CASCADE)
@@ -395,7 +396,7 @@ class Orden(models.Model):
     
 
     def Mostrar(self):
-        return "{} - {}".format(self.nombreOrden)
+        return "{}".format(self.nombreOrden)
 
     def __str__(self):
         return self.Mostrar()
@@ -413,7 +414,7 @@ class Motivo(models.Model):
     
 
     def Mostrar(self):
-        return "{} - {}".format(self.nombre)
+        return "{}".format(self.nombre)
 
     def __str__(self):
         return self.Mostrar()
@@ -427,12 +428,14 @@ class Motivo(models.Model):
 
 class Cita(models.Model):
     folio = models.CharField(max_length=50)
-    fecha = models.DateField()
+    fechaSolicitud = models.DateField(auto_now_add = True, editable = False)
+    fechaAsignacion = models.DateField(null = True, blank = True)
+    fechaCita = models.DateField(null = True, blank = True)
     horaInicio = models.TimeField(null = True, blank = True)
     horaFinal = models.TimeField(null = True, blank = True)
     horaCanalizacion = models.TimeField(null = True, blank = True)
     lugar = models.CharField(max_length=50)
-    descripcion = models.CharField(max_length=300, null = True, blank = True)
+    descripcion = models.TextField(null = True, blank = True)
     idMotivo = models.ForeignKey('Motivo', on_delete=models.CASCADE)
     idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE, null = True, blank = True)
@@ -442,7 +445,7 @@ class Cita(models.Model):
     
 
     def Mostrar(self):
-        return "{} - {}".format(self.folio)
+        return "{}".format(self.folio)
 
     def __str__(self):
         return self.Mostrar()

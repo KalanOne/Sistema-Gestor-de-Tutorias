@@ -28,7 +28,6 @@ class PerfilTutoradoForm(forms.ModelForm):
             'semestre': forms.TextInput(attrs={'class':'form-control', 'id':'Tutorado_semestre'})
         }
 
-
 class PadreMadreTutorForm(forms.ModelForm):
     class Meta:
         model = PadreMadreTutor
@@ -39,7 +38,6 @@ class PadreMadreTutorForm(forms.ModelForm):
             'telefonotutor': forms.TextInput(attrs={'class':'form-control', 'id':'PadreMadreTutor_telefono'})
         }
 
-
 class GrupoForm(forms.ModelForm):
     class Meta:
         model = Grupo
@@ -47,7 +45,6 @@ class GrupoForm(forms.ModelForm):
         widgets = {
             'grupo': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_grupo'})
         }
-
 
 class DepartamentoAcademicoForm(forms.ModelForm):
     class Meta:
@@ -57,7 +54,6 @@ class DepartamentoAcademicoForm(forms.ModelForm):
             'departamentoAcademico': forms.TextInput(attrs={'class':'form-control', 'id':'DepartamentoAcademico_departamentoAcademico'}),
             'abreviacion': forms.TextInput(attrs={'class':'form-control', 'id':'DepartamentoAcademico_abreviacion'})
         }
-
 
 class PerfilPersonalTecForm(forms.ModelForm):
     class Meta:
@@ -71,12 +67,11 @@ class PerfilPersonalTecForm(forms.ModelForm):
         }
 
 class EnviarCuestionario(forms.ModelForm):
-    # file = forms.FileField(label='Sube tu archivo', required=False, widget=forms.FileInput(attrs={'accept' : 'application/pdf'}))
     class Meta:
         model = CuestionarioContestado
         fields = {'archivo'}
         labels = {
-            'archivo': ('Sube tu archivo'),
+            'archivo': ('Sube tu archivo')
         }
         widgets = {
             'archivo': forms.FileInput(attrs={'accept' : 'application/pdf'}),
@@ -91,4 +86,16 @@ class GrupoForm(forms.ModelForm):
             'idInstitucion': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_idInstitucion'}),
             'idPersonalTec': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_idPersonalTec'}),
             'idEstado': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_idEstado'})
+        }
+
+class SolicitudCitaFormTutorado(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = {'idMotivo', 'descripcion'}
+        labels = {
+            'idMotivo': ('Motivo'),
+            'descripcion': ('Descripción')
+        }
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'rows' : 5}),
         }
