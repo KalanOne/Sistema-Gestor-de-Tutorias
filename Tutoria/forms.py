@@ -1,10 +1,8 @@
-from cProfile import label
-from dataclasses import fields
-from pyexpat import model
 from django import forms
 from django.forms import Widget
 from .models import *
 from django.contrib.auth.models import User
+import datetime
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -98,4 +96,18 @@ class SolicitudCitaFormTutorado(forms.ModelForm):
         }
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows' : 5})
+        }
+
+class CrearCuestionarioForm(forms.ModelForm):
+    class Meta:
+        model = Cuestionario
+        fields = {'nombre', 'fechaLimite', 'archivo', 'idGrupo'}
+        labels = {
+            'nombre': ('Nombre de cuestionario'),
+            'fechaLimite': ('Fecha límite'),
+            'archivo': ('Archivo'),
+            'idGrupo': ('Grupo')
+        }
+        widgets = {
+            'fechaLimite': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today(),})
         }

@@ -9,7 +9,7 @@
             <h1 class="text-center h1">
                 {{ cuestionario.nombre }}
             </h1>
-            Archivo: <a href="{% static cuestionario.ruta %}" download=""><i class="bi bi-download mx-2"></i></a>
+            Archivo: <a href="{{ cuestionario.archivo.url }}" download=""><i class="bi bi-download mx-2"></i></a>
             <form method="post" enctype = "multipart/form-data">
                 {% csrf_token %}
                 {{ form|crispy }}

@@ -1,6 +1,3 @@
-from distutils.log import error
-from this import d
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
@@ -446,10 +443,46 @@ def a2(request):
 @login_required
 @group_required('Tutor')
 def crearCuestionario(request):
-    return render(request, 'crear_cuestionario.html',{
-        'gruops': request.user.groups.all(),
-        'title': 'Grupos'
-    })
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    estados = Estado.objects.get(estado = 'Activo')
+    grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id, idEstado_id = estados.id)
+    form = CrearCuestionarioForm()
+    form.fields['idGrupo'].choices = [(grupo.id, grupo.grupo) for grupo in grupos]
+    if request.method == 'GET':
+        return render(request, 'crear_cuestionario.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Crear cuestionario',
+            'form': form
+        })
+    else:
+        formCuestionario = CrearCuestionarioForm(request.POST, request.FILES)
+        if formCuestionario.is_valid():
+            try:
+                cuestionarioNuevo = formCuestionario.save(commit = False)
+                cuestionarioNuevo.idPersonalTec_id = tutor.id
+                cuestionarioNuevo.idEstado_id = estados.id
+                cuestionarioNuevo.save()
+                return render(request, 'crear_cuestionario.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Crear cuestionario',
+                    'form': form,
+                    'exito': 'Se ha creado con éxito el cuestionario'
+                })
+            except:
+                return render(request, 'crear_cuestionario.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Crear cuestionario',
+                    'form': formCuestionario,
+                    'error': 'No se ha podido crear el cuestionario'
+                })
+        else:
+            return render(request, 'crear_cuestionario.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Crear cuestionario',
+                    'form': formCuestionario,
+                    'error': 'No se ha podido crear el cuestionario'
+                })
+
 
 @login_required
 @group_required('Tutor')

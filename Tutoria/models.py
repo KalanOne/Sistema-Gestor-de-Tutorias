@@ -163,10 +163,10 @@ class Cuestionario(models.Model):
     nombre = models.CharField(max_length=100)
     fechaPublicado = models.DateField(default=now, editable=False)
     fechaLimite = models.DateField()
-    ruta = models.CharField(max_length=300, null = True, blank = True)
+    archivo = models.FileField(upload_to = 'Cuestionarios/Asignacion/%Y/%m/%d')
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
-    idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE, null = True, blank = True)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
+    idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE)
+    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
 
     def Mostrar(self):
         return "{} - {}".format(self.nombre, self.idPersonalTec)
@@ -182,7 +182,7 @@ class Cuestionario(models.Model):
 
 
 class CuestionarioContestado(models.Model):
-    archivo = models.FileField(upload_to = 'Respuestas/Cuestionarios/%Y/%m/%d')
+    archivo = models.FileField(upload_to = 'Cuestionarios/Respuesta/%Y/%m/%d')
     idCuestionario = models.ForeignKey('Cuestionario', on_delete=models.CASCADE)
     idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
 
