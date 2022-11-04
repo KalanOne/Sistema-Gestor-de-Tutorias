@@ -169,7 +169,7 @@ def enviarCuestionarioTutorado(request, cuestionario_id):
                     'title': 'Enviar cuestionario',
                     'cuentaGrupo': cuentaGrupo,
                     'cuestionario': cuestionario,
-                    'form': EnviarCuestionario,
+                    'form': EnviarCuestionario(instance = respondido),
                     'contestado' : contestado
                 })
             except:
@@ -199,10 +199,21 @@ def enviarCuestionarioTutorado(request, cuestionario_id):
                                 'title': 'Enviar cuestionario',
                                 'cuentaGrupo': cuentaGrupo,
                                 'cuestionario': cuestionario,
-                                'form': EnviarCuestionario,
+                                'form': form,
                                 'error': 'Error al enviar el archivo, por favor intentelo de nuevo',
                                 'contestado' : 0
                             })
+                    else:
+                        cuentaGrupo = 1
+                        return render(request, 'enviarCuestionarioTutorado.html', {
+                            'gruops': request.user.groups.all(),
+                            'title': 'Enviar cuestionario',
+                            'cuentaGrupo': cuentaGrupo,
+                            'cuestionario': cuestionario,
+                            'form': form,
+                            'error': 'Error al enviar el archivo, por favor intentelo de nuevo',
+                            'contestado' : 0
+                        })
         else:
             return redirect('paginaInicio')
 
@@ -353,7 +364,7 @@ def misCitasTutorado(request):
                     'cuentaGrupo': cuentaGrupo,
                     'citas': citasTutorado,
                     'personalMeds': personalMed,
-                    'form': form,
+                    'form': formsolicitud,
                     'error': 'No se ha podido procesar la solicitud'
                 })
         else:
@@ -363,7 +374,7 @@ def misCitasTutorado(request):
                 'cuentaGrupo': cuentaGrupo,
                 'citas': citasTutorado,
                 'personalMeds': personalMed,
-                'form': form,
+                'form': formsolicitud,
                 'error': 'No se ha podido procesar la solicitud'
             })
 
@@ -436,9 +447,6 @@ def perfilTodos(request):
         'formperfilPersonalTec': perfilPersonalTecform,
         'formdepartamentoacademico': departamentoacademicoform
     })
-
-def a2(request):
-    return render(request, 'Creacion_usuarios_tutores.html')
 
 @login_required
 @group_required('Tutor')
