@@ -3,6 +3,7 @@ from django.forms import Widget
 from .models import *
 from django.contrib.auth.models import User
 import datetime
+from crispy_forms.helper import FormHelper
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -78,13 +79,12 @@ class EnviarCuestionario(forms.ModelForm):
 class GrupoForm(forms.ModelForm):
     class Meta:
         model = Grupo
-        fields = '__all__'
-        widgets = {
-            'grupo': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_grupo'}),
-            'idInstitucion': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_idInstitucion'}),
-            'idPersonalTec': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_idPersonalTec'}),
-            'idEstado': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_idEstado'})
+        fields = {'grupo','idEstado'}
+        labels = {
+            'grupo': ('Grupo'),
+            'idEstado': ('Estado')
         }
+    
 
 class SolicitudCitaFormTutorado(forms.ModelForm):
     class Meta:

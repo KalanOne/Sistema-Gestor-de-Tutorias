@@ -38,9 +38,14 @@ class Institucion(models.Model):
 
 
 class Grupo(models.Model):
-    grupo = models.CharField(max_length=100)
-    idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
-    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
+    opciones=(
+            ('A','A'),
+            ('B','B'),
+            ('C','C')
+    )   
+    grupo = models.CharField(max_length=100, blank=True, null=True, choices=opciones)
+    idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE, null = True, blank = True)
+    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
 
     def Mostrar(self):

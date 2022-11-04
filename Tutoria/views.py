@@ -546,15 +546,54 @@ def listaTutor(request):
 @login_required
 @group_required('Coordinador de Tutoria del Departamento Académico')
 def crearGrupo(request, Tutor):
-    grupoform=GrupoForm()
-    return render(request, 'crearGrupo.html', {
+    if request.method == 'GET':
+        grupoform=GrupoForm()
+        return render(request, 'crearGrupo.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Crear Grupo',
+            'formgrupo': grupoform
+        })
+    else:
+
+        
+        grupoform=GrupoForm(request.POST)
+
+        if grupoform.is_valid():
+            try:
+                tutor=PersonalTec.objects.get(id=Tutor)
+                post=grupoform.save(commit=False)
+                post.grupo="ISC-"+request.POST['grupo']
+                post.idInstitucion_id=tutor.idInstitucion_id
+                post.idPersonalTec_id=Tutor
+                post.save()
+                return redirect('verGruposDelTutor',Tutor)
+            except:
+                grupoform=GrupoForm()
+                return render(request, 'crearGrupo.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Crear Grupo',
+                    'formgrupo': grupoform
+                })
+        else:
+            grupoform=GrupoForm()
+            return render(request, 'crearGrupo.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Crear Grupo',
+                'formgrupo': grupoform
+            })
+        
+
+@login_required
+@group_required('Coordinador de Tutoria del Departamento Académico')
+def verGruposDelTutor(request, Tutor):
+    print(Tutor)
+    grupos=Grupo.objects.filter(idPersonalTec_id=Tutor)
+    return render(request, 'verGrupoDelTutor.html', {
         'gruops': request.user.groups.all(),
         'title': 'Crear Grupo',
-        'formgrupo': grupoform
+        'grupos': grupos,
+        'tutor':Tutor
     })
-
-
-
 
 #pruebas
 @login_required

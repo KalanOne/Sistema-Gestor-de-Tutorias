@@ -1,6 +1,16 @@
-{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}
+{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %} {%load crispy_forms_tags %}
 <div class="container">
-    {% csrf_token %}
-    {{formgrupo}}
+  <div class="row text-center mb-5">
+    <h4>Crear Grupo</h4>
+  </div>
+  <form method="POST">
+    {% csrf_token %} 
+    {{ formgrupo|crispy }}
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
+      <button type="submit" class="btn btn-sm btn-primary text-center m-1">
+        Crear
+      </button>
+    </div>
+  </form>
 </div>
 {% endblock content %}

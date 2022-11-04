@@ -1,0 +1,28 @@
+{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}
+<div class="container">
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <div class="row">
+      <div class="col">
+        <a href="{% url 'crearGrupo' tutor %}" class="btn btn-primary">Crear Grupo <i class="bi bi-plus-circle"></i></a>
+        
+      </div>
+    </div>
+  </div>
+  <div class="row row-cols-1 row-cols-md-3 g-3">
+    {% for grupo in grupos %}
+    <div class="col">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <h5 class="card-title">{{grupo.grupo}}</h5>
+          <p class="card-text my-4">{{grupo.idEstado}}</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="#" class="btn btn-primary">Eliminar Grupo</a>
+            <a href="#" class="btn btn-primary">Editar Grupo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}
