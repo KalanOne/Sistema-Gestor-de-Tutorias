@@ -1,4 +1,4 @@
-{% extends 'layout/basicCNMenu.html' %}{% load static %} {% block content %}
+{% extends 'layout/basicCNMenu.html' %}{% load static %} {% block content %} {% load crispy_forms_tags %}
 
 <form action="">
   {% csrf_token %}
@@ -101,7 +101,7 @@
                   <br />
                   <div class="row">
                     <div class="col-3" style="text-align: right">Grupo:</div>
-                    <div class="col-8">{{formgrupo.grupo}}</div>
+                    <div class="col-8">{{formgrupo.grupo|as_crispy_field}}</div>
                   </div>
                   <br />
                   <div class="row">
