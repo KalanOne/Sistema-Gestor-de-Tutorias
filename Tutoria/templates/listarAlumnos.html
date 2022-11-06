@@ -1,0 +1,66 @@
+{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}
+<div class="container">
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+    <div class="row">
+      <div class="col">
+        <a href="#" class="btn btn-primary"
+          >Agregar alumnos <i class="bi bi-person-plus-fill mx-2"></i
+        ></a>
+      </div>
+    </div>
+  </div>
+  {% if tieneAlumnos == True %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">N°Control</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Apellidos</th>
+        <th scope="col">Grupo</th>
+        <th scope="col">Accciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for alumno,usuario in lista %}
+      <tr>
+        <td>{{usuario.id}}</td>
+        <td>{{usuario.first_name}}</td>
+        <td>{{usuario.last_name}}</td>
+        <td>{{alumno.idGrupo}}</td>
+        <td>
+          <div class="row text">
+            <div class="col">
+              <a
+                class="mx-2"
+                href="#"
+                style="text-decoration: none; color: black"
+              >
+                <i class="bi bi-person-circle"></i>
+              </a>
+              <a
+                class="mx-2"
+                href="#"
+                style="text-decoration: none; color: black"
+              >
+                <i class="bi bi-pencil-square"></i>
+              </a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="container">
+    <div class="row">
+      <div class="col-1 col-md-3"></div>
+      <div class="col-10 col-md-6 bg-light shadow p-3 mb-5 rounded">
+        <h6 class="text-center">Este grupo no tiene alumnos registrados</h6>
+      </div>
+      <div class="col-1 col-md-3"></div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

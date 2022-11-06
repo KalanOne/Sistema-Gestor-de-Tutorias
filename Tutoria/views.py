@@ -595,6 +595,29 @@ def verGruposDelTutor(request, Tutor):
         'tutor':Tutor
     })
 
+@login_required
+@group_required('Coordinador de Tutoria del Departamento Académico')
+def listarAlumnos(request, Grupoid):
+
+    if request.method == 'GET':
+        listaAlumnos=Tutorado.objects.filter(idGrupo_id=Grupoid)
+        tieneAlumnos=False
+        lista=[]
+        listaTutorado=[]
+        if listaAlumnos.count() > 0:
+            tieneAlumnos=True
+            for alumno in listaAlumnos:
+                usuario=get_object_or_404(User, id=alumno.user_id)
+                lista=[alumno,usuario]
+                listaTutorado.append(lista)         
+
+        return render(request, 'listarAlumnos.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Listar alumnos',
+            'lista': listaTutorado,
+            'tieneAlumnos':tieneAlumnos
+        })
+
 #pruebas
 @login_required
 def prueba(request):
