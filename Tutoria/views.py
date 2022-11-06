@@ -207,7 +207,7 @@ def Excel(request):
     excel_resource = ExcelResource()  
     dataset = Dataset()  
     print(dataset)  
-    nuevas_personas = request.FILES['xlsxfile']  #problemas
+    nuevas_personas = request.FILES['xlsfile']  #problemas
     #print(nuevas_personas)  
     imported_data = dataset.load(nuevas_personas.read())  
     print(dataset)  
