@@ -45,6 +45,18 @@ Estados:
     Reporte institucional:
         Aceptado
 
+    Orden final:
+        Activo
+        Inactivo
+        Cerrado
+        Espera
+        Citado
+        Alta
+        Baja
+        Aceptado
+        Rechazado
+
+
 Grupo de respuestas:
 
     1:
@@ -92,3 +104,22 @@ Grupo de respuestas:
         Seguido
         Casi siempre
         Siempre
+
+Orden:
+    Psicológico
+    Médico
+
+Motivo:
+    Psicológico:
+        Depresión
+        Ansiedad
+        Estrés
+        Adicción o transtorno por sustancias
+    
+    Médico:
+        Dolor de cabeza
+        Dolor de ojo
+        Dolor de brazo
+        Dolor de estómago
+        Dolor de pierna
+        Dolor de pie

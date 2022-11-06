@@ -9,9 +9,11 @@ urlpatterns = [
 
     #urls de tutorado
     path('Tutorado/Cuestionarios/', views.cuestionariosTutorado, name='cuestionariosTutorado'),
-    path('Tutorado/Cuestionarios/Realizar/<int:cuestionario_id>', views.cuestionariosTutorado, name='realizarCuestionarioTutorado'),
-    path('perfilTutorado/', views.perfilTutorado, name = 'perfilTutorado'),
-    path('miscitas/', views.miscitas, name = 'miscitas'),
+    path('Tutorado/Cuestionarios/Enviar/<int:cuestionario_id>', views.enviarCuestionarioTutorado, name='enviarCuestionarioTutorado'),
+    path('Tutorado/Perfil', views.perfilTutorado, name = 'perfilTutorado'),
+    path('Tutorado/Citas', views.misCitasTutorado, name = 'misCitasTutorado'),
+    path('Tutorado/CambioPassword', views.cambiarPassword, name = 'cambiarPassword'),
+    path('Tutorado/EditarInformacion', views.editarInformacion, name = 'editarInformacion'),
 
     #urls para todos menos el tutorado
     path('Documentacion/', views.Documentacion, name = 'documentos'),
@@ -20,6 +22,11 @@ urlpatterns = [
     path('perfilTodos/', views.perfilTodos, name = 'perfilTodos'),
     path('gruposTutor/', views.gruposTutor, name = 'gruposTutor'),
     path('crearCuestionario/', views.crearCuestionario, name = 'crearCuestionario'),
+    path('Tutor/CambioPassword', views.cambiarPasswordTutor, name = 'cambiarPasswordTutor'),
+
+    path('CoordinadorDepartamental/listaTutor', views.listaTutor, name = 'listaTutor'),
+    path('CoordinadorDepartamental/crearGrupo/<int:Tutor>', views.crearGrupo, name = 'crearGrupo'),
+    path('CoordinadorDepartamental/verGruposDelTutor/<int:Tutor>', views.verGruposDelTutor, name = 'verGruposDelTutor'),
     
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),

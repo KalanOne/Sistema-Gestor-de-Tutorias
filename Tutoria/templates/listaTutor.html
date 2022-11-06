@@ -1,0 +1,24 @@
+{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-3 g-3">
+    {% for tutor,usuario in tutores %}
+    <div class="col">
+      <div class="card h-100 text-center">
+        <img src="..." class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h5 class="card-title">
+            {{usuario.first_name}} {{usuario.last_name}}
+          </h5>
+          <p class="card-text my-4">{{tutor.idDepartamentoAcademico}}</p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{% url 'verGruposDelTutor' tutor.id %}" class="btn btn-primary"
+              >Ver Grupos</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}

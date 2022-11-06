@@ -1,4 +1,3 @@
-from pyexpat import model
 from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -39,9 +38,14 @@ class Institucion(models.Model):
 
 
 class Grupo(models.Model):
-    grupo = models.CharField(max_length=100)
-    idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
-    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
+    opciones=(
+            ('A','A'),
+            ('B','B'),
+            ('C','C')
+    )   
+    grupo = models.CharField(max_length=100, blank=True, null=True, choices=opciones)
+    idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE, null = True, blank = True)
+    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
 
     def Mostrar(self):
@@ -77,12 +81,11 @@ class DepartamentoAcademico(models.Model):
 
 class PadreMadreTutor(models.Model):
     nombre = models.CharField(max_length=100)
-    apellidoPaterno = models.CharField(max_length=100)
-    apellidoMaterno = models.CharField(max_length=100)
-    telefono = models.CharField(max_length=10)
+    apellidos = models.CharField(max_length=100)
+    telefonotutor = models.CharField(max_length=10)
 
     def Mostrar(self):
-        return "{} {}, {}".format(self.apellidoPaterno, self.apellidoMaterno, self.nombre)
+        return "{}, {}".format(self.apellidos, self.nombre)
 
     def __str__(self):
         return self.Mostrar()
@@ -165,9 +168,10 @@ class Cuestionario(models.Model):
     nombre = models.CharField(max_length=100)
     fechaPublicado = models.DateField(default=now, editable=False)
     fechaLimite = models.DateField()
+    archivo = models.FileField(upload_to = 'Cuestionarios/Asignacion/%Y/%m/%d')
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
-    idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE, null = True, blank = True)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
+    idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE)
+    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
 
     def Mostrar(self):
         return "{} - {}".format(self.nombre, self.idPersonalTec)
@@ -179,6 +183,24 @@ class Cuestionario(models.Model):
         verbose_name= 'Cuestionario'
         verbose_name_plural= 'Cuestionarios'
         db_table= 'cuestionario'
+        ordering= ['id']
+
+
+class CuestionarioContestado(models.Model):
+    archivo = models.FileField(upload_to = 'Cuestionarios/Respuesta/%Y/%m/%d')
+    idCuestionario = models.ForeignKey('Cuestionario', on_delete=models.CASCADE)
+    idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
+
+    def Mostrar(self):
+        return "{} - {} - {}".format(self.idTutorado_id, self.idCuestionario_id, self.archivo)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'CuestionarioContestado'
+        verbose_name_plural= 'CuestionarioContestados'
+        db_table= 'cuestionarioContestado'
         ordering= ['id']
 
 
@@ -379,7 +401,7 @@ class Orden(models.Model):
     
 
     def Mostrar(self):
-        return "{} - {}".format(self.nombreOrden)
+        return "{}".format(self.nombreOrden)
 
     def __str__(self):
         return self.Mostrar()
@@ -397,7 +419,7 @@ class Motivo(models.Model):
     
 
     def Mostrar(self):
-        return "{} - {}".format(self.nombre)
+        return "{}".format(self.nombre)
 
     def __str__(self):
         return self.Mostrar()
@@ -411,22 +433,24 @@ class Motivo(models.Model):
 
 class Cita(models.Model):
     folio = models.CharField(max_length=50)
-    fecha = models.DateField()
+    fechaSolicitud = models.DateField(auto_now_add = True, editable = False)
+    fechaAsignacion = models.DateField(null = True, blank = True)
+    fechaCita = models.DateField(null = True, blank = True)
     horaInicio = models.TimeField(null = True, blank = True)
     horaFinal = models.TimeField(null = True, blank = True)
     horaCanalizacion = models.TimeField(null = True, blank = True)
-    lugar = models.CharField(max_length=50)
-    descripcion = models.CharField(max_length=300, null = True, blank = True)
+    lugar = models.CharField(max_length=50, null = True, blank = True)
+    descripcion = models.TextField(null = True, blank = True)
     idMotivo = models.ForeignKey('Motivo', on_delete=models.CASCADE)
     idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE, null = True, blank = True)
     idPersonalMed = models.ForeignKey('PersonalMed', on_delete=models.CASCADE, null = True, blank = True)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
+    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
     idOrden = models.ForeignKey('Orden', on_delete=models.CASCADE)
     
 
     def Mostrar(self):
-        return "{} - {}".format(self.folio)
+        return "{}".format(self.folio)
 
     def __str__(self):
         return self.Mostrar()

@@ -68,46 +68,46 @@
                 ><i class="bi bi-house"></i
               ></a>
             </li>
-            {% for group in gruops %} {% if group.name == 'Tutorado' %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'cuestionariosTutorado' %}"
-                >Cuestionarios</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'miscitas' %}"
-                >Ayuda Psicologica</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'perfilTutorado' %}">Perfil</a>
-            </li>
-            {% else %} {% if group.name == 'Tutor' %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'documentos' %}">Documentos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'gruposTutor' %}">Grupos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'crearCuestionario' %}"
-                >Crear cuestionario</a
-              >
-            </li>
-            {% comment %} de momento la pantalla de ver resultados no esta creada asi que redirige a la pantalla cuestionario {% endcomment %}
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="{% url 'crearCuestionario' %}"
-                >Resultados de cuestionarios</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'perfilTodos' %}"
-                >Perfil</a
-              >
-            </li>
-            {% endif %} {% endif %} {% endfor %}
+            {% for group in gruops %}
+                {% if group.name == 'Tutorado' %}
+                    {% if cuentaGrupo == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cuestionariosTutorado' %}">Cuestionarios</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'misCitasTutorado' %}">Ayuda Psicologica</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'perfilTutorado' %}">Perfil</a>
+                    </li>
+                {% else %}
+                    {% if group.name == 'Tutor' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'documentos' %}">Documentos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'gruposTutor' %}">Grupos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'crearCuestionario' %}">Crear cuestionario</a>
+                        </li>
+                        {% comment %} de momento la pantalla de ver resultados no esta creada asi que redirige a la pantalla cuestionario {% endcomment %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'crearCuestionario' %}">Resultados de cuestionarios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'perfilTodos' %}">Perfil</a>
+                        </li>
+                    {% else %}
+                        {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
           </ul>
         </div>
         <div class="text-end my-sm-2 my-md-0">

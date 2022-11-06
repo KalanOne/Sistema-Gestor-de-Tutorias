@@ -1,87 +1,76 @@
-{% extends 'layout/basicCNMenu.html' %} {% block content %}
+{% extends 'layout/basicCNMenu.html' %} {% block content %} {% load static %}
 <div class="container">
-  <h3 class="mt-4">Elije un periodo semestral para iniciar</h3>
-  <select
-    class="rounded form-select form-select-sm"
-    name="Documentos"
-    id="documentos"
-  >
-    <option value="2022P1">2022 Periodo 1</option>
-    <option value="2022P2">2022 Periodo 2</option>
-    <option value="2022P3">2022 Periodo 3</option>
-  </select>
-  <div class="row mt-5">
-    <div class="col-1"></div>
-    <div class="d-grid gap-3 col-10">
-      <div class="p-2 border row rounded" style="background-color: #d9d9d9">
-        <div class="col-10">Diagnostico Institucional de Tutorias</div>
-        <div class="col-2">
-          <div class="row">
-            <div class="col">
-              <a class="nav-link active" aria-current="page" href="#"
-                ><i class="bi bi-printer"></i
-              ></a>
-            </div>
-            <div class="col">
-              <a class="nav-link active" aria-current="page" href="#"
-                ><i class="bi bi-download"></i
-              ></a>
-            </div>
-          </div>
+    <div class="row mb-5">
+        <h3 class="text-center mb-4">Elije un periodo semestral para iniciar</h3>
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form method="post">
+                <select class="form-select form-select-sm" name="Documentos" id="documentos">
+                    <option value="2022P1">2022 Periodo 1</option>
+                    <option value="2022P2">2022 Periodo 2</option>
+                    <option value="2022P3">2022 Periodo 3</option>
+                </select>
+            </form>
         </div>
-      </div>
-      <div class="p-2 border row rounded" style="background-color: #d9d9d9">
-        <div class="col-10">PAT ISC</div>
-        <div class="col-2">
-          <div class="row">
-            <div class="col">
-              <a class="nav-link active" aria-current="page" href="#"
-                ><i class="bi bi-printer"></i
-              ></a>
-            </div>
-            <div class="col">
-              <a class="nav-link active" aria-current="page" href="#"
-                ><i class="bi bi-download"></i
-              ></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="p-2 border row rounded" style="background-color: #d9d9d9">
-        <div class="col-10">PAT Industrial</div>
-        <div class="col-2">
-          <div class="row">
-            <div class="col">
-              <a class="nav-link active" aria-current="page" href="#"
-                ><i class="bi bi-printer"></i
-              ></a>
-            </div>
-            <div class="col">
-              <a class="nav-link active" aria-current="page" href="#"
-                ><i class="bi bi-download"></i
-              ></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="p-2 border row rounded" style="background-color: #d9d9d9">
-        <div class="col-10">PIT</div>
-        <div class="col-2">
-          <div class="row">
-            <div class="col">
-              <a class="nav-link active" aria-current="page" href="#"
-                ><i class="bi bi-printer"></i
-              ></a>
-            </div>
-            <div class="col">
-              <a class="nav-link active" aria-current="page" href="#"
-                ><i class="bi bi-download"></i
-              ></a>
-            </div>
-          </div>
-        </div>
-      </div>
+        <div class="col-md-2"></div>
     </div>
-  </div>
+
+    <div class="row mb-1">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="d-grid gap-2">
+                <button class="btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false">
+                    <div class="row">
+                        <div class="col-10 text-start">PIT</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <embed src="{% static 'Aviso_de_Privacidad_Simplificado.pdf' %}" type="application/pdf" width="100%" height="600px" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <div class="row mb-1">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="d-grid gap-2">
+                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false">
+                    <div class="row">
+                        <div class="col-10 text-start">PIT</div>
+                        <div class="col-1">
+                            <a class="nav-link active" aria-current="page" href="#"
+                            ><i class="bi bi-printer"></i></a>
+                        </div>
+                        <div class="col-1">
+                            <a class="nav-link active" aria-current="page" href="#"
+                            ><i class="bi bi-download"></i></a>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="collapse" id="collapseExample2">
+                <div class="card card-body">
+                    <iframe src="http://docs.google.com/gview?url=http://127.0.0.1:8000{% static 'Aviso_de_Privacidad_Simplificado.pdf' %}&embedded=true" style="width:100%; height:600px;" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
 </div>
 {% endblock content %}
