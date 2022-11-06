@@ -3,8 +3,12 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
+from tablib import Dataset
+
+from .resources import ExcelResource 
 from .models import *
 from .forms import *
+
 import datetime
 # Create your views here.
 
@@ -194,3 +198,21 @@ def prueba(request):
     return render(request, 'prueba.html', {
         'groups': request.user.groups.all()
     })
+
+@login_required
+
+ 
+def Excel(request):  
+   #template = loader.get_template('export/importar.html')  if request.method == 'POST':  
+    excel_resource = ExcelResource()  
+    dataset = Dataset()  
+    print(dataset)  
+    nuevas_personas = request.FILES['xlsxfile']  #problemas
+    #print(nuevas_personas)  
+    imported_data = dataset.load(nuevas_personas.read())  
+    print(dataset)  
+    result = excel_resource.import_data(dataset, dry_run=True) # Test the data import  
+    print(result.has_errors())  
+    if not result.has_errors():  
+        excel_resource.import_data(dataset, dry_run=False) # Actually import now  
+        return render(request, 'excel.html')  

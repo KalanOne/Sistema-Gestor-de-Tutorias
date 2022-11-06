@@ -436,3 +436,9 @@ class Cita(models.Model):
         verbose_name_plural= 'Citas'
         db_table= 'cita'
         ordering= ['id']
+
+class Excel(models.Model):  
+    control = models.CharField(max_length=8)  
+    nombres = models.CharField(max_length=35) 
+    apellidos = models.CharField(max_length=35) 
+    email = models.EmailField(blank=True)  
