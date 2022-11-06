@@ -437,7 +437,7 @@ class Cita(models.Model):
         db_table= 'cita'
         ordering= ['id']
 
-class Excel(models.Model):  
+class Excel2(models.Model):  
     control = models.CharField(max_length=8)  
     nombres = models.CharField(max_length=35) 
     apellidos = models.CharField(max_length=35) 

@@ -3,9 +3,12 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
-from tablib import Dataset
+from tablib import Dataset 
+from django.utils.datastructures import MultiValueDictKeyError
 
-from .resources import ExcelResource 
+import openpyxl
+
+from Tutoria.resources import ExcelResource
 from .models import *
 from .forms import *
 
@@ -199,20 +202,51 @@ def prueba(request):
         'groups': request.user.groups.all()
     })
 
-@login_required
+#@login_required
 
- 
-def Excel(request):  
-   #template = loader.get_template('export/importar.html')  if request.method == 'POST':  
-    excel_resource = ExcelResource()  
-    dataset = Dataset()  
-    print(dataset)  
-    nuevas_personas = request.FILES['xlsfile']  #problemas
-    #print(nuevas_personas)  
+def Excel(request):
+    if "GET" == request.method:
+        return render(request, 'excel.html', {})
+    else:
+        excel_file = request.FILES["excel_file"]
+
+        # you may put validations here to check extension or file size
+
+        wb = openpyxl.load_workbook(excel_file)
+
+        # solo saca valores de la hoja de datos
+        active_sheet = wb.active
+        print(active_sheet)
+
+        excel_data = list()
+        # iterating over the rows and
+        # getting value from each cell in row
+        for row in active_sheet.iter_rows():
+            row_data = list()
+            for cell in row:
+                row_data.append(str(cell.value))
+            excel_data.append(row_data)
+
+        return render(request, 'excel.html', {"excel_data":excel_data})
+
+from tablib import Dataset 
+
+@login_required 
+def Excel2(request):  
+   #template = loader.get_template('export/importar.html')  
+    if request.method == 'POST':  
+        persona_resource = ExcelResource()  
+        dataset = Dataset()  
+     #print(dataset)  
+    try:
+        nuevas_personas = request.FILES['excel_file']  
+    except MultiValueDictKeyError:
+        return render(request, 'excel2.html')
+     #print(nuevas_personas)  
     imported_data = dataset.load(nuevas_personas.read())  
-    print(dataset)  
-    result = excel_resource.import_data(dataset, dry_run=True) # Test the data import  
+     #print(dataset)  
+    result = persona_resource.import_data(dataset, dry_run=True) # Test the data import  
     print(result.has_errors())  
     if not result.has_errors():  
-        excel_resource.import_data(dataset, dry_run=False) # Actually import now  
-        return render(request, 'excel.html')  
+        persona_resource.import_data(dataset, dry_run=False) # Actually import now  
+        return render(request, 'excel2.html')  

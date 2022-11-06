@@ -24,3 +24,5 @@ admin.site.register(ConstanciaTutor)
 admin.site.register(Orden)
 admin.site.register(Motivo)
 admin.site.register(Cita)
+
+admin.site.register(Excel2)

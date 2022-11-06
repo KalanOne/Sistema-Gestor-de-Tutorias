@@ -24,4 +24,5 @@ urlpatterns = [
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),
     path('prueba/excel/', views.Excel, name = 'Excel'),
+    path('excel2/', views.Excel2, name = 'Excel2'),
 ]
