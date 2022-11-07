@@ -22,6 +22,7 @@ urlpatterns = [
     path('perfilTodos/', views.perfilTodos, name = 'perfilTodos'),
     path('Grupos/', views.gruposTutor, name = 'gruposTutor'),
     path('Grupos/<int:grupo_id>', views.grupoTutor, name = 'grupoTutor'),
+    path('Grupos/<int:grupo_id>/Ayuda/Psicologica/<int:tutorado_id>', views.solicitudPsicologigaTutor, name = 'solicitarAyudaPsicologicaTutor'),
     path('Cuestionario/Crear', views.crearCuestionario, name = 'crearCuestionario'),
     path('Cuestionario/Resultados', views.resultadosCuestionarios, name = 'verResultadosCuestionarios'),
     path('Cuestionario/Resultados/<int:grupo_id>', views.verResultadosCuestionariosGrupo, name = 'verResultadosCuestionariosGrupo'),

@@ -1,0 +1,61 @@
+{% extends 'layout/basicCNMenu.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center mb-5">{{ grupo.grupo }}</h1>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 g-4 mb-3">
+            {% for tutorado in tutorados %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-header text-white text-center" style="background: #1b396a;">
+                            <h5>{{ tutorado.user.first_name }} {{ tutorado.user.last_name }}</h5>
+                        </div>
+                        {% comment %} <div class="card-body">
+                            <div class="card-text">
+                                <p>No. de control: {{ tutorado.user.username }}</p>
+                                <p>Semestre: {{ tutorado.semestre }}</p>
+                                <p>Academia: {{ tutorado.idDepartamentoAcademico.departamentoAcademico }}</p>
+                                <p>Correo institucional: {{ tutorado.user.email }}</p>
+                                <p>Correo personal: {{ tutorado.correoPersonal }}</p>
+                                <p>Domicilio: {{ tutorado.domicilio }}</p>
+                                <p>Teléfono: {{ tutorado.telefono }}</p>
+                                <div class="text-success">
+                                    <hr class="border border-success border-2">
+                                </div>
+                                <p>Padre/Madre/Tutor: {{ tutorado.idPadreMadreTutor.nombre }} {{ tutorado.idPadreMadreTutor.apellidos }}</p>
+                                <p>Teléfono Padre/Madre/Tutor: {{ tutorado.idPadreMadreTutor.telefonotutor }}</p>
+                            </div> 
+                        </div>{% endcomment %}
+                        <div class="accordion" id="acordeon{{ tutorado.id }}">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="acordeonHead{{ tutorado.id }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acordeonPanel{{ tutorado.id }}" aria-expanded="false" aria-controls="acordeonPanel{{ tutorado.id }}">
+                                        Información
+                                    </button>
+                                </h2>
+                                <div id="acordeonPanel{{ tutorado.id }}" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">No. de control: {{ tutorado.user.username }}</li>
+                                            <li class="list-group-item">Semestre: {{ tutorado.semestre }}</li>
+                                            <li class="list-group-item">Academia: {{ tutorado.idDepartamentoAcademico.departamentoAcademico }}</li>
+                                            <li class="list-group-item">Correo institucional: {{ tutorado.user.email }}</li>
+                                            <li class="list-group-item">Correo personal: {{ tutorado.correoPersonal }}</li>
+                                            <li class="list-group-item">Domicilio: {{ tutorado.domicilio }}</li>
+                                            <li class="list-group-item">Teléfono: {{ tutorado.telefono }}</li>
+                                            <li class="list-group-item border-top border-5">Padre/Madre/Tutor: {{ tutorado.idPadreMadreTutor.nombre }} {{ tutorado.idPadreMadreTutor.apellidos }}</li>
+                                            <li class="list-group-item">Teléfono Padre/Madre/Tutor: {{ tutorado.idPadreMadreTutor.telefonotutor }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a class="btn btn-primary" href="{% url 'solicitarAyudaPsicologicaTutor' grupo.id tutorado.id %}" role="button" style="background: #1b396a;">Solicitar ayuda psicológica</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

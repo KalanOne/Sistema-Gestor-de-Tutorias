@@ -542,13 +542,71 @@ def gruposTutor(request):
 @group_required('Tutor')
 def grupoTutor(request, grupo_id):
     tutor = PersonalTec.objects.get(user_id = request.user.id)
-    estadoCerrado = Estado.objects.get(estado = 'Cerrado')
-    grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id).exclude(idEstado_id = estadoCerrado.id)
-    return render(request, 'Listado_Grupos_Tutor_Tutorados.html', {
+    try:
+        grupo = Grupo.objects.get(idPersonalTec_id = tutor.id, id = grupo_id)
+    except:
+        return redirect('gruposTutor')
+    tutorados = Tutorado.objects.filter(idGrupo_id = grupo_id)
+    return render(request, 'Listado_Tutorados.html', {
         'gruops': request.user.groups.all(),
         'title': 'Ver grupos',
-        'grupos': grupos
+        'tutorados': tutorados,
+        'grupo': grupo
     })
+
+@login_required
+@group_required('Tutor')
+def solicitudPsicologigaTutor(request, grupo_id, tutorado_id):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    try:
+        grupo = Grupo.objects.get(idPersonalTec_id = tutor.id, id = grupo_id)
+        tutorado = Tutorado.objects.get(idGrupo_id = grupo_id, id = tutorado_id)
+    except:
+        return redirect('gruposTutor')
+    form = SolicitudCitaFormTutor()
+    ordenes = Orden.objects.get(nombreOrden = 'Psicológico')
+    motivos = Motivo.objects.filter(idOrden_id = ordenes.id)
+    form.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]
+    
+    if request.method == 'GET':
+        return render(request, 'Solicitud_Ayuda_Psicologica_Tutor.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Solicitar ayuda psicológica',
+            'form': form
+        })
+    else:
+        formsolicitud = SolicitudCitaFormTutor(request.POST)
+        if formsolicitud.is_valid():
+            try:
+                estadosCitas = Estado.objects.get(estado = 'Espera')
+                nuevaSolicitud = formsolicitud.save(commit = False)
+                nuevaSolicitud.folio = request.user.username + '-' + datetime.datetime.now().strftime("%Y/%m/%d") + '-' + tutorado.user.username
+                nuevaSolicitud.idTutorado_id = tutorado.id
+                nuevaSolicitud.idOrden_id = ordenes.id
+                nuevaSolicitud.idEstado_id = estadosCitas.id
+                nuevaSolicitud.idPersonalTec_id = tutor.id
+                nuevaSolicitud.save()
+                return render(request, 'Solicitud_Ayuda_Psicologica_Tutor.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Solicitar ayuda psicológica',
+                    'form': form,
+                    'exito': 'Solicitud creada con éxito'
+                })
+            except:
+                return render(request, 'Solicitud_Ayuda_Psicologica_Tutor.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Ayuda Psicologica',
+                    'form': formsolicitud,
+                    'error': 'No se ha podido procesar la solicitud'
+                })
+        else:
+            return render(request, 'miscitas.html',{
+                'gruops': request.user.groups.all(),
+                'title': 'Ayuda Psicologica',
+                'form': formsolicitud,
+                'error': 'No se ha podido procesar la solicitud'
+            })
+
 
 def a11(request):
     return render(request, 'psicologo dar citas.html')

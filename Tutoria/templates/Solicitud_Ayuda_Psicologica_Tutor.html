@@ -1,0 +1,33 @@
+{% extends 'layout/basicCNMenu.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center mb-5">Solicitar ayuda psicológica</h1>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form method="post">
+                    {% csrf_token %}
+                    {% comment %} {{ form|crispy }} {% endcomment %}
+                    {{ form.idMotivo|as_crispy_field }}
+                    {{ form.descripcion|as_crispy_field }}
+                    {% if exito is not none %}
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <div>{{exito}}</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                    {% if error is not none %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <div>{{error}}</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary" style="background: #1b396a;">Entrar</button>
+                </form>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+{% endblock content %}
