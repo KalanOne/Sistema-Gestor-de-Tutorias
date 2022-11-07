@@ -485,19 +485,69 @@ def crearCuestionario(request):
                 })
         else:
             return render(request, 'crear_cuestionario.html',{
-                    'gruops': request.user.groups.all(),
-                    'title': 'Crear cuestionario',
-                    'form': formCuestionario,
-                    'error': 'No se ha podido crear el cuestionario'
-                })
+                'gruops': request.user.groups.all(),
+                'title': 'Crear cuestionario',
+                'form': formCuestionario,
+                'error': 'No se ha podido crear el cuestionario'
+            })
 
+@login_required
+@group_required('Tutor')
+def resultadosCuestionarios(request):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    estadoCerrado = Estado.objects.get(estado = 'Cerrado')
+    grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id).exclude(idEstado_id = estadoCerrado.id)
+    return render(request, 'Listado_Grupos_Tutor_Cuestionarios.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Ver resultados de Cuestionarios',
+        'grupos': grupos
+    })
+
+@login_required
+@group_required('Tutor')
+def verResultadosCuestionariosGrupo(request, grupo_id):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    try:
+        grupo = Grupo.objects.get(idPersonalTec_id = tutor.id, id = grupo_id)
+    except:
+        return redirect('verResultadosCuestionarios')
+    tutorados = Tutorado.objects.filter(idGrupo_id = grupo_id)
+    cuesitonarios = Cuestionario.objects.filter(idGrupo_id = grupo_id)
+    arr = []
+    for cues in cuesitonarios:
+       arr.append(cues.id)
+    respuestas = CuestionarioContestado.objects.filter(idCuestionario_id__in = arr)
+
+    return render(request, 'resultadosCuestionarios.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Ver resultados de Cuestionarios',
+        'tutorados': tutorados,
+        'cuesitonarios': cuesitonarios,
+        'respuestas': respuestas
+    })
 
 @login_required
 @group_required('Tutor')
 def gruposTutor(request):
-    return render(request, 'Listado_Grupos_Tutor.html',{
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    estadoCerrado = Estado.objects.get(estado = 'Cerrado')
+    grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id).exclude(idEstado_id = estadoCerrado.id)
+    return render(request, 'Listado_Grupos_Tutor_Tutorados.html', {
         'gruops': request.user.groups.all(),
-        'title': 'Grupos'
+        'title': 'Ver grupos',
+        'grupos': grupos
+    })
+
+@login_required
+@group_required('Tutor')
+def grupoTutor(request, grupo_id):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    estadoCerrado = Estado.objects.get(estado = 'Cerrado')
+    grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id).exclude(idEstado_id = estadoCerrado.id)
+    return render(request, 'Listado_Grupos_Tutor_Tutorados.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Ver grupos',
+        'grupos': grupos
     })
 
 def a11(request):
@@ -620,6 +670,7 @@ def listarAlumnos(request, Grupoid):
 
 #pruebas
 @login_required
+@group_required('Tutor', 'Tutorado')
 def prueba(request):
     return render(request, 'prueba.html', {
         'groups': request.user.groups.all()

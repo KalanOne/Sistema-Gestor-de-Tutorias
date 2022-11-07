@@ -20,8 +20,11 @@ urlpatterns = [
     path('verDocumentacion/', views.verDocumentacion, name = 'verDocumentacion'),
     path('crearDocumento/', views.crearDocumento, name = 'crearDocumento'),
     path('perfilTodos/', views.perfilTodos, name = 'perfilTodos'),
-    path('gruposTutor/', views.gruposTutor, name = 'gruposTutor'),
-    path('crearCuestionario/', views.crearCuestionario, name = 'crearCuestionario'),
+    path('Grupos/', views.gruposTutor, name = 'gruposTutor'),
+    path('Grupos/<int:grupo_id>', views.grupoTutor, name = 'grupoTutor'),
+    path('Cuestionario/Crear', views.crearCuestionario, name = 'crearCuestionario'),
+    path('Cuestionario/Resultados', views.resultadosCuestionarios, name = 'verResultadosCuestionarios'),
+    path('Cuestionario/Resultados/<int:grupo_id>', views.verResultadosCuestionariosGrupo, name = 'verResultadosCuestionariosGrupo'),
     path('Tutor/CambioPassword', views.cambiarPasswordTutor, name = 'cambiarPasswordTutor'),
 
     path('CoordinadorDepartamental/listaTutor', views.listaTutor, name = 'listaTutor'),

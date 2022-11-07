@@ -94,18 +94,17 @@
                         </li>
                         {% comment %} de momento la pantalla de ver resultados no esta creada asi que redirige a la pantalla cuestionario {% endcomment %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'crearCuestionario' %}">Resultados de cuestionarios</a>
+                            <a class="nav-link" href="{% url 'verResultadosCuestionarios' %}">Resultados de cuestionarios</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'perfilTodos' %}">Perfil</a>
-                        </li>
-                    {% else %}
-                        {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
-                            </li>
-                        {% endif %}
                     {% endif %}
+                    {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'perfilTodos' %}">Perfil</a>
+                    </li>
                 {% endif %}
             {% endfor %}
           </ul>
