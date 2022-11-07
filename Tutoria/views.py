@@ -202,47 +202,21 @@ def prueba(request):
         'groups': request.user.groups.all()
     })
 
-#@login_required
 
-def Excel(request):
-    if "GET" == request.method:
-        return render(request, 'excel.html', {})
-    else:
-        excel_file = request.FILES["excel_file"]
-
-        # you may put validations here to check extension or file size
-
-        wb = openpyxl.load_workbook(excel_file)
-
-        # solo saca valores de la hoja de datos
-        active_sheet = wb.active
-        print(active_sheet)
-
-        excel_data = list()
-        # iterating over the rows and
-        # getting value from each cell in row
-        for row in active_sheet.iter_rows():
-            row_data = list()
-            for cell in row:
-                row_data.append(str(cell.value))
-            excel_data.append(row_data)
-
-        return render(request, 'excel.html', {"excel_data":excel_data})
 
 from tablib import Dataset 
 
-@login_required 
+@group_required('Excel2')
 def Excel2(request):  
-   #template = loader.get_template('export/importar.html')  
     if request.method == 'POST':  
         persona_resource = ExcelResource()  
         dataset = Dataset()  
-     #print(dataset)  
+     #print(dataset)  para la comprobacion
     try:
         nuevas_personas = request.FILES['excel_file']  
     except MultiValueDictKeyError:
         return render(request, 'excel2.html')
-     #print(nuevas_personas)  
+     #print(nuevas_personas)  para ver si se guardaron los datos
     imported_data = dataset.load(nuevas_personas.read())  
      #print(dataset)  
     result = persona_resource.import_data(dataset, dry_run=True) # Test the data import  

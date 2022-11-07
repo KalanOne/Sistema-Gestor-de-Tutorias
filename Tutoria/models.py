@@ -436,7 +436,7 @@ class Cita(models.Model):
         verbose_name_plural= 'Citas'
         db_table= 'cita'
         ordering= ['id']
-
+#Quizas no la mejor idea llamar igual a la tabla que a la pagina
 class Excel2(models.Model):  
     control = models.CharField(max_length=8)  
     nombres = models.CharField(max_length=35) 
