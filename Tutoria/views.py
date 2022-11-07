@@ -206,7 +206,6 @@ def prueba(request):
 
 from tablib import Dataset 
 
-@group_required('Excel2')
 def Excel2(request):  
     if request.method == 'POST':  
         persona_resource = ExcelResource()  
@@ -223,4 +222,10 @@ def Excel2(request):
     print(result.has_errors())  
     if not result.has_errors():  
         persona_resource.import_data(dataset, dry_run=False) # Actually import now  
+        from Tutoria.models import Excel2
+        from Tutoria.models import Tutorado
+        from django.contrib.auth.models import User
+        for Alumno in Excel2.objects.all():
+            #print(Alumno.control)
+            usr=User.objects.create(username=Alumno.control, password=Alumno.email)
         return render(request, 'excel2.html')  
