@@ -79,6 +79,7 @@
                                 <tr>
                                     <th scope="row">{{ cita.id }}</th>
                                     <td>{{ cita.idMotivo.nombre }}</td>
+                                    {% comment %} <td>{{ cita.fechaSolicitud|date:"d/m/yy" }}</td> {% endcomment %}
                                     <td>{{ cita.fechaSolicitud }}</td>
                                     {% if cita.fechaAsignacion is none %}
                                         <td>Aun asigada</td>

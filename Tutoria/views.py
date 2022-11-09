@@ -6,6 +6,7 @@ from .models import *
 from .forms import *
 import datetime
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 # Create your views here.
 
 #Vistas para login, logout y pagina principal para todos los usuarios
@@ -327,13 +328,19 @@ def misCitasTutorado(request):
         cuentaGrupo = 0
     else:
         cuentaGrupo = 1
-
+    paginator = Paginator(citasTutorado, 3)
+    # if request.Get.get('page') exist:
+    # pagina = request.Get.get['page']
+    # else:
+    #     pagina = 1
+    print(request)
+    paginacion = paginator.get_page(1)
     if request.method == 'GET':
         return render(request, 'miscitas.html',{
             'gruops': request.user.groups.all(),
             'title': 'Ayuda Psicologica',
             'cuentaGrupo': cuentaGrupo,
-            'citas': citasTutorado,
+            'citas': paginacion,
             'personalMeds': personalMed,
             'form': form
         })
@@ -352,7 +359,7 @@ def misCitasTutorado(request):
                     'gruops': request.user.groups.all(),
                     'title': 'Ayuda Psicologica',
                     'cuentaGrupo': cuentaGrupo,
-                    'citas': citasTutorado,
+                    'citas': paginacion,
                     'personalMeds': personalMed,
                     'form': form,
                     'exito': 'Solicitud creada con éxito'
@@ -362,7 +369,7 @@ def misCitasTutorado(request):
                     'gruops': request.user.groups.all(),
                     'title': 'Ayuda Psicologica',
                     'cuentaGrupo': cuentaGrupo,
-                    'citas': citasTutorado,
+                    'citas': paginacion,
                     'personalMeds': personalMed,
                     'form': formsolicitud,
                     'error': 'No se ha podido procesar la solicitud'
@@ -372,7 +379,7 @@ def misCitasTutorado(request):
                 'gruops': request.user.groups.all(),
                 'title': 'Ayuda Psicologica',
                 'cuentaGrupo': cuentaGrupo,
-                'citas': citasTutorado,
+                'citas': paginacion,
                 'personalMeds': personalMed,
                 'form': formsolicitud,
                 'error': 'No se ha podido procesar la solicitud'
