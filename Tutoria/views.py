@@ -316,9 +316,9 @@ def editarInformacion(request):
 
 @login_required
 @group_required('Tutorado')
-def misCitasTutorado(request):
+def misCitasTutorado(request, page):
     tutorado = Tutorado.objects.get(user_id = request.user.id)
-    citasTutorado = Cita.objects.filter(idTutorado_id = tutorado.id)
+    citasTutorado = Cita.objects.filter(idTutorado_id = tutorado.id).order_by("-id")
     personalMed = PersonalMed.objects.filter(idInstitucion_id = tutorado.idInstitucion_id)
     ordenes = Orden.objects.get(nombreOrden = 'Psicológico')
     motivos = Motivo.objects.filter(idOrden_id = ordenes.id)
@@ -329,12 +329,7 @@ def misCitasTutorado(request):
     else:
         cuentaGrupo = 1
     paginator = Paginator(citasTutorado, 3)
-    # if request.Get.get('page') exist:
-    # pagina = request.Get.get['page']
-    # else:
-    #     pagina = 1
-    print(request)
-    paginacion = paginator.get_page(1)
+    paginacion = paginator.get_page(page)
     if request.method == 'GET':
         return render(request, 'miscitas.html',{
             'gruops': request.user.groups.all(),
