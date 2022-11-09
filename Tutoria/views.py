@@ -107,46 +107,24 @@ def perfilTutorado(request):
 
     try:
         padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
-        padremadretutorform = PadreMadreTutorForm(instance = padremadretutor) 
-        for fieldname in padremadretutorform.fields:
-            padremadretutorform.fields[fieldname].disabled = True
     except:
-        padremadretutorform = PadreMadreTutorForm() 
-        for fieldname in padremadretutorform.fields:
-            padremadretutorform.fields[fieldname].disabled = True
+        padremadretutor = None
     
     try:
         grupo = Grupo.objects.get(id = tutorado.idGrupo_id)
-        grupoform = GrupoForm(instance = grupo)
-        for fieldname in grupoform.fields:
-            grupoform.fields[fieldname].disabled = True
     except:
-        grupoform = GrupoForm()
-        for fieldname in grupoform.fields:
-            grupoform.fields[fieldname].disabled = True
+        grupo = None
 
-    #autorellenar forms con el instance
-    usuarioform = UserForm(instance = usuario)
-    for fieldname in usuarioform.fields:
-        usuarioform.fields[fieldname].disabled = True
-
-    perfilTutoradoform = PerfilTutoradoForm(instance = tutorado)
-    for fieldname in perfilTutoradoform.fields:
-        perfilTutoradoform.fields[fieldname].disabled = True
-
-    departamentoacademicoform = DepartamentoAcademicoForm(instance = departamentoacademico)
-    for fieldname in departamentoacademicoform.fields:
-        departamentoacademicoform.fields[fieldname].disabled = True
         
     return render(request, 'perfilTutorado.html',{
         'gruops': request.user.groups.all(),
         'title': 'Perfil',
         'cuentaGrupo': cuentaGrupo,
-        'formusuario': usuarioform,
-        'formPerfilTutorado': perfilTutoradoform,
-        'formpadremadretutor': padremadretutorform,
-        'formgrupo': grupoform,
-        'formdepartamentoacademico': departamentoacademicoform
+        'formusuario': usuario,
+        'formPerfilTutorado': tutorado,
+        'formpadremadretutor': padremadretutor,
+        'formgrupo': grupo,
+        'formdepartamentoacademico': departamentoacademico
     })
 
 @login_required

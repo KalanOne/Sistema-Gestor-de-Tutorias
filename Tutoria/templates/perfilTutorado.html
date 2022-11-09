@@ -1,10 +1,10 @@
-{% extends 'layout/basicCNMenu.html' %}{% load static %} {% block content %} {% load crispy_forms_tags %}
+{% extends 'layout/basicCNMenu.html' %}{% load static %} {% block content %}
 
 <form action="">
   {% csrf_token %}
   <div class="container p-1">
     <div class="row">
-      <div class="col-md-2 m-2 text-center">
+      {% comment %} <div class="col-md-2 m-2 text-center">
         <br />
         <div>
           <img
@@ -27,20 +27,36 @@
           style="background-color: #1b396a"
           >Actualizar contraseña</a
         >
-      </div>
-      <div class="col-md-9 fw-semibold">
+      </div> {% endcomment %}
+      <div class="col-md-2"></div>
+      <div class="col-md-8 fw-semibold">
         <div class="container">
-          <div
-            class="row text-white text-center py-1"
-            style="background-color: #1b396a"
-          >
-            <h4>Información Personal</h4>
+          <div class="row text-white py-1" style="background-color: #1b396a">
+            <h4 class="text-center">
+              Información Personal
+              <a
+                class="mx-2 justify-content-end"
+                href="{% url 'editarInformacion' %}"
+                style="text-decoration: none; color: white"
+              >
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              <a
+                class="mx-2 justify-content-end"
+                href="{% url 'cambiarPassword' %}"
+                style="text-decoration: none; color: white"
+              >
+                <i class="bi bi-key-fill"></i>
+              </a>
+            </h4>
           </div>
           <div class="row">
             <div class="container py-3" style="background-color: #d9d9d9">
               <div class="row text">
                 <div class="col-3" style="text-align: right">Nombre:</div>
-                <div class="col-8">{{formusuario.first_name}}{{formusuario.last_name}}</div>
+                <div class="col-8">
+                  {{formusuario.first_name}} {{formusuario.last_name}}
+                </div>
               </div>
               <br />
               <div class="row">
@@ -64,8 +80,9 @@
                 <div class="col-3" style="text-align: right">
                   Nombre del padre/madre/tutor:
                 </div>
-                <div class="col-8 text-center">
-                  {{formpadremadretutor.nombre}}{{formpadremadretutor.apellidos}}
+                <div class="col-8">
+                  {{formpadremadretutor.nombre}}
+                  {{formpadremadretutor.apellidos}}
                 </div>
               </div>
               <br />
@@ -73,9 +90,7 @@
                 <div class="col-3" style="text-align: right">
                   Teléfono del padre/madre/tutor:
                 </div>
-                <div class="col-8 text-center">
-                  {{formpadremadretutor.telefonotutor}}
-                </div>
+                <div class="col-8">{{formpadremadretutor.telefonotutor}}</div>
               </div>
             </div>
           </div>
@@ -101,7 +116,7 @@
                   <br />
                   <div class="row">
                     <div class="col-3" style="text-align: right">Grupo:</div>
-                    <div class="col-8">{{formgrupo.grupo|as_crispy_field}}</div>
+                    <div class="col-8">{{formgrupo.grupo}}</div>
                   </div>
                   <br />
                   <div class="row">
@@ -133,11 +148,15 @@
 </form>
 
 <div class="container">
-    <div class="row">
-        <div class="col text-center my-3">
-            <a href="{% static 'Aviso_de_Privacidad_Simplificado.pdf' %}" target="_blank">Aviso de privacidad</a>
-        </div>
+  <div class="row">
+    <div class="col text-center my-3">
+      <a
+        href="{% static 'Aviso_de_Privacidad_Simplificado.pdf' %}"
+        target="_blank"
+        >Aviso de privacidad</a
+      >
     </div>
+  </div>
 </div>
 {% endblock content %} {% block JS %}
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
