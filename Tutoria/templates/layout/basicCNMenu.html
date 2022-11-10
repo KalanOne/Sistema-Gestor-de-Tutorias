@@ -90,11 +90,14 @@
                             <a class="nav-link" href="{% url 'gruposTutor' %}">Grupos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'crearCuestionario' %}">Crear cuestionario</a>
+                            <a class="nav-link" href="{% url 'crearCuestionario' %}">Crear Cuestionario</a>
                         </li>
                         {% comment %} de momento la pantalla de ver resultados no esta creada asi que redirige a la pantalla cuestionario {% endcomment %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'verResultadosCuestionarios' %}">Resultados de cuestionarios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'reporteSemestral' %}">Reporte Semestral</a>
                         </li>
                     {% endif %}
                     {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}

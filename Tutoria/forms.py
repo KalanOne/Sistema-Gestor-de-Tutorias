@@ -130,3 +130,12 @@ class CrearCuestionarioForm(forms.ModelForm):
         widgets = {
             'fechaLimite': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today(),})
         }
+
+class CambioDePeriodoInstitucion(forms.ModelForm):
+    class Meta:
+        model = Institucion
+        fields = {'anoActual', 'periodoActual'}
+        labels = {
+            'anoActual': ('Año nuevo'),
+            'periodoActual': ('Periodo nuevo')
+        }

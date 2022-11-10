@@ -1,0 +1,31 @@
+{% extends 'layout\basicCNMenu.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-5">
+            <h1 class="text-center h1">
+                Inicio de sesion para SGT
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <form method="POST" autocomplete="false">
+                {% csrf_token %}
+                {{ form|crispy }}
+                {% if error is not none %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <div>{{error}}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary">Entrar</button>
+            <form>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+{% endblock content %}

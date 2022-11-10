@@ -18,7 +18,8 @@ urlpatterns = [
     #urls para todos menos el tutorado
     path('Documentacion/', views.Documentacion, name = 'documentos'),
     path('verDocumentacion/', views.verDocumentacion, name = 'verDocumentacion'),
-    path('crearDocumento/', views.crearDocumento, name = 'crearDocumento'),
+    # path('crearDocumento/', views.crearDocumento, name = 'crearDocumento'),
+    path('ReporteSemestral', views.reporteSemestral, name='reporteSemestral'),
     path('perfilTodos/', views.perfilTodos, name = 'perfilTodos'),
     path('Grupos/', views.gruposTutor, name = 'gruposTutor'),
     path('Grupos/<int:grupo_id>', views.grupoTutor, name = 'grupoTutor'),

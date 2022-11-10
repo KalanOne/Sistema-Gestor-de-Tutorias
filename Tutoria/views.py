@@ -396,9 +396,20 @@ def Documentacion(request):
 def verDocumentacion(request):
     return render(request, 'verDocumentacion.html')
 
+# @login_required
+# def crearDocumento(request):
+#     return render(request, 'crearDocumento.html')
+
 @login_required
-def crearDocumento(request):
-    return render(request, 'crearDocumento.html')
+@group_required('Tutor')
+def reporteSemestral(request):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    form = CambioDePeriodoInstitucion
+    return render(request, 'reporteSemestral_Tutor.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Reporte semestral',
+        'form': form
+    })
 
 @login_required
 def perfilTodos(request):

@@ -21,8 +21,16 @@ class Estado(models.Model):
 
 
 class Institucion(models.Model):
+    opciones=(
+            (1, 1),
+            (2, 2),
+            (3, 3)
+    )
+
     nombreInstitucion = models.CharField(max_length=100)
     ruta = models.CharField(max_length=300, blank = True, null = True)
+    anoActual = models.IntegerField()
+    periodoActual = models.IntegerField(choices = opciones)
 
     def Mostrar(self):
         return "{}".format(self.nombreInstitucion)
@@ -43,7 +51,7 @@ class Grupo(models.Model):
             ('B','B'),
             ('C','C')
     )   
-    grupo = models.CharField(max_length=100, blank=True, null=True, choices=opciones)
+    grupo = models.CharField(max_length=100, blank=True, null=True, choices = opciones)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE, null = True, blank = True)
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
