@@ -98,6 +98,25 @@ class SolicitudCitaFormTutorado(forms.ModelForm):
             'descripcion': forms.Textarea(attrs={'rows' : 5})
         }
 
+class SolicitudCitaFormTutor(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = {'idMotivo', 'descripcion'}
+        labels = {
+            'idMotivo': ('Motivo'),
+            'descripcion': ('Descripción')
+        }
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'rows' : 5})
+        }
+        required = {'descripcion'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.Meta.required:
+            self.fields[field].required = True
+
 class CrearCuestionarioForm(forms.ModelForm):
     class Meta:
         model = Cuestionario

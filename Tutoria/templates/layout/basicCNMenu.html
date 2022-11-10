@@ -39,7 +39,7 @@
           ></ul>
           <div class="text-end my-sm-2 my-md-0">
             <a class="navbar-brand text-wrap" href="#"
-              >Sistema de Gestion de Tutorias</a
+              >Sistema de Gestión de Tutorías</a
             >
           </div>
         </div>
@@ -76,7 +76,7 @@
                         </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'misCitasTutorado' %}">Ayuda Psicologica</a>
+                        <a class="nav-link" href="{% url 'misCitasTutorado' 1 %}">Ayuda Psicologica</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'perfilTutorado' %}">Perfil</a>
@@ -94,18 +94,17 @@
                         </li>
                         {% comment %} de momento la pantalla de ver resultados no esta creada asi que redirige a la pantalla cuestionario {% endcomment %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'crearCuestionario' %}">Resultados de cuestionarios</a>
+                            <a class="nav-link" href="{% url 'verResultadosCuestionarios' %}">Resultados de cuestionarios</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'perfilTodos' %}">Perfil</a>
-                        </li>
-                    {% else %}
-                        {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
-                            </li>
-                        {% endif %}
                     {% endif %}
+                    {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'perfilTodos' %}">Perfil</a>
+                    </li>
                 {% endif %}
             {% endfor %}
           </ul>

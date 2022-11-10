@@ -6,6 +6,7 @@ from .models import *
 from .forms import *
 import datetime
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 # Create your views here.
 
 #Vistas para login, logout y pagina principal para todos los usuarios
@@ -106,46 +107,24 @@ def perfilTutorado(request):
 
     try:
         padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
-        padremadretutorform = PadreMadreTutorForm(instance = padremadretutor) 
-        for fieldname in padremadretutorform.fields:
-            padremadretutorform.fields[fieldname].disabled = True
     except:
-        padremadretutorform = PadreMadreTutorForm() 
-        for fieldname in padremadretutorform.fields:
-            padremadretutorform.fields[fieldname].disabled = True
+        padremadretutor = None
     
     try:
         grupo = Grupo.objects.get(id = tutorado.idGrupo_id)
-        grupoform = GrupoForm(instance = grupo)
-        for fieldname in grupoform.fields:
-            grupoform.fields[fieldname].disabled = True
     except:
-        grupoform = GrupoForm()
-        for fieldname in grupoform.fields:
-            grupoform.fields[fieldname].disabled = True
+        grupo = None
 
-    #autorellenar forms con el instance
-    usuarioform = UserForm(instance = usuario)
-    for fieldname in usuarioform.fields:
-        usuarioform.fields[fieldname].disabled = True
-
-    perfilTutoradoform = PerfilTutoradoForm(instance = tutorado)
-    for fieldname in perfilTutoradoform.fields:
-        perfilTutoradoform.fields[fieldname].disabled = True
-
-    departamentoacademicoform = DepartamentoAcademicoForm(instance = departamentoacademico)
-    for fieldname in departamentoacademicoform.fields:
-        departamentoacademicoform.fields[fieldname].disabled = True
         
     return render(request, 'perfilTutorado.html',{
         'gruops': request.user.groups.all(),
         'title': 'Perfil',
         'cuentaGrupo': cuentaGrupo,
-        'formusuario': usuarioform,
-        'formPerfilTutorado': perfilTutoradoform,
-        'formpadremadretutor': padremadretutorform,
-        'formgrupo': grupoform,
-        'formdepartamentoacademico': departamentoacademicoform
+        'formusuario': usuario,
+        'formPerfilTutorado': tutorado,
+        'formpadremadretutor': padremadretutor,
+        'formgrupo': grupo,
+        'formdepartamentoacademico': departamentoacademico
     })
 
 @login_required
@@ -315,9 +294,9 @@ def editarInformacion(request):
 
 @login_required
 @group_required('Tutorado')
-def misCitasTutorado(request):
+def misCitasTutorado(request, page):
     tutorado = Tutorado.objects.get(user_id = request.user.id)
-    citasTutorado = Cita.objects.filter(idTutorado_id = tutorado.id)
+    citasTutorado = Cita.objects.filter(idTutorado_id = tutorado.id).order_by("-id")
     personalMed = PersonalMed.objects.filter(idInstitucion_id = tutorado.idInstitucion_id)
     ordenes = Orden.objects.get(nombreOrden = 'Psicológico')
     motivos = Motivo.objects.filter(idOrden_id = ordenes.id)
@@ -327,13 +306,14 @@ def misCitasTutorado(request):
         cuentaGrupo = 0
     else:
         cuentaGrupo = 1
-
+    paginator = Paginator(citasTutorado, 3)
+    paginacion = paginator.get_page(page)
     if request.method == 'GET':
         return render(request, 'miscitas.html',{
             'gruops': request.user.groups.all(),
             'title': 'Ayuda Psicologica',
             'cuentaGrupo': cuentaGrupo,
-            'citas': citasTutorado,
+            'citas': paginacion,
             'personalMeds': personalMed,
             'form': form
         })
@@ -352,7 +332,7 @@ def misCitasTutorado(request):
                     'gruops': request.user.groups.all(),
                     'title': 'Ayuda Psicologica',
                     'cuentaGrupo': cuentaGrupo,
-                    'citas': citasTutorado,
+                    'citas': paginacion,
                     'personalMeds': personalMed,
                     'form': form,
                     'exito': 'Solicitud creada con éxito'
@@ -362,7 +342,7 @@ def misCitasTutorado(request):
                     'gruops': request.user.groups.all(),
                     'title': 'Ayuda Psicologica',
                     'cuentaGrupo': cuentaGrupo,
-                    'citas': citasTutorado,
+                    'citas': paginacion,
                     'personalMeds': personalMed,
                     'form': formsolicitud,
                     'error': 'No se ha podido procesar la solicitud'
@@ -372,7 +352,7 @@ def misCitasTutorado(request):
                 'gruops': request.user.groups.all(),
                 'title': 'Ayuda Psicologica',
                 'cuentaGrupo': cuentaGrupo,
-                'citas': citasTutorado,
+                'citas': paginacion,
                 'personalMeds': personalMed,
                 'form': formsolicitud,
                 'error': 'No se ha podido procesar la solicitud'
@@ -485,20 +465,128 @@ def crearCuestionario(request):
                 })
         else:
             return render(request, 'crear_cuestionario.html',{
-                    'gruops': request.user.groups.all(),
-                    'title': 'Crear cuestionario',
-                    'form': formCuestionario,
-                    'error': 'No se ha podido crear el cuestionario'
-                })
+                'gruops': request.user.groups.all(),
+                'title': 'Crear cuestionario',
+                'form': formCuestionario,
+                'error': 'No se ha podido crear el cuestionario'
+            })
 
+@login_required
+@group_required('Tutor')
+def resultadosCuestionarios(request):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    estadoCerrado = Estado.objects.get(estado = 'Cerrado')
+    grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id).exclude(idEstado_id = estadoCerrado.id)
+    return render(request, 'Listado_Grupos_Tutor_Cuestionarios.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Ver resultados de Cuestionarios',
+        'grupos': grupos
+    })
+
+@login_required
+@group_required('Tutor')
+def verResultadosCuestionariosGrupo(request, grupo_id):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    try:
+        grupo = Grupo.objects.get(idPersonalTec_id = tutor.id, id = grupo_id)
+    except:
+        return redirect('verResultadosCuestionarios')
+    tutorados = Tutorado.objects.filter(idGrupo_id = grupo_id)
+    cuesitonarios = Cuestionario.objects.filter(idGrupo_id = grupo_id)
+    arr = []
+    for cues in cuesitonarios:
+       arr.append(cues.id)
+    respuestas = CuestionarioContestado.objects.filter(idCuestionario_id__in = arr)
+
+    return render(request, 'resultadosCuestionarios.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Ver resultados de Cuestionarios',
+        'tutorados': tutorados,
+        'cuesitonarios': cuesitonarios,
+        'respuestas': respuestas
+    })
 
 @login_required
 @group_required('Tutor')
 def gruposTutor(request):
-    return render(request, 'Listado_Grupos_Tutor.html',{
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    estadoCerrado = Estado.objects.get(estado = 'Cerrado')
+    grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id).exclude(idEstado_id = estadoCerrado.id)
+    return render(request, 'Listado_Grupos_Tutor_Tutorados.html', {
         'gruops': request.user.groups.all(),
-        'title': 'Grupos'
+        'title': 'Ver grupos',
+        'grupos': grupos
     })
+
+@login_required
+@group_required('Tutor')
+def grupoTutor(request, grupo_id):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    try:
+        grupo = Grupo.objects.get(idPersonalTec_id = tutor.id, id = grupo_id)
+    except:
+        return redirect('gruposTutor')
+    tutorados = Tutorado.objects.filter(idGrupo_id = grupo_id)
+    return render(request, 'Listado_Tutorados.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Ver grupos',
+        'tutorados': tutorados,
+        'grupo': grupo
+    })
+
+@login_required
+@group_required('Tutor')
+def solicitudPsicologigaTutor(request, grupo_id, tutorado_id):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    try:
+        grupo = Grupo.objects.get(idPersonalTec_id = tutor.id, id = grupo_id)
+        tutorado = Tutorado.objects.get(idGrupo_id = grupo_id, id = tutorado_id)
+    except:
+        return redirect('gruposTutor')
+    form = SolicitudCitaFormTutor()
+    ordenes = Orden.objects.get(nombreOrden = 'Psicológico')
+    motivos = Motivo.objects.filter(idOrden_id = ordenes.id)
+    form.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]
+    
+    if request.method == 'GET':
+        return render(request, 'Solicitud_Ayuda_Psicologica_Tutor.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Solicitar ayuda psicológica',
+            'form': form
+        })
+    else:
+        formsolicitud = SolicitudCitaFormTutor(request.POST)
+        if formsolicitud.is_valid():
+            try:
+                estadosCitas = Estado.objects.get(estado = 'Espera')
+                nuevaSolicitud = formsolicitud.save(commit = False)
+                nuevaSolicitud.folio = request.user.username + '-' + datetime.datetime.now().strftime("%Y/%m/%d") + '-' + tutorado.user.username
+                nuevaSolicitud.idTutorado_id = tutorado.id
+                nuevaSolicitud.idOrden_id = ordenes.id
+                nuevaSolicitud.idEstado_id = estadosCitas.id
+                nuevaSolicitud.idPersonalTec_id = tutor.id
+                nuevaSolicitud.save()
+                return render(request, 'Solicitud_Ayuda_Psicologica_Tutor.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Solicitar ayuda psicológica',
+                    'form': form,
+                    'exito': 'Solicitud creada con éxito'
+                })
+            except:
+                return render(request, 'Solicitud_Ayuda_Psicologica_Tutor.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Ayuda Psicologica',
+                    'form': formsolicitud,
+                    'error': 'No se ha podido procesar la solicitud'
+                })
+        else:
+            return render(request, 'miscitas.html',{
+                'gruops': request.user.groups.all(),
+                'title': 'Ayuda Psicologica',
+                'form': formsolicitud,
+                'error': 'No se ha podido procesar la solicitud'
+            })
+
 
 def a11(request):
     return render(request, 'psicologo dar citas.html')
@@ -595,8 +683,32 @@ def verGruposDelTutor(request, Tutor):
         'tutor':Tutor
     })
 
+@login_required
+@group_required('Coordinador de Tutoria del Departamento Académico')
+def listarAlumnos(request, Grupoid):
+
+    if request.method == 'GET':
+        listaAlumnos=Tutorado.objects.filter(idGrupo_id=Grupoid)
+        tieneAlumnos=False
+        lista=[]
+        listaTutorado=[]
+        if listaAlumnos.count() > 0:
+            tieneAlumnos=True
+            for alumno in listaAlumnos:
+                usuario=get_object_or_404(User, id=alumno.user_id)
+                lista=[alumno,usuario]
+                listaTutorado.append(lista)         
+
+        return render(request, 'listarAlumnos.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Listar alumnos',
+            'lista': listaTutorado,
+            'tieneAlumnos':tieneAlumnos
+        })
+
 #pruebas
 @login_required
+@group_required('Tutor', 'Tutorado')
 def prueba(request):
     return render(request, 'prueba.html', {
         'groups': request.user.groups.all()

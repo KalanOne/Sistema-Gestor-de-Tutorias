@@ -11,7 +11,7 @@ urlpatterns = [
     path('Tutorado/Cuestionarios/', views.cuestionariosTutorado, name='cuestionariosTutorado'),
     path('Tutorado/Cuestionarios/Enviar/<int:cuestionario_id>', views.enviarCuestionarioTutorado, name='enviarCuestionarioTutorado'),
     path('Tutorado/Perfil', views.perfilTutorado, name = 'perfilTutorado'),
-    path('Tutorado/Citas', views.misCitasTutorado, name = 'misCitasTutorado'),
+    path('Tutorado/Citas/<int:page>', views.misCitasTutorado, name = 'misCitasTutorado'),
     path('Tutorado/CambioPassword', views.cambiarPassword, name = 'cambiarPassword'),
     path('Tutorado/EditarInformacion', views.editarInformacion, name = 'editarInformacion'),
 
@@ -20,13 +20,18 @@ urlpatterns = [
     path('verDocumentacion/', views.verDocumentacion, name = 'verDocumentacion'),
     path('crearDocumento/', views.crearDocumento, name = 'crearDocumento'),
     path('perfilTodos/', views.perfilTodos, name = 'perfilTodos'),
-    path('gruposTutor/', views.gruposTutor, name = 'gruposTutor'),
-    path('crearCuestionario/', views.crearCuestionario, name = 'crearCuestionario'),
+    path('Grupos/', views.gruposTutor, name = 'gruposTutor'),
+    path('Grupos/<int:grupo_id>', views.grupoTutor, name = 'grupoTutor'),
+    path('Grupos/<int:grupo_id>/Ayuda/Psicologica/<int:tutorado_id>', views.solicitudPsicologigaTutor, name = 'solicitarAyudaPsicologicaTutor'),
+    path('Cuestionario/Crear', views.crearCuestionario, name = 'crearCuestionario'),
+    path('Cuestionario/Resultados', views.resultadosCuestionarios, name = 'verResultadosCuestionarios'),
+    path('Cuestionario/Resultados/<int:grupo_id>', views.verResultadosCuestionariosGrupo, name = 'verResultadosCuestionariosGrupo'),
     path('Tutor/CambioPassword', views.cambiarPasswordTutor, name = 'cambiarPasswordTutor'),
 
     path('CoordinadorDepartamental/listaTutor', views.listaTutor, name = 'listaTutor'),
     path('CoordinadorDepartamental/crearGrupo/<int:Tutor>', views.crearGrupo, name = 'crearGrupo'),
     path('CoordinadorDepartamental/verGruposDelTutor/<int:Tutor>', views.verGruposDelTutor, name = 'verGruposDelTutor'),
+    path('CoordinadorDepartamental/listarAlumnos/<int:Grupoid>', views.listarAlumnos, name = 'listarAlumnos'),
     
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),
