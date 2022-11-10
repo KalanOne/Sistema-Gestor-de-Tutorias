@@ -460,3 +460,22 @@ class Cita(models.Model):
         verbose_name_plural= 'Citas'
         db_table= 'cita'
         ordering= ['id']
+
+
+class Credito(models.Model):
+    archivo = models.FileField(upload_to = 'Tutorado/Creditos')
+    comentarios = models.CharField(max_length=200, null = True, blank = True)
+    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
+    idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
+
+    def Mostrar(self):
+        return "{}".format(self.idTutorado)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'Credito'
+        verbose_name_plural= 'Creditos'
+        db_table= 'credito'
+        ordering= ['id']
