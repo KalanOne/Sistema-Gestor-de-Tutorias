@@ -321,9 +321,16 @@ class PAT(models.Model):
 
 
 class ReporteSemestralGrupal(models.Model):
+    opciones=(
+            (1, 1),
+            (2, 2),
+            (3, 3)
+    )
+
     folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    fechaLimite = models.DateField()
+    archivo = models.FileField(upload_to = 'Tutor/ReporteSemestral')
+    ano = models.IntegerField()
+    periodo = models.IntegerField(choices = opciones)
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
     idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)

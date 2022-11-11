@@ -6,24 +6,18 @@
     <div class="row">
         <div class="col-12 mb-5">
             <h1 class="text-center h1">
-                Inicio de sesion para SGT
+                Reporte Semestral
             </h1>
         </div>
     </div>
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-            <form method="POST" autocomplete="false">
-                {% csrf_token %}
-                {{ form|crispy }}
-                {% if error is not none %}
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <div>{{error}}</div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {% if hecho is not none %}
+                <div class="alert alert-info" role="alert">
+                    <div>{{hecho}}</div>
                 </div>
-                {% endif %}
-                <button type="submit" class="btn btn-primary">Entrar</button>
-            <form>
+            {% endif %}
         </div>
         <div class="col-md-3"></div>
     </div>

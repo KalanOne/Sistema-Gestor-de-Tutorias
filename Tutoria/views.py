@@ -404,11 +404,29 @@ def verDocumentacion(request):
 @group_required('Tutor')
 def reporteSemestral(request):
     tutor = PersonalTec.objects.get(user_id = request.user.id)
-    form = CambioDePeriodoInstitucion
+    estadoActivo = Estado.objects.get(estado = 'Activo')
+
+    try:
+        grupo = Grupo.objects.get(idPersonalTec_id = tutor.id, idEstado_id = estadoActivo.id)
+    except:
+        return render(request, 'reporteSemestral_Tutor.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Reporte semestral',
+            'hecho': 'No tienes grupos activos para elaborar reporte semestral'
+        })
+
+    try:
+        reporte = ReporteSemestralGrupal.objects.get(idPersonalTec_id = tutor.id, ano = tutor.idInstitucion.anoActual, periodo = tutor.idInstitucion.periodoActual, idGrupo_id = grupo.id)
+        return render(request, 'reporteSemestral_Tutor.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Reporte semestral',
+            'hecho': 'Ya has realizado el reporte semestral del año' + tutor.idInstitucion.anoActual + ' periodo ' + tutor.idInstitucion.periodoActual + ' del grupo ' + grupo.grupo
+        })
+    except:
+        print('Se hace form para que suba su reporte')
     return render(request, 'reporteSemestral_Tutor.html', {
         'gruops': request.user.groups.all(),
-        'title': 'Reporte semestral',
-        'form': form
+        'title': 'Reporte semestral'
     })
 
 @login_required
