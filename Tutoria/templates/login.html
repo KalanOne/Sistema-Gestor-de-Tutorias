@@ -16,11 +16,11 @@
             <form method="POST" autocomplete="false">
                 {% csrf_token %}
                 {{ form|crispy }}
-                {% if error is not none %}
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <div>{{error}}</div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+                {% if error is not defined %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <div>{{error}}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 {% endif %}
                 <button type="submit" class="btn btn-primary">Entrar</button>
             <form>

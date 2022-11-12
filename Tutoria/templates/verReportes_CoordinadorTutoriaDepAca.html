@@ -1,0 +1,58 @@
+{% extends 'layout\basicCNMenu.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-5">
+            <h1 class="text-center h1">
+                Reportes Semestrales Grupales
+            </h1>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for grupo in grupos %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-header text-white text-center" style="background: #1b396a;">
+                        <h5>{{ grupo.grupo }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            {% for reporte in reportes %}
+                                {% if reporte.idGrupo_id == grupo.id %}
+                                    <p>Descargar reporte: <a href="{{ reporte.archivo.url }}" download="" class="link-success text-decoration-none ms-2"><i class="bi bi-download"></i></a></p>
+                                    {% if reporte.idEstado.estado == 'Espera' %}
+                                        <div class="text-center">
+                                            <a class="btn btn-success" href="#" role="button">Aceptar</a>
+                                            <a class="btn btn-danger" href="#" role="button">Rechazar</a>
+                                        </div>
+                                    {% elif reporte.idEstado.estado == 'Rechazado' %}
+                                        <div class="alert alert-danger mb-1" role="alert">
+                                            <div>Rechazado</div>
+                                        </div>
+                                        <a class="btn btn-success" href="#" role="button">Aceptar</a>
+                                        <button class="btn btn-danger" type="button" disabled>Rechazar</button>
+                                    {% elif reporte.idEstado.estado == 'Aceptado' %}
+                                        <div class="alert alert-success mb-1" role="alert">
+                                            <div>Aceptado</div>
+                                        </div>
+                                        <button class="btn btn-danger" type="button" disabled>Rechazar</button>
+                                        <a class="btn btn-danger" href="#" role="button">Rechazar</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if tiene == False %}
+                                <div class="alert alert-info mb-1" role="alert">
+                                    <div>No hay reporte de este grupo</div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

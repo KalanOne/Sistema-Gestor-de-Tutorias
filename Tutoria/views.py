@@ -417,17 +417,92 @@ def reporteSemestral(request):
 
     try:
         reporte = ReporteSemestralGrupal.objects.get(idPersonalTec_id = tutor.id, ano = tutor.idInstitucion.anoActual, periodo = tutor.idInstitucion.periodoActual, idGrupo_id = grupo.id)
+    except:
+        form = SubirReporteSemestral()
+        grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id, idEstado_id = estadoActivo.id)
+        form.fields['idGrupo'].choices = [(gr.id, gr.grupo) for gr in grupos]
+        if request.method == 'GET':
+            return render(request, 'reporteSemestral_Tutor.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Reporte semestral',
+                'form': form
+            })
+        else:
+            formNuevo = SubirReporteSemestral(request.POST, request.FILES)
+            if formNuevo.is_valid():
+                try:
+                    estadoEspera = Estado.objects.get(estado = 'Espera')
+                    nuevoReporte = formNuevo.save(commit = False)
+                    nuevoReporte.folio = datetime.datetime.now().strftime("%Y%m%d") + tutor.user.username
+                    nuevoReporte.idPersonalTec_id = tutor.id
+                    nuevoReporte.idEstado_id = estadoEspera.id
+                    nuevoReporte.ano = tutor.idInstitucion.anoActual
+                    nuevoReporte.periodo = tutor.idInstitucion.periodoActual
+                    nuevoReporte.save()
+                    return render(request, 'reporteSemestral_Tutor.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Reporte semestral',
+                        'exito': 'Se ha enviado el documento con éxito'
+                    })
+                except:
+                    return render(request, 'reporteSemestral_Tutor.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Reporte semestral',
+                        'form': formNuevo,
+                        'error': 'No se ha podido enviar el documento'
+                    })
+            else:
+                return render(request, 'reporteSemestral_Tutor.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Reporte semestral',
+                    'form': formNuevo,
+                    'error': 'No se ha podido enviar el documento'
+                })
+    if reporte.idEstado.estado == 'Espera' or reporte.idEstado.estado == 'Aceptado':
         return render(request, 'reporteSemestral_Tutor.html', {
             'gruops': request.user.groups.all(),
             'title': 'Reporte semestral',
-            'hecho': 'Ya has realizado el reporte semestral del año' + tutor.idInstitucion.anoActual + ' periodo ' + tutor.idInstitucion.periodoActual + ' del grupo ' + grupo.grupo
+            'hecho': 'Ya has realizado el reporte semestral del semestre ' + str(tutor.idInstitucion.anoActual) + ' periodo ' + str(tutor.idInstitucion.periodoActual) + ' del grupo ' + grupo.grupo
         })
-    except:
-        print('Se hace form para que suba su reporte')
-    return render(request, 'reporteSemestral_Tutor.html', {
-        'gruops': request.user.groups.all(),
-        'title': 'Reporte semestral'
-    })
+    else:
+        form = SubirReporteSemestral()
+        grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id, idEstado_id = estadoActivo.id)
+        form.fields['idGrupo'].choices = [(gr.id, gr.grupo) for gr in grupos]
+        if request.method == 'GET':
+            return render(request, 'reporteSemestral_Tutor.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Reporte semestral',
+                'form': form,
+                'info': 'Tu reporte ha sido rechazado, por favor sube un nuevo reporte'
+            })
+        else:
+            formNuevo = SubirReporteSemestral(request.POST, request.FILES, instance = reporte)
+            if formNuevo.is_valid():
+                try:
+                    estadoEspera = Estado.objects.get(estado = 'Espera')
+                    nuevoReporte = formNuevo.save(commit = False)
+                    nuevoReporte.folio = datetime.datetime.now().strftime("%Y%m%d") + tutor.user.username
+                    nuevoReporte.idEstado_id = estadoEspera.id
+                    nuevoReporte.save()
+                    return render(request, 'reporteSemestral_Tutor.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Reporte semestral',
+                        'exito': 'Se ha actualizado el documento con éxito'
+                    })
+                except:
+                    return render(request, 'reporteSemestral_Tutor.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Reporte semestral',
+                        'form': formNuevo,
+                        'error': 'No se ha podido enviar el documento'
+                    })
+            else:
+                return render(request, 'reporteSemestral_Tutor.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Reporte semestral',
+                    'form': formNuevo,
+                    'error': 'No se ha podido enviar el documento'
+                })
 
 @login_required
 def perfilTodos(request):
@@ -734,6 +809,21 @@ def listarAlumnos(request, Grupoid):
             'lista': listaTutorado,
             'tieneAlumnos':tieneAlumnos
         })
+
+@login_required
+@group_required('Coordinador de Tutoria del Departamento Académico')
+def verReportesSemestralesGrupales(request):
+    coordinador = PersonalTec.objects.get(user_id = request.user.id)
+    estadoActivo = Estado.objects.get(estado = 'Activo')
+    tutores = PersonalTec.objects.filter(idDepartamentoAcademico_id = coordinador.idDepartamentoAcademico_id)
+    grupos = Grupo.objects.filter(idPersonalTec__in = tutores, idEstado_id = estadoActivo.id)
+    reportes = ReporteSemestralGrupal.objects.filter(idGrupo__in = grupos)
+    return render(request, 'verReportes_CoordinadorTutoriaDepAca.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Ver Reportes Semestrales Grupales',
+        'grupos': grupos,
+        'reportes': reportes
+    })
 
 #pruebas
 @login_required

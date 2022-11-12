@@ -33,7 +33,8 @@ urlpatterns = [
     path('CoordinadorDepartamental/crearGrupo/<int:Tutor>', views.crearGrupo, name = 'crearGrupo'),
     path('CoordinadorDepartamental/verGruposDelTutor/<int:Tutor>', views.verGruposDelTutor, name = 'verGruposDelTutor'),
     path('CoordinadorDepartamental/listarAlumnos/<int:Grupoid>', views.listarAlumnos, name = 'listarAlumnos'),
-    
+    path('CoordinadorDepartamental/ReportesSemestralesGrupales', views.verReportesSemestralesGrupales, name = 'verReportesSemestralesGrupales'),
+
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),
     
