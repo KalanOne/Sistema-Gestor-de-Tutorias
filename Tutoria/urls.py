@@ -11,7 +11,8 @@ urlpatterns = [
     path('Tutorado/Cuestionarios/', views.cuestionariosTutorado, name='cuestionariosTutorado'),
     path('Tutorado/Cuestionarios/Enviar/<int:cuestionario_id>', views.enviarCuestionarioTutorado, name='enviarCuestionarioTutorado'),
     path('Tutorado/Perfil', views.perfilTutorado, name = 'perfilTutorado'),
-    path('Tutorado/Citas/<int:page>', views.misCitasTutorado, name = 'misCitasTutorado'),
+    # path('Tutorado/Citas/<int:page>', views.misCitasTutorado, name = 'misCitasTutorado'),
+    path('Tutorado/Citas', views.misCitasTutorado, name = 'misCitasTutorado'),
     path('Tutorado/CambioPassword', views.cambiarPassword, name = 'cambiarPassword'),
     path('Tutorado/EditarInformacion', views.editarInformacion, name = 'editarInformacion'),
 
