@@ -6,7 +6,6 @@ from .models import *
 from .forms import *
 import datetime
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator
 # Create your views here.
 
 #Vistas para login, logout y pagina principal para todos los usuarios
@@ -291,72 +290,6 @@ def editarInformacion(request):
             'formPerfilTutorado': perfilTutoradoform,
             'formpadremadretutor': padremadretutorform,
         })
-
-# @login_required
-# @group_required('Tutorado')
-# def misCitasTutorado(request, page):
-#     tutorado = Tutorado.objects.get(user_id = request.user.id)
-#     citasTutorado = Cita.objects.filter(idTutorado_id = tutorado.id).order_by("-id")
-#     personalMed = PersonalMed.objects.filter(idInstitucion_id = tutorado.idInstitucion_id)
-#     ordenes = Orden.objects.get(nombreOrden = 'Psicológico')
-#     motivos = Motivo.objects.filter(idOrden_id = ordenes.id)
-#     form = SolicitudCitaFormTutorado()
-#     form.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]
-#     if tutorado.idGrupo is None:
-#         cuentaGrupo = 0
-#     else:
-#         cuentaGrupo = 1
-#     paginator = Paginator(citasTutorado, 3)
-#     paginacion = paginator.get_page(page)
-#     if request.method == 'GET':
-#         return render(request, 'miscitas.html',{
-#             'gruops': request.user.groups.all(),
-#             'title': 'Ayuda Psicologica',
-#             'cuentaGrupo': cuentaGrupo,
-#             'citas': paginacion,
-#             'personalMeds': personalMed,
-#             'form': form
-#         })
-#     else:
-#         formsolicitud = SolicitudCitaFormTutorado(request.POST)
-#         if formsolicitud.is_valid():
-#             try:
-#                 estadosCitas = Estado.objects.get(estado = 'Espera')
-#                 nuevaSolicitud = formsolicitud.save(commit = False)
-#                 nuevaSolicitud.folio = request.user.username + '-' + datetime.datetime.now().strftime("%Y/%m/%d") + '-' + request.user.username
-#                 nuevaSolicitud.idTutorado_id = tutorado.id
-#                 nuevaSolicitud.idOrden_id = ordenes.id
-#                 nuevaSolicitud.idEstado_id = estadosCitas.id
-#                 nuevaSolicitud.save()
-#                 return render(request, 'miscitas.html',{
-#                     'gruops': request.user.groups.all(),
-#                     'title': 'Ayuda Psicologica',
-#                     'cuentaGrupo': cuentaGrupo,
-#                     'citas': paginacion,
-#                     'personalMeds': personalMed,
-#                     'form': form,
-#                     'exito': 'Solicitud creada con éxito'
-#                 })
-#             except:
-#                 return render(request, 'miscitas.html',{
-#                     'gruops': request.user.groups.all(),
-#                     'title': 'Ayuda Psicologica',
-#                     'cuentaGrupo': cuentaGrupo,
-#                     'citas': paginacion,
-#                     'personalMeds': personalMed,
-#                     'form': formsolicitud,
-#                     'error': 'No se ha podido procesar la solicitud'
-#                 })
-#         else:
-#             return render(request, 'miscitas.html',{
-#                 'gruops': request.user.groups.all(),
-#                 'title': 'Ayuda Psicologica',
-#                 'cuentaGrupo': cuentaGrupo,
-#                 'citas': paginacion,
-#                 'personalMeds': personalMed,
-#                 'form': formsolicitud,
-#                 'error': 'No se ha podido procesar la solicitud'
-#             })
 
 @login_required
 @group_required('Tutorado')
