@@ -56,7 +56,6 @@ Estados:
         Aceptado
         Rechazado
 
-
 Grupo de respuestas:
 
     1:
@@ -123,3 +122,16 @@ Motivo:
         Dolor de estómago
         Dolor de pierna
         Dolor de pie
+
+Grupos:
+    Academia
+    Coordinación Institucional de Tutoría
+    Coordinador de Tutoria del Departamento Académico
+    Jefe de Departamento Académico
+    Jefe de Desarrollo Académico
+    Subdirector Académico
+    Tutor
+    Encargado de Créditos Complementarios
+    Tutorado
+    Psicológico
+    Médico

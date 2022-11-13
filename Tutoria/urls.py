@@ -19,7 +19,7 @@ urlpatterns = [
     path('Documentacion/', views.Documentacion, name = 'documentos'),
     path('verDocumentacion/', views.verDocumentacion, name = 'verDocumentacion'),
     # path('crearDocumento/', views.crearDocumento, name = 'crearDocumento'),
-    path('ReporteSemestral', views.reporteSemestral, name='reporteSemestral'),
+    path('ReporteSemestral', views.reporteSemestralGrupal, name='reporteSemestral'),
     path('perfilTodos/', views.perfilTodos, name = 'perfilTodos'),
     path('Grupos/', views.gruposTutor, name = 'gruposTutor'),
     path('Grupos/<int:grupo_id>', views.grupoTutor, name = 'grupoTutor'),
@@ -29,11 +29,16 @@ urlpatterns = [
     path('Cuestionario/Resultados/<int:grupo_id>', views.verResultadosCuestionariosGrupo, name = 'verResultadosCuestionariosGrupo'),
     path('Tutor/CambioPassword', views.cambiarPasswordTutor, name = 'cambiarPasswordTutor'),
 
-    path('CoordinadorDepartamental/listaTutor', views.listaTutor, name = 'listaTutor'),
-    path('CoordinadorDepartamental/crearGrupo/<int:Tutor>', views.crearGrupo, name = 'crearGrupo'),
-    path('CoordinadorDepartamental/verGruposDelTutor/<int:Tutor>', views.verGruposDelTutor, name = 'verGruposDelTutor'),
-    path('CoordinadorDepartamental/listarAlumnos/<int:Grupoid>', views.listarAlumnos, name = 'listarAlumnos'),
+    # urls para Jefe de Departamento Académico
+    path('JefeDepartamentoAcademico/listaTutor', views.listaTutor, name = 'listaTutor'),
+    path('JefeDepartamentoAcademico/crearGrupo/<int:Tutor>', views.crearGrupo, name = 'crearGrupo'),
+    path('JefeDepartamentoAcademico/verGruposDelTutor/<int:Tutor>', views.verGruposDelTutor, name = 'verGruposDelTutor'),
+    path('JefeDepartamentoAcademico/listarAlumnos/<int:Grupoid>', views.listarAlumnos, name = 'listarAlumnos'),
+
+    # urls para Coordinador de Tutoria del Departamento Académico
     path('CoordinadorDepartamental/ReportesSemestralesGrupales', views.verReportesSemestralesGrupales, name = 'verReportesSemestralesGrupales'),
+    path('CoordinadorDepartamental/ReportesSemestrales', views.reporteSemestralDept, name = 'reporteSemestralDpt'),
+    path('CoordinadorDepartamental/PAT', views.reportePAT, name = 'reportePAT'),
 
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),

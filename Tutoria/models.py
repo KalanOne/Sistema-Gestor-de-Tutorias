@@ -300,11 +300,13 @@ class PIT(models.Model):
 
 class PAT(models.Model):
     folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    estadoEdicion = models.CharField(max_length=50)
-    fechaLimite = models.DateField()
+    archivo = models.FileField(upload_to = 'CoordinadorTutoriaDepartamentoAcademico/PAT')
+    fechaEnvio = models.DateField(auto_now_add = True, editable = False)
+    ano = models.IntegerField()
+    periodo = models.IntegerField()
+    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
     idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
+    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
     
 
     def Mostrar(self):
@@ -323,6 +325,7 @@ class PAT(models.Model):
 class ReporteSemestralGrupal(models.Model):
     folio = models.CharField(max_length=50)
     archivo = models.FileField(upload_to = 'Tutor/ReporteSemestral')
+    fechaEnvio = models.DateField(auto_now_add = True, editable = False)
     ano = models.IntegerField()
     periodo = models.IntegerField()
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
@@ -345,11 +348,13 @@ class ReporteSemestralGrupal(models.Model):
 
 class ReporteSemestralDepartamento(models.Model):
     folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    fechaLimite = models.DateField()
+    archivo = models.FileField(upload_to = 'CoordinadorTutoriaDepartamentoAcademico/ReporteSemestral')
+    fechaEnvio = models.DateField(auto_now_add = True, editable = False)
+    ano = models.IntegerField()
+    periodo = models.IntegerField()
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
     idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
+    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
     
 
     def Mostrar(self):

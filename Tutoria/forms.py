@@ -140,11 +140,27 @@ class CambioDePeriodoInstitucion(forms.ModelForm):
             'periodoActual': ('Periodo nuevo')
         }
 
-class SubirReporteSemestral(forms.ModelForm):
+class SubirReporteSemestralGrupal(forms.ModelForm):
     class Meta:
         model = ReporteSemestralGrupal
         fields = {'archivo', 'idGrupo'}
         labels = {
-            'archivo': 'Sube tu archivo', 
-            'idGrupo': 'Grupo'
+            'archivo': ('Sube tu archivo'), 
+            'idGrupo': ('Grupo')
+        }
+
+class SubirReporteSemestralDept(forms.ModelForm):
+    class Meta:
+        model = ReporteSemestralDepartamento
+        fields = {'archivo'}
+        labels = {
+            'archivo': ('Sube tu archivo')
+        }
+
+class SubirPAT(forms.ModelForm):
+    class Meta:
+        model = PAT
+        fields = {'archivo'}
+        labels = {
+            'archivo': ('Sube tu archivo')
         }

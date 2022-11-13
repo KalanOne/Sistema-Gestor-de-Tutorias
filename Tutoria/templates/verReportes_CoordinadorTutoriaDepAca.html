@@ -19,34 +19,13 @@
                     </div>
                     <div class="card-body">
                         <div class="card-text">
+                            <p>Tutor: {{ grupo.idPersonalTec.user.first_name }} {{ grupo.idPersonalTec.user.last_name }}</p>
                             {% for reporte in reportes %}
                                 {% if reporte.idGrupo_id == grupo.id %}
                                     <p>Descargar reporte: <a href="{{ reporte.archivo.url }}" download="" class="link-success text-decoration-none ms-2"><i class="bi bi-download"></i></a></p>
-                                    {% if reporte.idEstado.estado == 'Espera' %}
-                                        <div class="text-center">
-                                            <a class="btn btn-success" href="#" role="button">Aceptar</a>
-                                            <a class="btn btn-danger" href="#" role="button">Rechazar</a>
-                                        </div>
-                                    {% elif reporte.idEstado.estado == 'Rechazado' %}
-                                        <div class="alert alert-danger mb-1" role="alert">
-                                            <div>Rechazado</div>
-                                        </div>
-                                        <a class="btn btn-success" href="#" role="button">Aceptar</a>
-                                        <button class="btn btn-danger" type="button" disabled>Rechazar</button>
-                                    {% elif reporte.idEstado.estado == 'Aceptado' %}
-                                        <div class="alert alert-success mb-1" role="alert">
-                                            <div>Aceptado</div>
-                                        </div>
-                                        <button class="btn btn-danger" type="button" disabled>Rechazar</button>
-                                        <a class="btn btn-danger" href="#" role="button">Rechazar</a>
-                                    {% endif %}
+                                    <p>Fecha: {{ reporte.fechaEnvio }}</p>
                                 {% endif %}
                             {% endfor %}
-                            {% if tiene == False %}
-                                <div class="alert alert-info mb-1" role="alert">
-                                    <div>No hay reporte de este grupo</div>
-                                </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>

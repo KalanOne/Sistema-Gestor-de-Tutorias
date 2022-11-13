@@ -92,7 +92,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'crearCuestionario' %}">Crear Cuestionario</a>
                         </li>
-                        {% comment %} de momento la pantalla de ver resultados no esta creada asi que redirige a la pantalla cuestionario {% endcomment %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'verResultadosCuestionarios' %}">Resultados de cuestionarios</a>
                         </li>
@@ -102,10 +101,18 @@
                     {% endif %}
                     {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
+                            <a class="nav-link" href="{% url 'verReportesSemestralesGrupales' %}">Reportes Grupales</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'verReportesSemestralesGrupales' %}">Reportes Grupales</a>
+                            <a class="nav-link" href="{% url 'reporteSemestralDpt' %}">Reporte Semestral Departamental</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'reportePAT' %}">Plan de Acción Tutorial</a>
+                        </li>
+                    {% endif %}
+                    {% if group.name == 'Jefe de Departamento Académico' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
                         </li>
                     {% endif %}
                     <li class="nav-item">
