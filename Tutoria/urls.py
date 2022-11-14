@@ -38,8 +38,12 @@ urlpatterns = [
 
     # urls para Coordinador de Tutoria del Departamento Académico
     path('CoordinadorDepartamental/ReportesSemestralesGrupales', views.verReportesSemestralesGrupales, name = 'verReportesSemestralesGrupales'),
-    path('CoordinadorDepartamental/ReportesSemestrales', views.reporteSemestralDept, name = 'reporteSemestralDpt'),
+    path('CoordinadorDepartamental/ReporteSemestral', views.reporteSemestralDept, name = 'reporteSemestralDpt'),
     path('CoordinadorDepartamental/PAT', views.reportePAT, name = 'reportePAT'),
+
+    # urls Coordinación Institucional de Tutoría
+    path('CoordinadorInstitucional/ReporteSemestralInstitucional', views.reporteSemestralInst, name = 'reporteSemestralInst'),
+    path('CoordinadorInstitucional/ReportesSemestralesDpt', views.verReportesSemestralesDpt, name = 'verReportesSemestralesDpt'),
 
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),

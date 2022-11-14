@@ -130,13 +130,13 @@ class Tutorado(models.Model):
 
 
 class PersonalTec(models.Model):
-    domicilio = models.CharField(max_length=100)
-    telefono = models.CharField(max_length=10)
-    correoPersonal = models.EmailField(max_length = 254)
-    edificio = models.CharField(max_length=100)
-    idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
+    domicilio = models.CharField(max_length=100, null = True, blank = True)
+    telefono = models.CharField(max_length=10, null = True, blank = True)
+    correoPersonal = models.EmailField(max_length = 254, null = True, blank = True)
+    edificio = models.CharField(max_length=100, null = True, blank = True)
+    idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE, null = True, blank = True)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null = True, blank = True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def Mostrar(self):
         return "{} - {}".format(self.correoPersonal, self.edificio)
@@ -372,10 +372,13 @@ class ReporteSemestralDepartamento(models.Model):
 
 class ReporteSemestralInstitucional(models.Model):
     folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    fechaLimite = models.DateField()
+    archivo = models.FileField(upload_to = 'CoordinacionInstitucionalTutoria/ReporteSemestral')
+    fechaEnvio = models.DateField(auto_now_add = True, editable = False)
+    ano = models.IntegerField()
+    periodo = models.IntegerField()
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
+    idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
+    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
     
 
     def Mostrar(self):

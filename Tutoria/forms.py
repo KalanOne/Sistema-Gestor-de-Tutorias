@@ -164,3 +164,11 @@ class SubirPAT(forms.ModelForm):
         labels = {
             'archivo': ('Sube tu archivo')
         }
+
+class SubirReporteSemestralInst(forms.ModelForm):
+    class Meta:
+        model = ReporteSemestralInstitucional
+        fields = {'archivo'}
+        labels = {
+            'archivo': ('Sube tu archivo')
+        }
