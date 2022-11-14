@@ -1,13 +1,51 @@
 {% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}
 <div class="container">
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
-    <div class="row">
-      <div class="col">
-        <a href="{% url 'crearGrupo' tutor %}" class="btn btn-primary">Crear grupo <i class="bi bi-plus-circle"></i></a>
-        
+  <div class="text">
+    {% if sobrecargaGrupo == True %}
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+      <div class="row">
+        <div class="col">
+          <button type="button" class="btn btn-primary" id="liveToastBtn">
+            Crear grupo <i class="bi bi-plus-circle"></i>
+          </button>
+        </div>
       </div>
     </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div
+        id="liveToast"
+        class="toast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header" style="background-color: #1b396a"> 
+          <i class="bi bi-circle-fill" style="color:red"></i>
+          <strong class="me-auto" style="color:white"> &nbsp;SGT</strong>
+          <small style="color:white">Ahora</small>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">No se puede crear otro grupo, se ha alcanzado el límite</div>
+      </div>
+    </div>
+    {% else %}
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+      <div class="row">
+        <div class="col">
+          <a href="{% url 'crearGrupo' tutor %}" class="btn btn-primary"
+            >Crear grupo <i class="bi bi-plus-circle"></i
+          ></a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
   </div>
+
   <div class="row row-cols-1 row-cols-md-3 g-3">
     {% for grupo in grupos %}
     <div class="col">
@@ -16,7 +54,9 @@
           <h5 class="card-title">{{grupo.grupo}}</h5>
           <p class="card-text my-4">{{grupo.idEstado}}</p>
           <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a href="{% url 'listarAlumnos' grupo.id%}" class="btn btn-primary">Listar alumnos</a>
+            <a href="{% url 'listarAlumnos' grupo.id%}" class="btn btn-primary"
+              >Listar alumnos</a
+            >
             <a href="#" class="btn btn-primary">Editar grupo</a>
           </div>
         </div>
@@ -25,4 +65,8 @@
     {% endfor %}
   </div>
 </div>
-{% endblock content %}
+{% endblock content %} {% block JS %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.rawgit.com/JacobLett/bootstrap4-latest/504729ba/bootstrap-4-latest.min.js"></script>
+<script src="{% static 'JS/perfilTutorado.js' %}"></script>
+{% endblock JS %}

@@ -1,38 +1,36 @@
 {% extends 'layout/basicCNMenu.html' %} {% block content %} {% load static %}
 <div class="container p-1">
   <div class="row">
-    <div class="col-2 m-2">
-      <br />
-      <div>
-        <img
-          src="icono.png"
-          class="rounded-circle img-fluid m-1"
-          style="background-color: #d9d9d9"
-          alt="..."
-        />
-      </div>
-      <br />
-
-      <a
-        class="btn btn-sm btn-primary text-center m-1"
-        href="{% url 'cambiarPasswordTutor' %}"
-        style="background-color: #1b396a"
-        >Actualizar contraseña</a
-      >
-    </div>
-    <div class="col-9 fw-semibold">
+    <div class="col-2"></div>
+    <div class="col-8 fw-semibold">
       <div class="container">
         <div
           class="row text-white text-center"
           style="background-color: #1b396a"
         >
-          <h4>Información Personal</h4>
+          <h4>
+            Información Personal
+            <a
+              class="mx-2 justify-content-end"
+              href="{% url 'editarInformacionTodos' %}"
+              style="text-decoration: none; color: white"
+            >
+              <i class="bi bi-pencil-square"></i>
+            </a>
+            <a
+              class="mx-2 justify-content-end"
+              href="{% url 'cambiarContraseña' %}"
+              style="text-decoration: none; color: white"
+            >
+              <i class="bi bi-key-fill"></i>
+            </a>
+          </h4>
         </div>
         <div class="row">
           <div class="container p-3" style="background-color: #d9d9d9">
             <div class="row text">
               <div class="col-3" style="text-align: right">Nombre:</div>
-              <div class="col-8">{{formusuario.first_name}}</div>
+              <div class="col-8">{{formusuario.first_name}} {{formusuario.last_name}}</div>
             </div>
             <br />
             <div class="row">
@@ -95,10 +93,14 @@
   </div>
 </div>
 <div class="container">
-    <div class="row">
-        <div class="col text-center my-3">
-            <a href="{% static 'Aviso_de_Privacidad_Simplificado.pdf' %}" target="_blank">Aviso de privacidad</a>
-        </div>
+  <div class="row">
+    <div class="col text-center my-3">
+      <a
+        href="{% static 'Aviso_de_Privacidad_Simplificado.pdf' %}"
+        target="_blank"
+        >Aviso de privacidad</a
+      >
     </div>
+  </div>
 </div>
 {% endblock content %}

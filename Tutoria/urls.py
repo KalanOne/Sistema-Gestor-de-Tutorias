@@ -13,7 +13,6 @@ urlpatterns = [
     path('Tutorado/Perfil', views.perfilTutorado, name = 'perfilTutorado'),
     # path('Tutorado/Citas/<int:page>', views.misCitasTutorado, name = 'misCitasTutorado'),
     path('Tutorado/Citas', views.misCitasTutorado, name = 'misCitasTutorado'),
-    path('Tutorado/CambioPassword', views.cambiarPassword, name = 'cambiarPassword'),
     path('Tutorado/EditarInformacion', views.editarInformacion, name = 'editarInformacion'),
 
     #urls para todos menos el tutorado
@@ -28,7 +27,6 @@ urlpatterns = [
     path('Cuestionario/Crear', views.crearCuestionario, name = 'crearCuestionario'),
     path('Cuestionario/Resultados', views.resultadosCuestionarios, name = 'verResultadosCuestionarios'),
     path('Cuestionario/Resultados/<int:grupo_id>', views.verResultadosCuestionariosGrupo, name = 'verResultadosCuestionariosGrupo'),
-    path('Tutor/CambioPassword', views.cambiarPasswordTutor, name = 'cambiarPasswordTutor'),
 
     # urls para Jefe de Departamento Académico
     path('JefeDepartamentoAcademico/listaTutor', views.listaTutor, name = 'listaTutor'),
@@ -44,6 +42,9 @@ urlpatterns = [
     # urls Coordinación Institucional de Tutoría
     path('CoordinadorInstitucional/ReporteSemestralInstitucional', views.reporteSemestralInst, name = 'reporteSemestralInst'),
     path('CoordinadorInstitucional/ReportesSemestralesDpt', views.verReportesSemestralesDpt, name = 'verReportesSemestralesDpt'),
+
+    path('Cambiar/Contraseña', views.cambiarContraseña, name='cambiarContraseña'),
+    path('Todos/EditarInformacion', views.editarInformacionTodos, name='editarInformacionTodos'),
 
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),

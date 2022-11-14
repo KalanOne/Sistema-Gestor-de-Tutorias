@@ -4,6 +4,7 @@ from .models import *
 from django.contrib.auth.models import User
 import datetime
 from crispy_forms.helper import FormHelper
+from django.contrib.auth.forms import PasswordChangeForm
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -12,8 +13,17 @@ class UserForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(attrs={'class':'form-control', 'id':'User_username','required':'true'}),
             'first_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_first_name','required':'true'}),
-            'last_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_last_name', 'hidden':'true','required':'true'}),
+            'last_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_last_name','required':'true'}),
             'email': forms.TextInput(attrs={'class':'form-control', 'id':'User_email','required':'true'}),
+        }
+
+class EditarUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = {'first_name','last_name'}
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_first_name','required':'true'}),
+            'last_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_last_name','required':'true'}),
         }
 
 class PerfilTutoradoForm(forms.ModelForm):
@@ -63,6 +73,16 @@ class PerfilPersonalTecForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_telefono'}),
             'correoPersonal': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_correoPersonal'}),
             'edificio': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_edificio'})
+        }
+
+class EditarPerfilPersonalTecForm(forms.ModelForm):
+    class Meta:
+        model = PersonalTec
+        fields = {'domicilio','telefono', 'correoPersonal'}
+        widgets = {
+            'domicilio': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_domicilio'}),
+            'telefono': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_telefono'}),
+            'correoPersonal': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_correoPersonal'}),
         }
 
 class EnviarCuestionario(forms.ModelForm):
@@ -172,3 +192,12 @@ class SubirReporteSemestralInst(forms.ModelForm):
         labels = {
             'archivo': ('Sube tu archivo')
         }
+
+class CambiarPasswordForm(PasswordChangeForm):
+    old_password= forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
+    new_password1= forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
+    new_password2= forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
+
+    class Meta:
+        model = User
+        fields = ('old_password','new_password1','new_password2')

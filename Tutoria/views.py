@@ -1,12 +1,48 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
 from .forms import *
 import datetime
 from django.contrib.auth.models import User
 # Create your views here.
+
+def cambiarContraseña(request):
+    if request.method == 'POST':
+        changeform = CambiarPasswordForm(data=request.POST, user=request.user)
+        if changeform.is_valid():
+            changeform.save()
+            update_session_auth_hash(request, changeform.user)
+            return redirect('/Inicio')
+        else:
+
+            error=True
+            changeform = CambiarPasswordForm(user=request.user)
+            changeform.fields['old_password'].label = 'Contraseña Actual'
+            changeform.fields['new_password1'].label = 'Nueva Contraseña'
+            changeform.fields['new_password2'].label = 'Repetir Contraseña'
+            return render(request, 'CambiarContra.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Cambiar Contraseña',
+                'cuentaGrupo': 1,
+                'changeform': changeform,
+                'error': error
+            })
+    else:
+        
+        error=False
+        changeform = CambiarPasswordForm(user=request.user)
+        changeform.fields['old_password'].label = 'Contraseña Actual'
+        changeform.fields['new_password1'].label = 'Nueva Contraseña'
+        changeform.fields['new_password2'].label = 'Repetir Contraseña'
+        return render(request, 'CambiarContra.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Cuestionarios',
+            'cuentaGrupo': 1,
+            'changeform': changeform,
+            'error': error
+        })
 
 #Vistas para login, logout y pagina principal para todos los usuarios
 def group_required(*group_names):
@@ -358,20 +394,6 @@ def misCitasTutorado(request):
                 'error': 'No se ha podido procesar la solicitud'
             })
 
-@login_required
-@group_required('Tutorado')
-def cambiarPassword(request):
-    tutorado = Tutorado.objects.get(user_id = request.user.id)
-    if tutorado.idGrupo is None:
-        cuentaGrupo = 0
-    else:
-        cuentaGrupo = 1
-
-    return render(request, 'PerfilTutoradoContra.html',{
-        'gruops': request.user.groups.all(),
-        'title': 'Cambiar Contraseña',
-        'cuentaGrupo': cuentaGrupo
-    })
 
 def a10(request):
     return render(request, 'Principal Tutorado.html')
@@ -500,30 +522,59 @@ def reporteSemestralGrupal(request):
 @login_required
 def perfilTodos(request):
     #obtener objetos
-    usuario=get_object_or_404(User, id=request.user.id)
-    personaltec=get_object_or_404(PersonalTec, user_id=request.user.id)
-    departamentoacademico=get_object_or_404(DepartamentoAcademico, id=personaltec.idDepartamentoAcademico_id)
-
-    #autorellenar forms con el instance
-    usuarioform=UserForm(instance=usuario)
-    for fieldname in usuarioform.fields:
-        usuarioform.fields[fieldname].disabled = True
-
-    perfilPersonalTecform=PerfilPersonalTecForm(instance=personaltec)
-    for fieldname in perfilPersonalTecform.fields:
-        perfilPersonalTecform.fields[fieldname].disabled = True
-
-    departamentoacademicoform=DepartamentoAcademicoForm(instance=departamentoacademico)
-    for fieldname in departamentoacademicoform.fields:
-        departamentoacademicoform.fields[fieldname].disabled = True
+    usuario=User.objects.get(id=request.user.id)
+    personaltec=PersonalTec.objects.get(user_id=request.user.id)
+    try:
+        departamentoacademico=DepartamentoAcademico.objects.get(id=personaltec.idDepartamentoAcademico_id)
+    except:
+        departamentoacademico=''
 
     return render(request, 'perfilTodos.html',{
         'gruops': request.user.groups.all(),
         'title': 'Perfil',
-        'formusuario': usuarioform,
-        'formperfilPersonalTec': perfilPersonalTecform,
-        'formdepartamentoacademico': departamentoacademicoform
+        'formusuario': usuario,
+        'formperfilPersonalTec': personaltec,
+        'formdepartamentoacademico': departamentoacademico
     })
+
+@login_required
+def editarInformacionTodos(request):
+    #obtener objetos
+    if request.method == 'GET':
+        usuario=User.objects.get(id=request.user.id)
+        personaltec=PersonalTec.objects.get(user_id=request.user.id)
+
+        usuarioform = UserForm(instance = usuario)
+        formpersonaltec= PerfilPersonalTecForm(instance=personaltec)
+
+
+        return render(request, 'editarInformacionTodos.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Perfil',
+            'formu': usuarioform,
+            'formperfilPersonalTec': formpersonaltec,
+        })
+    
+    else:
+        usuario=User.objects.get(id=request.user.id)
+        personaltec=PersonalTec.objects.get(user_id=request.user.id)
+
+        usuarioform = EditarUserForm(request.POST, instance=usuario)
+        formpersonaltec= EditarPerfilPersonalTecForm(request.POST, instance=personaltec)
+
+        if usuarioform.is_valid():
+            post=usuarioform.save(commit = False)
+            post.save()
+        else:
+            print('formulario 1 no valido')
+
+        if formpersonaltec.is_valid():
+            post2=formpersonaltec.save(commit = False)
+            post2.save()
+        else:
+            print('formulario 2 no valido')
+
+        return redirect('perfilTodos')
 
 @login_required
 @group_required('Tutor')
@@ -688,13 +739,6 @@ def solicitudPsicologigaTutor(request, grupo_id, tutorado_id):
 def a11(request):
     return render(request, 'psicologo dar citas.html')
 
-@login_required
-@group_required('Tutor')
-def cambiarPasswordTutor(request):
-    return render(request, 'PerfilTutoradoContra.html',{
-        'gruops': request.user.groups.all(),
-        'title': 'Cambiar Contraseña'
-    })
 
 
 # Jefe de Departamento Académico
@@ -768,13 +812,17 @@ def crearGrupo(request, Tutor):
 @login_required
 @group_required('Jefe de Departamento Académico')
 def verGruposDelTutor(request, Tutor):
-    print(Tutor)
+    sobrecargaGrupo=False
     grupos=Grupo.objects.filter(idPersonalTec_id=Tutor)
+    if grupos.count() >= 3:
+        sobrecargaGrupo=True
+
     return render(request, 'verGrupoDelTutor.html', {
         'gruops': request.user.groups.all(),
         'title': 'Crear Grupo',
         'grupos': grupos,
-        'tutor':Tutor
+        'tutor': Tutor,
+        'sobrecargaGrupo': sobrecargaGrupo
     })
 
 @login_required
