@@ -26,3 +26,4 @@ admin.site.register(Motivo)
 admin.site.register(Cita)
 
 admin.site.register(Excel2)
+admin.site.register(Credito)

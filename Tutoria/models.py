@@ -436,9 +436,17 @@ class Cita(models.Model):
         verbose_name_plural= 'Citas'
         db_table= 'cita'
         ordering= ['id']
+
 #Quizas no la mejor idea llamar igual a la tabla que a la pagina
 class Excel2(models.Model):  
     control = models.CharField(max_length=8)  
     nombres = models.CharField(max_length=35) 
     apellidos = models.CharField(max_length=35) 
     email = models.EmailField(blank=True)  
+
+class Credito(models.Model):
+    nombre_doc = models.CharField(max_length=100)
+    archivo = models.FileField(upload_to = 'Tutorado/Creditos')
+    comentarios = models.CharField(max_length=200, null = True, blank = True)
+    idEstado = models.CharField(max_length=10)
+    idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)

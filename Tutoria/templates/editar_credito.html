@@ -1,0 +1,45 @@
+{% extends 'layout/basicCNMenu.html' %}{% block content %}
+<div class="container">
+  <div class="row vh-705 justify-content-center rounded mt-4">
+    <div class="col-10">
+      
+      <form method="post" enctype="multipart/form-data">  
+        {% csrf_token %}  
+        <div class="row">
+          <div class="col">
+            <p style="font-size: x-large">
+              Cargue el documento de credito que quiera registrar
+            </p>
+          </div>
+        </div>
+        <br />
+        <input type="file" name="constancia_credito">  
+        <div class="row">
+          <div class="col">
+            <p style="font-size: x-large">Escribe el nombre de la actividad que libera el credito</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-11">
+            <input type="text" class="form-control" id="nombre" name="nombre">
+          </div>
+        </div>
+        <br />
+        <div class="row mt-4">
+          <div class="col-5"></div>
+          <div class="col-6">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              style="background-color: #1b396a"
+            >
+              Subir
+            </button>
+          </div>
+        </div>
+      </form>  
+      <br />
+    </div>
+  </div>
+</div>
+{% endblock content %}

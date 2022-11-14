@@ -66,3 +66,16 @@ class PerfilPersonalTecForm(forms.ModelForm):
             'correoPersonal': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'}),
             'edificio': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'})
         }
+
+
+class CreditosComplementarios(forms.ModelForm):
+    class Meta:
+        model = Tutorado
+        fields = '__all__'
+        widgets = {
+            'nombre_doc': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'}),
+            'archivo': forms.FileInput(attrs={'class':'form-control', 'disabled':'true'}),
+            'comentarios': forms.TextInput(attrs={'class':'form-control', 'disabled':'false'}),
+            'idEstado': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'}),
+            'idTutorado': forms.TextInput(attrs={'class':'form-control', 'disabled':'true'})
+        }

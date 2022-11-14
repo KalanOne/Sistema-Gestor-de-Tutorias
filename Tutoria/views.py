@@ -6,8 +6,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from tablib import Dataset 
 from django.utils.datastructures import MultiValueDictKeyError
 
-import openpyxl
-
 from Tutoria.resources import ExcelResource
 from .models import *
 from .forms import *
@@ -202,8 +200,87 @@ def prueba(request):
         'groups': request.user.groups.all()
     })
 
+#vista subir credito
+@login_required
+@group_required('Tutorado')
+def subir_credito(request):
+    tutorado=Tutorado.objects.get(user_id = request.user.id)
+    if request.method == 'POST':  
+        print(tutorado) 
+        fileTitle = request.POST['nombre']
+        print(fileTitle)
+    try:        
+        
+        uploadedFile = request.FILES['constancia_credito']
 
+    except MultiValueDictKeyError:
+        return render(request, 'subir_credito.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Creditos complementarios'
+        })
+    from Tutoria.models import Credito
+    cdt=Credito.objects.create(nombre_doc = fileTitle, archivo = uploadedFile, idEstado = 0, idTutorado = tutorado)  
+    print(fileTitle)   
+    print(uploadedFile) 
+    print(tutorado) 
+    return render(request, 'subir_credito.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Creditos complementarios'
+    })
+       
+#vista editar credito
+@login_required
+@group_required('Tutorado')
+def editar_credito(request):
+    tutorado=Tutorado.objects.get(user_id = request.user.id)
+    if request.method == 'POST':  
+        print(tutorado) 
+        fileTitle = request.POST['nombre']
+        print(fileTitle)
+    try:        
+        
+        uploadedFile = request.FILES['constancia_credito']
 
+    except MultiValueDictKeyError:
+        return render(request, 'subir_credito.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Creditos complementarios'
+        })
+    from Tutoria.models import Credito
+    cdt=Credito.objects.create(nombre_doc = fileTitle, archivo = uploadedFile, idEstado = 0, idTutorado = tutorado)  
+    print(fileTitle)   
+    print(uploadedFile) 
+    print(tutorado) 
+    return render(request, 'subir_credito.html',{
+        'gruops': request.user.groups.all(),
+        'title': 'Creditos complementarios'
+    })
+
+#Vista ver creditos tutorado
+@login_required
+@group_required('Tutorado')
+def ver_credito_tutorado(request):
+    tutorado = Tutorado.objects.get(user_id = request.user.id)
+    print(tutorado)
+    return render(request, 'ver_credito_tutorado.html', {
+        'title': 'Ver creditos',
+        'Credito': Credito.objects.filter(idTutorado = tutorado)
+    })
+
+#Vista ver creditos tutor
+@login_required
+@group_required('Encargado Creditos')
+def ver_credito_tutor(request):
+    #encargado = PersonalTec.objects.get(user_id = request.user.id)
+    #Tutorado.objects.filter(idDepartamentoAcademico = encargado.idDepartamentoAcademico)
+    #'Credito': Credito.objects.filter(idEstado = 0, condicion2)
+    return render(request, 'ver_credito_tutor.html', {
+        'title': 'Revisar creditos',
+        'Credito': Credito.objects.filter(idEstado = 0)
+        
+    })
+
+#Vista subir datos excel /falto la linea que borra la tabla luego de la operacion/ 
 from tablib import Dataset 
 
 def Excel2(request):  
@@ -228,4 +305,7 @@ def Excel2(request):
         for Alumno in Excel2.objects.all():
             #print(Alumno.control)
             usr=User.objects.create(username=Alumno.control, password=Alumno.email)
+        
+        limpiar = Excel2.objects.all()
+        limpiar.delete()
         return render(request, 'excel2.html')  

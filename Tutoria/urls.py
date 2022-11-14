@@ -24,4 +24,9 @@ urlpatterns = [
     #pruebas
     path('prueba/', views.prueba, name = 'Prueba'),
     path('excel2/', views.Excel2, name = 'Excel2'),
+    path('credito/subir/', views.subir_credito, name = 'subir_credito'),
+    path('credito/ver/', views.ver_credito_tutorado, name = 'ver_credito_tutorado'),
+    path('credito/tutor/', views.ver_credito_tutor, name = 'ver_credito_tutor'),
+    path('credito/editar/', views.editar_credito, name = 'editar_credito'),
+    
 ]
