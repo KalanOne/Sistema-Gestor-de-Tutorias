@@ -745,21 +745,19 @@ def a11(request):
 @login_required
 @group_required('Jefe de Departamento Académico')
 def listaTutor(request):
+    vacio=False
     try:
-        coordinador=get_object_or_404(PersonalTec, user_id=request.user.id)
+        coordinador=PersonalTec.objects.get(user_id=request.user.id)
         tutores = PersonalTec.objects.filter(idDepartamentoAcademico_id=coordinador.idDepartamentoAcademico_id, idInstitucion_id=coordinador.idInstitucion_id)
-        lista=[]
-        lista_tutor=[]
-        for tutor in tutores:
-            usuario=get_object_or_404(User, id=tutor.user_id)
-            if usuario.groups.filter(name__in=['Tutor']):
-                lista=[tutor,usuario]
-                lista_tutor.append(lista)
+
+        if tutores.count() == 0:
+            vacio=True
 
         return render(request, 'listaTutor.html',{
             'gruops': request.user.groups.all(),
             'title': 'Listar Tutores',
-            'tutores': lista_tutor,
+            'tutores': tutores,
+            'vacio': vacio
         })
 
     except:
@@ -813,16 +811,21 @@ def crearGrupo(request, Tutor):
 @group_required('Jefe de Departamento Académico')
 def verGruposDelTutor(request, Tutor):
     sobrecargaGrupo=False
+    vacio=False
     grupos=Grupo.objects.filter(idPersonalTec_id=Tutor)
     if grupos.count() >= 3:
         sobrecargaGrupo=True
+
+    if grupos.count() == 0:
+        vacio=True
 
     return render(request, 'verGrupoDelTutor.html', {
         'gruops': request.user.groups.all(),
         'title': 'Crear Grupo',
         'grupos': grupos,
         'tutor': Tutor,
-        'sobrecargaGrupo': sobrecargaGrupo
+        'sobrecargaGrupo': sobrecargaGrupo,
+        'vacio': vacio
     })
 
 @login_required
@@ -832,19 +835,13 @@ def listarAlumnos(request, Grupoid):
     if request.method == 'GET':
         listaAlumnos=Tutorado.objects.filter(idGrupo_id=Grupoid)
         tieneAlumnos=False
-        lista=[]
-        listaTutorado=[]
         if listaAlumnos.count() > 0:
-            tieneAlumnos=True
-            for alumno in listaAlumnos:
-                usuario=get_object_or_404(User, id=alumno.user_id)
-                lista=[alumno,usuario]
-                listaTutorado.append(lista)         
+            tieneAlumnos=True        
 
         return render(request, 'listarAlumnos.html', {
             'gruops': request.user.groups.all(),
             'title': 'Listar alumnos',
-            'lista': listaTutorado,
+            'lista': listaAlumnos,
             'tieneAlumnos':tieneAlumnos
         })
 

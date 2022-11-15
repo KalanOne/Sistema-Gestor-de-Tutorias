@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 100;">
       <div
         id="liveToast"
         class="toast"
@@ -19,10 +19,10 @@
         aria-live="assertive"
         aria-atomic="true"
       >
-        <div class="toast-header" style="background-color: #1b396a"> 
-          <i class="bi bi-circle-fill" style="color:red"></i>
-          <strong class="me-auto" style="color:white"> &nbsp;SGT</strong>
-          <small style="color:white">Ahora</small>
+        <div class="toast-header" style="background-color: #1b396a">
+          <i class="bi bi-circle-fill" style="color: red"></i>
+          <strong class="me-auto" style="color: white"> &nbsp;SGT</strong>
+          <small style="color: white">Ahora</small>
           <button
             type="button"
             class="btn-close"
@@ -30,7 +30,9 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="toast-body">No se puede crear otro grupo, se ha alcanzado el límite</div>
+        <div class="toast-body">
+          No se puede crear otro grupo, se ha alcanzado el límite
+        </div>
       </div>
     </div>
     {% else %}
@@ -46,27 +48,77 @@
     {% endif %}
   </div>
 
-  <div class="row row-cols-1 row-cols-md-3 g-3">
-    {% for grupo in grupos %}
-    <div class="col">
-      <div class="card h-100 text-center">
-        <div class="card-body">
-          <h5 class="card-title">{{grupo.grupo}}</h5>
-          <p class="card-text my-4">{{grupo.idEstado}}</p>
-          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a href="{% url 'listarAlumnos' grupo.id%}" class="btn btn-primary"
-              >Listar alumnos</a
-            >
-            <a href="#" class="btn btn-primary">Editar grupo</a>
-          </div>
-        </div>
+  {% if vacio == True %}
+  <div class="container">
+    <div class="row">
+      <div class="col-1 col-md-3"></div>
+      <div class="col-10 col-md-6 bg-light shadow p-3 mb-5 rounded">
+        <h6 class="text-center">El tutor no tiene grupos registrados</h6>
       </div>
+      <div class="col-1 col-md-3"></div>
     </div>
-    {% endfor %}
   </div>
+  {% else %}
+  <div class="table-resposive">
+    <table class="table table-hover" id="tabla">
+      <thead>
+        <tr>
+          <th scope="col">Grupo</th>
+          <th scope="col">Tutor</th>
+          <th scope="col">Institucion</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for grupo in grupos %}
+        <tr>
+          <td>{{grupo.grupo}}</td>
+          <td>
+            {{grupo.idPersonalTec.user.first_name}}
+            {{grupo.idPersonalTec.user.last_name}}
+          </td>
+          <td>{{grupo.idInstitucion.nombreInstitucion}}</td>
+          <td>{{grupo.idEstado.estado}}</td>
+          <td>
+            <div class="row text">
+              <div class="col">
+                <a
+                  class="mx-2"
+                  href="{% url 'listarAlumnos' grupo.id%}"
+                  style="text-decoration: none; color: black"
+                >
+                  <i class="bi bi-card-list"></i>
+                </a>
+                <a
+                  class="mx-2"
+                  href="#"
+                  style="text-decoration: none; color: black"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+
 </div>
 {% endblock content %} {% block JS %}
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdn.rawgit.com/JacobLett/bootstrap4-latest/504729ba/bootstrap-4-latest.min.js"></script>
 <script src="{% static 'JS/perfilTutorado.js' %}"></script>
+<script>
+  $("#tabla").DataTable({
+    dom: "Bfrtip",
+    lengthMenu: [
+      [3, 5, 10, 25, 50, -1],
+      ["3 rows", "5 rows", "10 rows", "25 rows", "50 rows", "Show all"],
+    ],
+    buttons: ["pageLength", "spacer", "print", "copy", "excel", "pdf"],
+  });
+</script>
 {% endblock JS %}
