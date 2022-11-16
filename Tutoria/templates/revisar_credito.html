@@ -6,22 +6,22 @@
       <form method="post" enctype="multipart/form-data">  
         {% csrf_token %}  
         <div class="row">
-          <div class="col">
-            <p style="font-size: x-large">
-              Cargue el documento de credito que quiera volver a subir
-            </p>
+          <div class="col-8">
+            <select class="form-select" aria-label="Default select example" name="desicion" id="desicion">
+              <option selected>Seleccione una opcion</option>
+              <option value="1">Aceptar</option>
+              <option value="2">Rechazar</option>
+            </select>
           </div>
         </div>
-        <br />
-        <input type="file" name="constancia_credito">  
         <div class="row">
           <div class="col">
-            <p style="font-size: x-large">Escribe el nombre de la actividad que libera el credito</p>
+            <p style="font-size: x-large">Escriba comentarios en caso de querer aceptar o rechazar el credito</p>
           </div>
         </div>
         <div class="row">
           <div class="col-11">
-            <input type="text" class="form-control" id="nombre" name="nombre">
+            <input type="text" class="form-control" id="comentarios" name="comentarios">
           </div>
         </div>
         <br />
@@ -34,13 +34,19 @@
               class="btn btn-primary"
               style="background-color: #1b396a"
             >
-              Subir
+              Enviar
             </button>
           </div>
         </div>
+        
       </form>  
       <br />
     </div>
   </div>
 </div>
 {% endblock content %}
+
+{% block JS %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdn.rawgit.com/JacobLett/bootstrap4-latest/504729ba/bootstrap-4-latest.min.js"></script>
+{% endblock JS %}

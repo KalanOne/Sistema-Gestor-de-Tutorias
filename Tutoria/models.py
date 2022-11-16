@@ -95,7 +95,7 @@ class PadreMadreTutor(models.Model):
 
 
 class Tutorado(models.Model):
-    domicilio = models.CharField(max_length=100)
+    domicilio = models.CharField(max_length=100) 
     telefono = models.CharField(max_length=10)
     correoPersonal = models.EmailField(max_length = 254)
     semestre = models.PositiveIntegerField()

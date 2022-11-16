@@ -22,9 +22,20 @@
                     <p>Estado: {{Creditos.idEstado}}</p>
                     <p>Comentarios: {{Creditos.comentarios}}</p>
                     <p>Direccion: {{Creditos.archivo.url}}</p>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a class="btn btn-primary" href="{% url 'editar_credito' %}" role="button">Editar</a>
-                    </div>
+                    <a class="btn btn-primary" href="{{Creditos.archivo.url}}" target=”_blank” role="button">Abrir</a>
+                    <form method="post" enctype="multipart/form-data">  
+                        {% csrf_token %}  
+                        <input id="Id" name="Id" type="hidden" value="{{Creditos.id}}">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button
+                            type="submit"
+                            class="btn btn-primary"
+                            style="background-color: #1b396a"
+                            >
+                            Editar
+                            </button>
+                        </div>
+                    </form> 
                 </div>
             </div>
             <div class="col-12 col-md-2"></div>

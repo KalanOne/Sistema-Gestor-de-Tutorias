@@ -231,28 +231,50 @@ def subir_credito(request):
 #vista editar credito
 @login_required
 @group_required('Tutorado')
-def editar_credito(request):
-    tutorado=Tutorado.objects.get(user_id = request.user.id)
+def editar_credito(request, dato):
     if request.method == 'POST':  
-        print(tutorado) 
+        #como recibir los datos?
         fileTitle = request.POST['nombre']
-        print(fileTitle)
-    try:        
+        try:        
         
-        uploadedFile = request.FILES['constancia_credito']
+            uploadedFile = request.FILES['constancia_credito']
 
-    except MultiValueDictKeyError:
-        return render(request, 'subir_credito.html',{
-            'gruops': request.user.groups.all(),
+        except MultiValueDictKeyError:
+            return render(request, 'editar_credito.html',{
+                'gruops': request.user.groups.all(),
+                'title': 'Creditos complementarios'
+            })
+
+        print(dato)
+        from Tutoria.models import Credito
+        cdt=Credito.objects.filter(id = dato).update(nombre_doc = fileTitle, archivo = uploadedFile, idEstado = 0)
+        return render(request, 'editar_credito.html',{
             'title': 'Creditos complementarios'
         })
-    from Tutoria.models import Credito
-    cdt=Credito.objects.create(nombre_doc = fileTitle, archivo = uploadedFile, idEstado = 0, idTutorado = tutorado)  
-    print(fileTitle)   
-    print(uploadedFile) 
-    print(tutorado) 
-    return render(request, 'subir_credito.html',{
-        'gruops': request.user.groups.all(),
+    
+    return render(request, 'editar_credito.html',{
+        'title': 'Creditos complementarios'
+    })
+
+#vista revisar credito
+@login_required
+@group_required('Encargado Creditos')
+def revisar_credito(request, dato):
+    
+    if request.method == 'POST':  
+        #como recibir los datos?
+        advise = request.POST['comentarios']
+        print(advise)
+        choice = request.POST['desicion']
+        print(choice)
+        print(dato)
+        from Tutoria.models import Credito
+        cdt=Credito.objects.filter(id = dato).update(comentarios=advise, idEstado=choice)
+        return render(request, 'revisar_credito.html',{
+            'title': 'Creditos complementarios'
+        })
+    
+    return render(request, 'revisar_credito.html',{
         'title': 'Creditos complementarios'
     })
 
@@ -260,6 +282,12 @@ def editar_credito(request):
 @login_required
 @group_required('Tutorado')
 def ver_credito_tutorado(request):
+    if request.method == 'POST':  
+        
+        dato = request.POST['Id']
+        print(dato)
+        return redirect('editar_credito', dato)
+    
     tutorado = Tutorado.objects.get(user_id = request.user.id)
     print(tutorado)
     return render(request, 'ver_credito_tutorado.html', {
@@ -267,20 +295,30 @@ def ver_credito_tutorado(request):
         'Credito': Credito.objects.filter(idTutorado = tutorado)
     })
 
-#Vista ver creditos tutor
+#Vista ver creditos encargado
 @login_required
 @group_required('Encargado Creditos')
 def ver_credito_tutor(request):
-    #encargado = PersonalTec.objects.get(user_id = request.user.id)
-    #Tutorado.objects.filter(idDepartamentoAcademico = encargado.idDepartamentoAcademico)
-    #'Credito': Credito.objects.filter(idEstado = 0, condicion2)
+
+    if request.method == 'POST':  
+        
+        dato = request.POST['Id']
+        print(dato)
+        return redirect('revisar_credito', dato)
+    encargado = PersonalTec.objects.get(user_id = request.user.id)
+    carrera = encargado.idDepartamentoAcademico
+    print(carrera)
+    alumnos = Tutorado.objects.filter(idDepartamentoAcademico = carrera).values('id')
+    print(alumnos)
+
     return render(request, 'ver_credito_tutor.html', {
         'title': 'Revisar creditos',
-        'Credito': Credito.objects.filter(idEstado = 0)
+        
+        'Credito': Credito.objects.filter(idTutorado__in = alumnos, idEstado = 0)
         
     })
 
-#Vista subir datos excel /falto la linea que borra la tabla luego de la operacion/ 
+#Vista subir datos excel 
 from tablib import Dataset 
 
 def Excel2(request):  

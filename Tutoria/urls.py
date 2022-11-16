@@ -27,6 +27,7 @@ urlpatterns = [
     path('credito/subir/', views.subir_credito, name = 'subir_credito'),
     path('credito/ver/', views.ver_credito_tutorado, name = 'ver_credito_tutorado'),
     path('credito/tutor/', views.ver_credito_tutor, name = 'ver_credito_tutor'),
-    path('credito/editar/', views.editar_credito, name = 'editar_credito'),
+    path('credito/editar/<int:dato>', views.editar_credito, name = 'editar_credito'),
+    path('credito/revisar/<int:dato>', views.revisar_credito, name = 'revisar_credito'),
     
 ]
