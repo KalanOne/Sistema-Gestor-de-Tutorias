@@ -6,6 +6,10 @@ from .models import *
 from .forms import *
 import datetime
 from django.contrib.auth.models import User
+from tablib import Dataset 
+from django.utils.datastructures import MultiValueDictKeyError
+from Tutoria.resources import ExcelResource
+from django.contrib.auth.hashers import make_password
 # Create your views here.
 
 def cambiarContraseña(request):
@@ -842,7 +846,8 @@ def listarAlumnos(request, Grupoid):
             'gruops': request.user.groups.all(),
             'title': 'Listar alumnos',
             'lista': listaAlumnos,
-            'tieneAlumnos':tieneAlumnos
+            'tieneAlumnos':tieneAlumnos,
+            'grupo': Grupoid
         })
 
 # Coordinador de Tutoria del Departamento Académico
@@ -1041,8 +1046,63 @@ def verReportesSemestralesDpt(request):
 
 #pruebas
 @login_required
-@group_required('Tutor', 'Tutorado')
-def prueba(request):
-    return render(request, 'prueba.html', {
-        'groups': request.user.groups.all()
-    })
+@group_required('Jefe de Departamento Académico')
+def registrarTutorados(request, Grupoid):  
+    Error=False
+    if request.method == 'POST':  
+        persona_resource = ExcelResource()  
+        dataset = Dataset()  
+        encargado = PersonalTec.objects.get(user_id = request.user.id)
+        escuela = encargado.idInstitucion
+        departamento = encargado.idDepartamentoAcademico 
+
+        try:
+            nuevas_personas = request.FILES['archivo']  
+        except MultiValueDictKeyError:
+            return render(request, 'agregarTutorado.html')
+
+        imported_data = dataset.load(nuevas_personas.read())  
+        result = persona_resource.import_data(dataset, dry_run=True)
+
+        if not result.has_errors(): 
+            persona_resource.import_data(dataset, dry_run=False) # Actually import now  
+            for Alumno in Excel2.objects.all():
+                if User.objects.filter(username=Alumno.control).exists():
+                    print(Alumno.control+" - Usuario ya existente")
+                else:
+                    try:
+                        try:
+                            semestreAlumno=Alumno.semestre
+                        except:
+                            semestreAlumno=1
+                        usr=User.objects.create(username=Alumno.control, password=make_password(Alumno.email), first_name=Alumno.nombres, last_name=Alumno.apellidos, email=(Alumno.control+"@morelia.tecnm.mx"))
+                        usr.groups.add(1)
+                        alm=Tutorado.objects.create(semestre=semestreAlumno,idGrupo_id=Grupoid, idDepartamentoAcademico=departamento, idInstitucion=escuela, user=usr)
+                        print("Registro exitoso")  
+                    except:
+                        print("Erro no pudo crear el usuario")
+
+            limpiar = Excel2.objects.all()         
+            limpiar.delete()
+
+            
+            return redirect ('listarAlumnos',Grupoid)
+        else:
+            print("Error") 
+            Error=True
+            form=RegistrarTutoradosForm()
+            form.fields['archivo'].label = 'Archivo de Alumnos'
+            return render(request, 'agregarTutorado.html',{
+                'gruops': request.user.groups.all(),
+                'form':form,
+                'Error':Error
+            })
+    else:
+        Error=False
+        form=RegistrarTutoradosForm()
+        form.fields['archivo'].label = 'Archivo de Alumnos'
+        return render(request, 'agregarTutorado.html',{
+            'gruops': request.user.groups.all(),
+            'form':form,
+            'Error':Error
+        })

@@ -60,7 +60,7 @@
   </div>
   {% else %}
   <div class="table-resposive">
-    <table class="table table-hover" id="tabla">
+    <table class="table table-hover datatable" id="tabla">
       <thead>
         <tr>
           <th scope="col">Grupo</th>
@@ -111,14 +111,4 @@
 </div>
 {% endblock content %} {% block JS %}
 <script src="{% static 'JS/perfilTutorado.js' %}"></script>
-<script>
-  $("#tabla").DataTable({
-    dom: "Bfrtip",
-    lengthMenu: [
-      [3, 5, 10, 25, 50, -1],
-      ["3 rows", "5 rows", "10 rows", "25 rows", "50 rows", "Show all"],
-    ],
-    buttons: ["pageLength", "spacer", "print", "copy", "excel", "pdf"],
-  });
-</script>
 {% endblock JS %}

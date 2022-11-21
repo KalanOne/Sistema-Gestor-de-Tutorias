@@ -1,0 +1,43 @@
+{% extends 'SistemaDeDocumentos/layout/basicCNMenu.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row mb-5"><h1 class="text-center">Planes de Acción Tutorial</h1></div>
+        <div class="row mb-3">
+            <div class="table-responsive">
+                <table class="table table-hover" id="tabla">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Departamento</th>
+                            <th scope="col">Coordinador</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Año</th>
+                            <th scope="col">Periodo</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reporte in patsDepartamentales %}
+                            <tr>
+                                <th scope="row">{{reporte.id}}</th>
+                                <td>{{reporte.departamento}}</td>
+                                <td>{{reporte.coordinador.user.first_name}} {{reporte.coordinador.user.last_name}}</td>
+                                <td>Plan de Acción Tutorial</td>
+                                <td>{{reporte.fecha}}</td>
+                                <td>{{reporte.ano}}</td>
+                                <td>{{reporte.periodo}}</td>
+                                <td>
+                                    <div class="d-grid gap-2">
+                                        <a href="{{reporte.archivo.url}}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,132 @@
+{% extends 'SistemaDeDocumentos/layout/basicCNMenu.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row mb-5">
+            <h1 class="text-center">Todos Los Documentos</h1>
+        </div>
+        <div class="row mb-5">
+            <div class="table-responsive">
+                <table class="table table-hover" id="tabla">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Autor</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Departamento</th>
+                            <th scope="col">Grupo</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Año</th>
+                            <th scope="col">Periodo</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reporte in reportesGrupales %}
+                            <tr>
+                                <th scope="row">{{reporte.id}}</th>
+                                <td>{{reporte.tutor.user.first_name}} {{reporte.tutor.user.last_name}}</td>
+                                <td>Reporte Semestral Grupal</td>
+                                <td>{{reporte.tutor.idDepartamentoAcademico}}</td>
+                                <td>{{reporte.grupo.grupo}}</td>
+                                <td>{{reporte.fecha}}</td>
+                                <td>{{reporte.ano}}</td>
+                                <td>{{reporte.periodo}} {% if reporte.periodo == 1 %}(Uno){% elif reporte.periodo == 2 %}(Dos){% elif reporte.periodo == 3 %}(Tres){% endif %}</td>
+                                <td>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% static reporte.archivo %}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for reporte in reportesDepartamentales %}
+                            <tr>
+                                <th scope="row">{{reporte.id}}</th>
+                                <td>{{reporte.coordinador.user.first_name}} {{reporte.coordinador.user.last_name}}</td>
+                                <td>Reporte Semestral Departamental</td>
+                                <td>{{reporte.departamento}}</td>
+                                <td>------</td>
+                                <td>{{reporte.fecha}}</td>
+                                <td>{{reporte.ano}}</td>
+                                <td>{{reporte.periodo}} {% if reporte.periodo == 1 %}(Uno){% elif reporte.periodo == 2 %}(Dos){% elif reporte.periodo == 3 %}(Tres){% endif %}</td>
+                                <td>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% static reporte.archivo %}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for reporte in reportesInstitucionales %}
+                            <tr>
+                                <th scope="row">{{reporte.id}}</th>
+                                <td>{{reporte.coordinador.user.first_name}} {{reporte.coordinador.user.last_name}}</td>
+                                <td>Reporte Semestral Institucional</td>
+                                <td>------</td>
+                                <td>------</td>
+                                <td>{{reporte.fecha}}</td>
+                                <td>{{reporte.ano}}</td>
+                                <td>{{reporte.periodo}} {% if reporte.periodo == 1 %}(Uno){% elif reporte.periodo == 2 %}(Dos){% elif reporte.periodo == 3 %}(Tres){% endif %}</td>
+                                <td>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% static reporte.archivo %}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for reporte in reportesPATs %}
+                            <tr>
+                                <th scope="row">{{reporte.id}}</th>
+                                <td>{{reporte.coordinador.user.first_name}} {{reporte.coordinador.user.last_name}}</td>
+                                <td>Plan de Acción Tutorial</td>
+                                <td>{{reporte.departamento}}</td>
+                                <td>------</td>
+                                <td>{{reporte.fecha}}</td>
+                                <td>{{reporte.ano}}</td>
+                                <td>{{reporte.periodo}} {% if reporte.periodo == 1 %}(Uno){% elif reporte.periodo == 2 %}(Dos){% elif reporte.periodo == 3 %}(Tres){% endif %}</td>
+                                <td>
+                                    <div class="d-grid gap-2">
+                                        <a href="{{reporte.archivo.url}}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for reporte in reportesPITs %}
+                            <tr>
+                                <th scope="row">{{reporte.id}}</th>
+                                <td>{{reporte.jefe.user.first_name}} {{reporte.jefe.user.last_name}}</td>
+                                <td>Programa Institucional de Tutoría</td>
+                                <td>------</td>
+                                <td>------</td>
+                                <td>{{reporte.fecha}}</td>
+                                <td>{{reporte.ano}}</td>
+                                <td>{{reporte.periodo}} {% if reporte.periodo == 1 %}(Uno){% elif reporte.periodo == 2 %}(Dos){% elif reporte.periodo == 3 %}(Tres){% endif %}</td>
+                                <td>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% static reporte.archivo %}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for reporte in reportesDiagnosticos %}
+                            <tr>
+                                <th scope="row">{{reporte.id}}</th>
+                                <td>{{reporte.coordinador.user.first_name}} {{reporte.coordinador.user.last_name}}</td>
+                                <td>Diagnóstico Institucional de Tutoría</td>
+                                <td>------</td>
+                                <td>------</td>
+                                <td>{{reporte.fecha}}</td>
+                                <td>{{reporte.ano}}</td>
+                                <td>{{reporte.periodo}} {% if reporte.periodo == 1 %}(Uno){% elif reporte.periodo == 2 %}(Dos){% elif reporte.periodo == 3 %}(Tres){% endif %}</td>
+                                <td>
+                                    <div class="d-grid gap-2">
+                                        <a href="{{reporte.archivo.url}}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

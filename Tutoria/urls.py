@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, documentosViews
 
 urlpatterns = [
     #url de inicio, login y logout
@@ -47,6 +47,34 @@ urlpatterns = [
     path('Todos/EditarInformacion', views.editarInformacionTodos, name='editarInformacionTodos'),
 
     #pruebas
-    path('prueba/', views.prueba, name = 'Prueba'),
+    path('registrarTutorados//<int:Grupoid>', views.registrarTutorados, name = 'registrarTutorados'),
     
+
+    # urls Para documentos
+    path('Tutor/V2/ReporteSemestral/Grupos/', documentosViews.SelectGruposReporteSemestral, name = 'Tutor_SelectGruposReporteSemestralV2'),
+    path('Tutor/V2/ReporteSemestral/Grupal/Visualizar/', documentosViews.VisualizarReportesSemestralesGrupalesTutor, name = 'Tutor_VerReportesSemestralesV2'),
+    path('Tutor/V2/ReporteSemestral/Grupos/<int:grupo_id>/', documentosViews.CrearReporteSemestralGrupal, name = 'Tutor_CrearReporteSemestralV2'),
+
+
+
+    path('CoordinadorTutoriaDepartamentoAcademico/V2/ReporteSemestral/Departamento/', documentosViews.SelectReportesSemestralesGrupalesCoordinador, name = 'CoordinadorTutoriaDepartamentoAcademico_SelectReporteSemestralGrupalV2'),
+    path('CoordinadorTutoriaDepartamentoAcademico/V2/ReporteSemestral/Departamento/Crear/', documentosViews.CrearReporteSemestralDepartamentalCoordinador, name = 'CoordinadorTutoriaDepartamentoAcademico_CrearReporteSemestralDepartamentalV2'),
+    path('CoordinadorTutoriaDepartamentoAcademico/V2/ReporteSemestral/Grupal/Visualizar/', documentosViews.VisualizarReportesSemestralesGrupalesCoordinador, name = 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralGrupalV2'),
+    path('CoordinadorTutoriaDepartamentoAcademico/V2/ReporteSemestral/Departamental/Visualizar/', documentosViews.VisualizarReportesSemestralesDepartamentalesCoordinador, name = 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralDepartamentalV2'),
+    path('CoordinadorTutoriaDepartamentoAcademico/V2/PlanDeAccionTutorial/Departamental/', documentosViews.SelectDiagnosticoInstitucionalCoordinador, name = 'CoordinadorTutoriaDepartamentoAcademico_SelectDiagnosticoInstitucionalV2'),
+    # path('CoordinadorTutoriaDepartamentoAcademico/V2/PlanDeAccionTutorial/Departamental/Crear/', documentosViews.SubirPlanDeAccionTutorialCoordinador, name = 'CoordinadorTutoriaDepartamentoAcademico_SubirPlanDeAccionTutorialV2'),
+    path('CoordinadorTutoriaDepartamentoAcademico/V2/PlanDeAccionTutorial/Departamental/Visualizar/', documentosViews.VisualizarPlanDeAccionTutorialCoordinador, name = 'CoordinadorTutoriaDepartamentoAcademico_VisualizarPlanDeAccionTutorialV2'),
+    path('CoordinadorTutoriaDepartamentoAcademico/V2/DiagnosticoInstitucional/Visualizar/', documentosViews.VisualizarDiagnosticoInstitucionalCoordinador, name = 'CoordinadorTutoriaDepartamentoAcademico_VisualizarDiagnosticoInstitucionalV2'),
+    
+
+
+    path('CoordinacionInstitucionalTutoria/V2/DiagnosticoInstitucional/Crear/', documentosViews.CrearDiagonsticoInstitucionalTutoriaCoordinacion, name = 'CoordinacionInstitucionalTutoria_CrearDiagnosticoInstitucionalTutoriaV2'),
+    path('CoordinacionInstitucionalTutoria/V2/Documentos/Visualizar/', documentosViews.VisualizarTodosLosDocumentosCoordinacion, name = 'CoordinacionInstitucionalTutoria_VisualizarTodosLosDocumentosV2'),
+    path('CoordinacionInstitucionalTutoria/V2/ReporteSemestralInstitucional/Integrar/', documentosViews.IntegrarReporteSemestralInstitucionalCoordinacion, name = 'CoordinacionInstitucionalTutoria_IntregarReporteInstitucionalTutoriaV2'),
+
+
+
+    path('JefeDesarrolloAcademico/V2/ProgramaInstitucional/Integrar/', documentosViews.IntegrarProgramaInstitucionalTutorialJefe, name = 'JefeDesarrolloAcademico_IntregarProgramaInstitucionalTutorialV2'),
+    path('JefeDesarrolloAcademico/V2/ProgramaInstitucional/Visualizar/', documentosViews.VisualizarProgramaInstitucionalTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarProgramaInstitucionalTutorialV2'),
+    path('JefeDesarrolloAcademico/V2/PlanAccionTutorial/Visualizar/', documentosViews.VisualizarPlanAccionTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarPlanAccionTutorialV2'),
 ]

@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "crispy_forms",
-    "crispy_bootstrap5"
+    "crispy_bootstrap5",
+    'import_export'
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,5 @@ SESSION_COOKIE_AGE = 3600
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True  

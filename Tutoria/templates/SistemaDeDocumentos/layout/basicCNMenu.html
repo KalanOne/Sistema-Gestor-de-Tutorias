@@ -85,30 +85,30 @@
                 {% else %}
                     {% if group.name == 'Tutor' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'documentos' %}">Documentos</a>
+                            <a class="nav-link" href="{% url 'Tutor_SelectGruposReporteSemestralV2' %}">Reporte Semestral Grupal</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'gruposTutor' %}">Grupos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'crearCuestionario' %}">Crear Cuestionario</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'verResultadosCuestionarios' %}">Resultados de cuestionarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'reporteSemestral' %}">Reporte Semestral</a>
+                            <a class="nav-link" href="{% url 'Tutor_VerReportesSemestralesV2' %}">Ver Reportes Semestrales Grupales</a>
                         </li>
                     {% endif %}
                     {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'verReportesSemestralesGrupales' %}">Reportes Grupales</a>
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_SelectReporteSemestralGrupalV2' %}">Reporte Semestral Departamental</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'reporteSemestralDpt' %}">Reporte Semestral Departamental</a>
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralGrupalV2' %}">Ver Reportes Semestrales Grupales</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'reportePAT' %}">Plan de Acción Tutorial</a>
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralDepartamentalV2' %}">Ver Reportes Semestrales Departamentales</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_SelectDiagnosticoInstitucionalV2' %}">Plan de Acción Tutorial</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarPlanDeAccionTutorialV2' %}">Ver Planes de Acción Tutorial</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarDiagnosticoInstitucionalV2' %}">Ver Diagnósticos Institucionales</a>
                         </li>
                     {% endif %}
                     {% if group.name == 'Jefe de Departamento Académico' %}
@@ -118,15 +118,31 @@
                     {% endif %}
                     {% if group.name == 'Coordinación Institucional de Tutoría' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'reporteSemestralInst' %}">Reporte Semestral Institucional</a>
+                            <a class="nav-link" href="{% url 'CoordinacionInstitucionalTutoria_CrearDiagnosticoInstitucionalTutoriaV2' %}">Diagnóstico Institucional</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'verReportesSemestralesDpt' %}">Reporte Semestral Departamental</a>
+                            <a class="nav-link" href="{% url 'CoordinacionInstitucionalTutoria_VisualizarTodosLosDocumentosV2' %}">Todos Los Documentos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinacionInstitucionalTutoria_IntregarReporteInstitucionalTutoriaV2' %}">Reporte Semestral Institucional</a>
                         </li>
                     {% endif %}
+                    {% if group.name == 'Jefe de Desarrollo Académico' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'JefeDesarrolloAcademico_IntregarProgramaInstitucionalTutorialV2' %}">Programa Institucional Tutorial</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'JefeDesarrolloAcademico_VisualizarPlanAccionTutorialV2' %}">Ver Planes de Acción Tutorial</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'JefeDesarrolloAcademico_VisualizarProgramaInstitucionalTutorialV2' %}">Ver Programa Institucional Tutorial</a>
+                        </li>
+                    {% endif %}
+                    {% if forloop.counter == gruops|length %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'perfilTodos' %}">Perfil</a>
                     </li>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
           </ul>
@@ -149,7 +165,24 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.13.1/af-2.5.1/b-2.3.2/b-colvis-2.3.2/b-html5-2.3.2/b-print-2.3.2/cr-1.6.1/date-1.2.0/fc-4.2.1/fh-3.3.1/kt-2.8.0/r-2.4.0/rg-1.3.0/rr-1.3.1/sc-2.0.7/sb-1.4.0/sp-2.1.0/sl-1.5.0/sr-1.2.0/datatables.min.js"></script>
-    <script src="{% static 'JS/DataTable.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#tabla').DataTable({
+                "dom": 'Bfrtip',
+                lengthMenu: [
+                    [ 3, 5, 10, 25, 50, -1 ],
+                    [ '3 rows', '5 rows', '10 rows', '25 rows', '50 rows', 'Show all' ]
+                ],
+                "buttons": ["pageLength","copy", "csv", "excel", "pdf", "print"],
+                "language": {
+                    url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json'
+                },
+                "ordering": true,
+            });
+        });
+     </script>
+
     {% block JS %}{% endblock JS %}
   </body>
 </html>

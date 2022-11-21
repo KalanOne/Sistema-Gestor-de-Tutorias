@@ -106,10 +106,10 @@ class PadreMadreTutor(models.Model):
 
 
 class Tutorado(models.Model):
-    domicilio = models.CharField(max_length=100)
-    telefono = models.CharField(max_length=10)
-    correoPersonal = models.EmailField(max_length = 254)
-    semestre = models.PositiveIntegerField()
+    domicilio = models.CharField(max_length=100, blank = True)
+    telefono = models.CharField(max_length=10, blank = True)
+    correoPersonal = models.EmailField(max_length = 254, blank = True)
+    semestre = models.PositiveIntegerField(blank = True)
     idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE, null = True, blank = True)
     idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
@@ -496,3 +496,13 @@ class Credito(models.Model):
         verbose_name_plural= 'Creditos'
         db_table= 'credito'
         ordering= ['id']
+
+
+class Excel2(models.Model):  
+    control = models.CharField(max_length=8)  
+    nombres = models.CharField(max_length=35) 
+    apellidos = models.CharField(max_length=35) 
+    email = models.EmailField(blank=True)  
+    domicilio = models.CharField(max_length=100)
+    telefono = models.CharField(max_length=10)
+    semestre = models.IntegerField(max_length=3)

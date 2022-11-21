@@ -201,3 +201,10 @@ class CambiarPasswordForm(PasswordChangeForm):
     class Meta:
         model = User
         fields = ('old_password','new_password1','new_password2')
+
+
+class RegistrarTutoradosForm(forms.ModelForm):
+    archivo= forms.FileField()
+    class Meta:
+        model = Excel2
+        fields = {'archivo'}
