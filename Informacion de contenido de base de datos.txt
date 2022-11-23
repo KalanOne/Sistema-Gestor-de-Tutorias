@@ -13,8 +13,8 @@ Estados:
     Cita:
         Espera
         Citado
-        Alta (Si se atendio)
-        Baja (No se atendio)
+        Atendido (Si se atendio)
+        No atendido (No se atendio)
 
     Credito complementario:
         Espera
@@ -51,8 +51,8 @@ Estados:
         Cerrado
         Espera
         Citado
-        Alta
-        Baja
+        Atendido
+        No atendido
         Aceptado
         Rechazado
 
@@ -113,7 +113,7 @@ Motivo:
         Depresión
         Ansiedad
         Estrés
-        Adicción o transtorno por sustancias
+        Adicción o trastorno por sustancias
     
     Médico:
         Dolor de cabeza

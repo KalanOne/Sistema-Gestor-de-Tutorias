@@ -505,4 +505,4 @@ class Excel2(models.Model):
     email = models.EmailField(blank=True)  
     domicilio = models.CharField(max_length=100)
     telefono = models.CharField(max_length=10)
-    semestre = models.IntegerField(max_length=3)
+    semestre = models.IntegerField()
