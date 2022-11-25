@@ -1,0 +1,36 @@
+Institucion:
+    Instituto Tecnologico de Morelia
+
+Departamentos:
+    Ingeniería en Sistemas Computacionales
+    Ingeniería Mecatrónica
+    Ingeniería Bioquimica
+
+Subdirector Academico:
+    Carlos Fabián Escudero García
+
+Jefe de Desarrollo Académico:
+    Aurora Mayol Fuentes
+
+Coordinación Institucional de Tutoría:
+    Mirian Jiménez García
+
+Coordinador de Tutoria del Departamento Académico:
+    ISC:
+        Alan García Díaz
+    IMC:
+        Ulises Rojas Ferreyra
+    IBQ:
+        Carlos Abraham Garcia Díaz
+
+Jefe de Departamento Académico:
+    ISC:
+        Edna Valencia López
+    IMC:
+        Kevin Yair Díaz Alejandre
+    IBQ:
+        Johan Jesus Díaz Alejandre
+
+Tutor:
+    ISC:
+        
