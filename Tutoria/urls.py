@@ -77,4 +77,12 @@ urlpatterns = [
     path('JefeDesarrolloAcademico/V2/ProgramaInstitucional/Integrar/', documentosViews.IntegrarProgramaInstitucionalTutorialJefe, name = 'JefeDesarrolloAcademico_IntregarProgramaInstitucionalTutorialV2'),
     path('JefeDesarrolloAcademico/V2/ProgramaInstitucional/Visualizar/', documentosViews.VisualizarProgramaInstitucionalTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarProgramaInstitucionalTutorialV2'),
     path('JefeDesarrolloAcademico/V2/PlanAccionTutorial/Visualizar/', documentosViews.VisualizarPlanAccionTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarPlanAccionTutorialV2'),
+
+    #fer
+    path('credito/subir/', views.subir_credito, name = 'subir_credito'),
+    path('credito/ver/', views.ver_credito_tutorado, name = 'ver_credito_tutorado'),
+    path('credito/tutor/', views.ver_credito_tutor, name = 'ver_credito_tutor'),
+    path('credito/editar/<int:dato>', views.editar_credito, name = 'editar_credito'),
+    path('credito/revisar/<int:dato>', views.revisar_credito, name = 'revisar_credito'),
+
 ]

@@ -749,13 +749,15 @@ def a11(request):
 @login_required
 @group_required('Jefe de Departamento Académico')
 def listaTutor(request):
-    vacio=False
+    vacio=0
     try:
         coordinador=PersonalTec.objects.get(user_id=request.user.id)
-        tutores = PersonalTec.objects.filter(idDepartamentoAcademico_id=coordinador.idDepartamentoAcademico_id, idInstitucion_id=coordinador.idInstitucion_id)
-
-        if tutores.count() == 0:
-            vacio=True
+        tutoresobtener = PersonalTec.objects.filter(idDepartamentoAcademico_id=coordinador.idDepartamentoAcademico_id, idInstitucion_id=coordinador.idInstitucion_id)
+        tutores=[]
+        for tutor in tutoresobtener:
+            if pertenece_cualquier_grupo(tutor.user, ['Tutor']):
+                tutores.append(tutor)
+                vacio=vacio+1
 
         return render(request, 'listaTutor.html',{
             'gruops': request.user.groups.all(),
@@ -765,9 +767,11 @@ def listaTutor(request):
         })
 
     except:
+        vacio=0
         return render(request, 'listaTutor.html',{
             'gruops': request.user.groups.all(),
-            'title': 'Listar Tutores'
+            'title': 'Listar Tutores',
+            'vacio': vacio
         })
 
     
@@ -790,7 +794,7 @@ def crearGrupo(request, Tutor):
             try:
                 tutor=PersonalTec.objects.get(id=Tutor)
                 post=grupoform.save(commit=False)
-                post.grupo="ISC-"+request.POST['grupo']
+                post.grupo=tutor.idDepartamentoAcademico.abreviacion+"-"+str(tutor.idInstitucion.anoActual)+"-"+str(tutor.idInstitucion.periodoActual)+"-"+request.POST['grupo']
                 post.idInstitucion_id=tutor.idInstitucion_id
                 post.idPersonalTec_id=Tutor
                 post.save()
@@ -1044,7 +1048,8 @@ def verReportesSemestralesDpt(request):
         'reportes': reportes
     })
 
-#pruebas
+
+
 @login_required
 @group_required('Jefe de Departamento Académico')
 def registrarTutorados(request, Grupoid):  
@@ -1066,7 +1071,7 @@ def registrarTutorados(request, Grupoid):
 
         if not result.has_errors(): 
             persona_resource.import_data(dataset, dry_run=False) # Actually import now  
-            for Alumno in Excel2.objects.all():
+            for Alumno in registrarAlumno.objects.all():
                 if User.objects.filter(username=Alumno.control).exists():
                     print(Alumno.control+" - Usuario ya existente")
                 else:
@@ -1082,7 +1087,7 @@ def registrarTutorados(request, Grupoid):
                     except:
                         print("Erro no pudo crear el usuario")
 
-            limpiar = Excel2.objects.all()         
+            limpiar = registrarAlumno.objects.all()         
             limpiar.delete()
 
             
@@ -1106,3 +1111,130 @@ def registrarTutorados(request, Grupoid):
             'form':form,
             'Error':Error
         })
+
+#pruebas
+#vista subir credito
+@login_required
+@group_required('Tutorado')
+def subir_credito(request):
+    tutorado=Tutorado.objects.get(user_id = request.user.id)
+    if tutorado.idGrupo is None:
+        cuentaGrupo = 0
+    else:
+        cuentaGrupo = 1
+    if request.method == 'POST':  
+        form=SubirCreditoForm(request.POST, request.FILES)
+        if form.is_valid():
+            print("es valido")
+            estado=Estado.objects.get(estado='Espera')
+            nuevoCredito = form.save(commit = False)
+            nuevoCredito.idEstado=estado
+            nuevoCredito.idTutorado=tutorado
+            nuevoCredito.save()
+            print("Guardaddo")
+        else:
+            print("no es valido")
+        return redirect('ver_credito_tutorado')
+    else:
+        form=SubirCreditoForm()
+        return render(request, 'subir_credito.html',{
+            'gruops': request.user.groups.all(),
+            'cuentaGrupo': cuentaGrupo,
+            'title': 'Creditos complementarios',
+            'form':form
+        })
+
+#vista editar credito
+@login_required
+@group_required('Tutorado')
+def editar_credito(request, dato):
+    tutorado=Tutorado.objects.get(user_id = request.user.id)
+    if tutorado.idGrupo is None:
+        cuentaGrupo = 0
+    else:
+        cuentaGrupo = 1
+    if request.method == 'POST':  
+        credito=Credito.objects.get(id=dato)
+        form=SubirCreditoForm(request.POST, request.FILES, instance=credito)
+        if form.is_valid():
+            print("es valido")
+            editaCredito = form.save(commit = False)
+            editaCredito.save()
+        else:
+            print("no es valido") 
+        return redirect ('ver_credito_tutorado')
+    else:
+        form=SubirCreditoForm()
+        return render(request, 'editar_credito.html',{
+            'gruops': request.user.groups.all(),
+            'cuentaGrupo': cuentaGrupo,
+            'title': 'Creditos complementarios',
+            'form':form
+        })
+
+
+#vista revisar credito
+@login_required
+@group_required('Encargado de Créditos Complementarios')
+def revisar_credito(request, dato):
+    
+    if request.method == 'POST':  
+        creditoActual= Credito.objects.get(id=dato)
+        form=DecisionCreditoForm(request.POST,instance=creditoActual)
+        if form.is_valid():
+            print('es valido')
+            editaCredito = form.save(commit = False)
+            editaCredito.save()
+        
+        return redirect ('ver_credito_tutor')
+    else:
+        form=DecisionCreditoForm()
+        return render(request, 'revisar_credito.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Creditos complementarios',
+            'form':form
+        })
+
+
+#Vista ver creditos tutorado
+@login_required
+@group_required('Tutorado')
+def ver_credito_tutorado(request):    
+    tutorado=Tutorado.objects.get(user_id = request.user.id)
+    nocredito=False
+
+    if tutorado.idGrupo is None:
+        cuentaGrupo = 0
+    else:
+        cuentaGrupo = 1
+
+    creditos=Credito.objects.filter(idTutorado = tutorado)
+    if creditos.count()==0:
+        nocredito=True
+    return render(request, 'ver_credito_tutorado.html', {
+        'gruops': request.user.groups.all(),
+        'cuentaGrupo': cuentaGrupo,
+        'title': 'Ver creditos',
+        'Credito': creditos,
+        'Nocredito':nocredito
+    })
+
+
+#Vista ver creditos encargado
+@login_required
+@group_required('Encargado de Créditos Complementarios')
+def ver_credito_tutor(request):
+    nocreditos=False
+    encargado = PersonalTec.objects.get(user_id = request.user.id)
+    alumnos = Tutorado.objects.filter(idDepartamentoAcademico = encargado.idDepartamentoAcademico.id).values('id')
+    estado= Estado.objects.get(estado='Espera')
+    credito=Credito.objects.filter(idTutorado__in = alumnos, idEstado =estado )
+    if credito.count()==0:
+        nocreditos=True
+
+    return render(request, 'ver_credito_tutor.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Revisar creditos',
+        'Credito': credito,
+        'nocreditos':nocreditos
+    })

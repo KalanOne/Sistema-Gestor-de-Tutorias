@@ -1,0 +1,54 @@
+{% extends 'layout/basicCNMenu.html' %} {% block content %}
+<div class="container">
+  {% if nocreditos %}
+  <div class="row">
+    <div class="col-1 col-md-3"></div>
+    <div class="col-10 col-md-6 bg-light shadow p-3 mb-5 rounded">
+      <h6 class="text-center">No tienes créditos para revisar</h6>
+    </div>
+    <div class="col-1 col-md-3"></div>
+  </div>
+  {% else %} 
+  {% for Creditos in Credito %}
+  <div class="row mb-3">
+    <div class="col-12 col-md-2"></div>
+    <div class="col-12 col-md-8" id="Credito">
+      <div class="row p-1 rounded-top" style="background-color: #1b396a">
+        <h5 class="text-center text-white">{{ Creditos.nombre_doc }}</h5>
+      </div>
+      <div class="row py-1 bg-white rounded-bottom">
+        <p>
+          Alumno: {{Creditos.idTutorado.user.first_name}}
+          {{Creditos.idTutorado.user.last_name}}
+        </p>
+        <p>Estado: {{Creditos.idEstado}}</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+          <div class="row">
+            <div class="col">
+              <a
+                class="btn btn-primary"
+                href="{{Creditos.archivo.url}}"
+                target="”_blank”"
+                role="button"
+                >Abrir</a
+              >
+              <a
+                class="btn btn-primary"
+                href="{% url 'revisar_credito' Creditos.id %}"
+                role="button"
+                >Revisar</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-2"></div>
+  </div>
+  {% endfor %} 
+  {% endif %}
+</div>
+{% endblock content %} {% block JS %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.rawgit.com/JacobLett/bootstrap4-latest/504729ba/bootstrap-4-latest.min.js"></script>
+{% endblock JS %}

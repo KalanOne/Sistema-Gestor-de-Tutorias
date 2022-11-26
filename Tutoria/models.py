@@ -480,6 +480,7 @@ class Cita(models.Model):
 
 
 class Credito(models.Model):
+    nombre_doc = models.CharField(max_length=100, null = True, blank = True)
     archivo = models.FileField(upload_to = 'Tutorado/Creditos')
     comentarios = models.CharField(max_length=200, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
@@ -498,11 +499,23 @@ class Credito(models.Model):
         ordering= ['id']
 
 
-class Excel2(models.Model):  
+class registrarAlumno(models.Model):  
     control = models.CharField(max_length=8)  
     nombres = models.CharField(max_length=35) 
     apellidos = models.CharField(max_length=35) 
     email = models.EmailField(blank=True)  
     domicilio = models.CharField(max_length=100)
     telefono = models.CharField(max_length=10)
-    semestre = models.IntegerField()
+    semestre = models.IntegerField(max_length=3)
+
+    def Mostrar(self):
+        return "{} - {}".format(self.nombres, self.apellidos)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'registrarAlumno'
+        verbose_name_plural= 'registrarAlumnos'
+        db_table= 'registrarAlumno'
+        ordering= ['id']

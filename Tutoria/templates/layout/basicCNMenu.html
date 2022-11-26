@@ -80,6 +80,9 @@
                         <a class="nav-link" href="{% url 'misCitasTutorado' %}">Ayuda Psicologica</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ver_credito_tutorado' %}">Créditos Complementarios</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'perfilTutorado' %}">Perfil</a>
                     </li>
                 {% else %}
@@ -114,6 +117,11 @@
                     {% if group.name == 'Jefe de Departamento Académico' %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
+                        </li>
+                    {% endif %}
+                    {% if group.name == 'Encargado de Créditos Complementarios' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ver_credito_tutor' %}">Ver Creditos</a>
                         </li>
                     {% endif %}
                     {% if group.name == 'Coordinación Institucional de Tutoría' %}

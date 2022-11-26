@@ -206,5 +206,22 @@ class CambiarPasswordForm(PasswordChangeForm):
 class RegistrarTutoradosForm(forms.ModelForm):
     archivo= forms.FileField()
     class Meta:
-        model = Excel2
+        model = registrarAlumno
         fields = {'archivo'}
+
+class SubirCreditoForm(forms.ModelForm):
+    class Meta:
+        model = Credito
+        fields = {'nombre_doc','archivo'}
+        labels = {
+            'archivo': ('Sube tu archivo')
+        }
+
+class DecisionCreditoForm(forms.ModelForm):
+    class Meta:
+        model = Credito
+        fields = {'idEstado','comentarios'}
+        labels = {
+            'idEstado': ('Seleccione el estado del credito'),
+            'comentarios': ('Comentarios')
+        }
