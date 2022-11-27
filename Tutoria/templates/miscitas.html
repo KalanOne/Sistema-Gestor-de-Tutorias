@@ -120,39 +120,10 @@
             </div>
             <div class="col-md-1"></div>   
         </div>
-        {% comment %} <div class="row my-3">
-            <div class="col-auto mx-auto">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        {% if citas.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="{% url 'misCitasTutorado' citas.previous_page_number %}#tabla">Anterior</a>
-                            </li>
-                        {% endif %}
-                        {% for i in citas.paginator.page_range %}
-                            {% if i == citas.number %}
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">{{ i }}</a>
-                                </li>
-                            {% else %}
-                                <li class="page-item">
-                                    <a class="page-link" href="{% url 'misCitasTutorado' i %}#tabla">{{ i }}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                        {% if citas.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="{% url 'misCitasTutorado' citas.next_page_number %}#tabla">Siguiente</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            </div>
-        </div> {% endcomment %}
     </div>
 {% endblock content %}
 
-{% block JS %}
+{% comment %} {% block JS %}
     <script>
         $('#tabla').DataTable( {
             dom: 'Bfrtip',
@@ -165,4 +136,4 @@
             ]
         } );
     </script>
-{% endblock JS %}
+{% endblock JS %} {% endcomment %}
