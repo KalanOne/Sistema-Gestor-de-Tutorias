@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -782,14 +782,21 @@ def listaTutor(request):
 def crearGrupo(request, Tutor):
     if request.method == 'GET':
         grupoform=GrupoForm()
+        estadoActivo = Estado.objects.get(estado = 'Activo')
+        estadoInactivo = Estado.objects.get(estado = 'Inactivo')
+        estadoCerrado = Estado.objects.get(estado = 'Cerrado')
+        elecciones = [
+            (estadoActivo.id, estadoActivo.estado),
+            (estadoInactivo.id, estadoInactivo.estado),
+            (estadoCerrado.id, estadoCerrado.estado)
+        ]
+        grupoform.fields['idEstado'].choices = elecciones
         return render(request, 'crearGrupo.html', {
             'gruops': request.user.groups.all(),
             'title': 'Crear Grupo',
             'formgrupo': grupoform
         })
     else:
-
-        
         grupoform=GrupoForm(request.POST)
 
         if grupoform.is_valid():
@@ -820,41 +827,147 @@ def crearGrupo(request, Tutor):
 @login_required
 @group_required('Jefe de Departamento Académico')
 def verGruposDelTutor(request, Tutor):
-    sobrecargaGrupo=False
-    vacio=False
-    grupos=Grupo.objects.filter(idPersonalTec_id=Tutor)
-    if grupos.count() >= 3:
-        sobrecargaGrupo=True
+    if request.method=="GET":
+        sobrecargaGrupo=False
+        vacio=False
+        grupos=Grupo.objects.filter(idPersonalTec_id=Tutor)
+        if grupos.count() >= 3:
+            sobrecargaGrupo=True
 
-    if grupos.count() == 0:
-        vacio=True
+        if grupos.count() == 0:
+            vacio=True
 
-    return render(request, 'verGrupoDelTutor.html', {
-        'gruops': request.user.groups.all(),
-        'title': 'Crear Grupo',
-        'grupos': grupos,
-        'tutor': Tutor,
-        'sobrecargaGrupo': sobrecargaGrupo,
-        'vacio': vacio
-    })
+        grupoform=GrupoForm()
+        estadoActivo = Estado.objects.get(estado = 'Activo')
+        estadoInactivo = Estado.objects.get(estado = 'Inactivo')
+        estadoCerrado = Estado.objects.get(estado = 'Cerrado')
+        elecciones = [
+            (estadoActivo.id, estadoActivo.estado),
+            (estadoInactivo.id, estadoInactivo.estado),
+            (estadoCerrado.id, estadoCerrado.estado)
+        ]
+        grupoform.fields['idEstado'].choices = elecciones
+
+
+        return render(request, 'verGrupoDelTutor.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Crear Grupo',
+            'grupos': grupos,
+            'tutor': Tutor,
+            'sobrecargaGrupo': sobrecargaGrupo,
+            'vacio': vacio,
+            'formgrupo': grupoform
+        })
+    else:
+        grupoform=GrupoForm(request.POST)
+
+        if grupoform.is_valid():
+            try:
+                tutor=PersonalTec.objects.get(id=Tutor)
+                post=grupoform.save(commit=False)
+                post.grupo=tutor.idDepartamentoAcademico.abreviacion+"-"+str(tutor.idInstitucion.anoActual)+"-"+str(tutor.idInstitucion.periodoActual)+"-"+request.POST['grupo']
+                post.idInstitucion_id=tutor.idInstitucion_id
+                post.idPersonalTec_id=Tutor
+                post.save()
+                return redirect('verGruposDelTutor',Tutor)
+            except:
+                grupoform=GrupoForm()
+                return render(request, 'crearGrupo.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Crear Grupo',
+                    'grupos': grupos,
+                    'tutor': Tutor,
+                    'sobrecargaGrupo': sobrecargaGrupo,
+                    'vacio': vacio,
+                    'formgrupo': grupoform
+                })
+        else:
+            grupoform=GrupoForm()
+            return render(request, 'crearGrupo.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Crear Grupo',
+                'grupos': grupos,
+                'tutor': Tutor,
+                'sobrecargaGrupo': sobrecargaGrupo,
+                'vacio': vacio,
+                'formgrupo': grupoform
+            })
 
 @login_required
 @group_required('Jefe de Departamento Académico')
 def listarAlumnos(request, Grupoid):
-
+    Error=False
     if request.method == 'GET':
+        Error=False
         listaAlumnos=Tutorado.objects.filter(idGrupo_id=Grupoid)
         tieneAlumnos=False
         if listaAlumnos.count() > 0:
             tieneAlumnos=True        
+        form=RegistrarTutoradosForm()
+        form.fields['archivo'].label = 'Archivo de Alumnos'
 
         return render(request, 'listarAlumnos.html', {
             'gruops': request.user.groups.all(),
             'title': 'Listar alumnos',
             'lista': listaAlumnos,
             'tieneAlumnos':tieneAlumnos,
-            'grupo': Grupoid
+            'grupo': Grupoid,
+            'form':form,
+            'Error':Error
         })
+    else:
+        Error=False
+        persona_resource = ExcelResource()  
+        dataset = Dataset()  
+        encargado = PersonalTec.objects.get(user_id = request.user.id)
+        escuela = encargado.idInstitucion
+        departamento = encargado.idDepartamentoAcademico 
+
+        try:
+            nuevas_personas = request.FILES['archivo']  
+        except MultiValueDictKeyError:
+            return render(request, 'agregarTutorado.html')
+
+        imported_data = dataset.load(nuevas_personas.read())  
+        result = persona_resource.import_data(dataset, dry_run=True)
+
+        if not result.has_errors(): 
+            persona_resource.import_data(dataset, dry_run=False) # Actually import now  
+            for Alumno in registrarAlumno.objects.all():
+                if User.objects.filter(username=Alumno.control).exists():
+                    print(Alumno.control+" - Usuario ya existente")
+                else:
+                    try:
+                        try:
+                            semestreAlumno=Alumno.semestre
+                        except:
+                            semestreAlumno=1
+                        usr=User.objects.create(username=Alumno.control, password=make_password(Alumno.email), first_name=Alumno.nombres, last_name=Alumno.apellidos, email=(Alumno.control+"@morelia.tecnm.mx"))
+                        usr.groups.add(1)
+                        alm=Tutorado.objects.create(semestre=semestreAlumno,idGrupo_id=Grupoid, idDepartamentoAcademico=departamento, idInstitucion=escuela, user=usr)
+                        print("Registro exitoso")  
+                    except:
+                        print("Erro no pudo crear el usuario")
+
+            limpiar = registrarAlumno.objects.all()         
+            limpiar.delete()
+
+            
+            return redirect ('listarAlumnos',Grupoid)
+        else:
+            print("Error") 
+            Error=True
+            form=RegistrarTutoradosForm()
+            form.fields['archivo'].label = 'Archivo de Alumnos'
+            return render(request, 'agregarTutorado.html',{
+                'gruops': request.user.groups.all(),
+                'title': 'Listar alumnos',
+                'lista': listaAlumnos,
+                'tieneAlumnos':tieneAlumnos,
+                'grupo': Grupoid,
+                'form':form,
+                'Error':Error
+            })
 
 # Coordinador de Tutoria del Departamento Académico
 @login_required
@@ -1191,6 +1304,13 @@ def revisar_credito(request, dato):
         return redirect ('ver_credito_tutor')
     else:
         form=DecisionCreditoForm()
+        estadoAceptado = Estado.objects.get(estado = 'Aceptado')
+        estadoRechazado = Estado.objects.get(estado = 'Rechazado')
+        elecciones = [
+            (estadoAceptado.id, estadoAceptado.estado),
+            (estadoRechazado.id, estadoRechazado.estado)
+        ]
+        form.fields['idEstado'].choices = elecciones
         return render(request, 'revisar_credito.html',{
             'gruops': request.user.groups.all(),
             'title': 'Creditos complementarios',
