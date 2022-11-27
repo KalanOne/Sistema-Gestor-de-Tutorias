@@ -28,7 +28,7 @@
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header text-white" style="background-color: #1B396A;">
           <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Alumnos</h1>
           <button
             type="button"
@@ -69,8 +69,8 @@
       class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white"
       id="tabla"
     >
-      <thead class="bg-white">
-        <tr>
+      <thead>
+        <tr class="text-white" style="background-color: #1B396A;">
           <th scope="col" class="text-center">N°Control</th>
           <th scope="col" class="text-center">Nombre</th>
           <th scope="col" class="text-center">Apellidos</th>
@@ -78,7 +78,7 @@
           <th scope="col" class="text-center">Acciones</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="table-secondary">
         {% for alumno in lista %}
         <tr>
           <td class="text-center">{{alumno.user.username}}</td>
