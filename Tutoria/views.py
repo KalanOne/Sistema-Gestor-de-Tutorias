@@ -367,6 +367,7 @@ def misCitasTutorado(request):
                 nuevaSolicitud.idTutorado_id = tutorado.id
                 nuevaSolicitud.idOrden_id = ordenes.id
                 nuevaSolicitud.idEstado_id = estadosCitas.id
+                nuevaSolicitud.idInstitucion_id = tutorado.idInstitucion.id
                 nuevaSolicitud.save()
                 return render(request, 'miscitas.html',{
                     'gruops': request.user.groups.all(),
@@ -717,6 +718,7 @@ def solicitudPsicologigaTutor(request, grupo_id, tutorado_id):
                 nuevaSolicitud.idOrden_id = ordenes.id
                 nuevaSolicitud.idEstado_id = estadosCitas.id
                 nuevaSolicitud.idPersonalTec_id = tutor.id
+                nuevaSolicitud.idInstitucion_id = tutor.idInstitucion.id
                 nuevaSolicitud.save()
                 return render(request, 'Solicitud_Ayuda_Psicologica_Tutor.html',{
                     'gruops': request.user.groups.all(),

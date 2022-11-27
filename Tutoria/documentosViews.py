@@ -16,6 +16,7 @@ from PyPDF2 import *
 from datetime import date
 from datetime import datetime
 import pythoncom
+from django.http import HttpResponse
 
 def group_required(*group_names):
     """ Grupos, checar si pertenece a grupo """
@@ -814,3 +815,148 @@ def VisualizarPlanAccionTutorialJefe(request):
         'title': 'Visualizar Planes de Acción Tutorial',
         'patsDepartamentales': patsDepartamentales
     })
+
+@login_required()
+@group_required('Psicológico')
+def CitasPsicologo(request):
+    psicologo = PersonalMed.objects.get(user_id = request.user.id)
+    ordenPsico = Orden.objects.get(nombreOrden = 'Psicológico')
+    citas = Cita.objects.filter(idOrden_id = ordenPsico.id, idPersonalMed_id = None, idInstitucion_id = psicologo.idInstitucion.id)
+    citas2 = Cita.objects.filter(idOrden_id = ordenPsico.id, idPersonalMed_id = psicologo.id, idInstitucion_id = psicologo.idInstitucion.id)
+    form = SolicitudCitaPsicologo()
+    formConcluir = ConcluirCitaPsicologo()
+    motivos = Motivo.objects.filter(idOrden_id = ordenPsico.id)
+    tutorados = Tutorado.objects.filter(idInstitucion_id = psicologo.idInstitucion.id)
+    form.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]
+    form.fields['idTutorado'].choices = [(motivo.id, motivo.idDepartamentoAcademico.abreviacion + " - " + motivo.user.first_name + " " + motivo.user.last_name) for motivo in tutorados]
+    if request.method == 'GET':
+        return render(request, 'Psicologo_VisualizarCitas.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Citas',
+            'citasAsig': citas,
+            'citasSAsig': citas2,
+            'form': form,
+            'form2': formConcluir
+        })
+    else:
+        form2 = SolicitudCitaPsicologo(request.POST)
+        if form2.is_valid():
+            try:
+                nuevo = form2.save(commit = False)
+                estadoCitado = Estado.objects.get(estado = 'Citado')
+                nuevo.folio = request.user.username + '-' + datetime.now().strftime("%Y/%m/%d") + '-' + nuevo.idTutorado.user.username
+                nuevo.fechaAsignacion = datetime.now()
+                nuevo.idOrden_id = ordenPsico.id
+                nuevo.idEstado_id = estadoCitado.id
+                nuevo.idPersonalMed_id = psicologo.id
+                nuevo.idInstitucion_id = psicologo.idInstitucion.id
+                nuevo.save()
+                return render(request, 'Psicologo_VisualizarCitas.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Citas',
+                    'citasAsig': citas,
+                    'citasSAsig': citas2,
+                    'form': form,
+                    'exito': 'Cita realizada',
+                    'form2': formConcluir
+                })
+            except:
+                form2.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]
+                form2.fields['idTutorado'].choices = [(motivo.id, motivo.idDepartamentoAcademico.abreviacion + " - " + motivo.user.first_name + " " + motivo.user.last_name) for motivo in tutorados]
+                return render(request, 'Psicologo_VisualizarCitas.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Citas',
+                    'citasAsig': citas,
+                    'citasSAsig': citas2,
+                    'form': form2,
+                    'error': 'No se ha podido hacer la cita',
+                    'form2': formConcluir
+                })
+        else:
+            form2.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]
+            form2.fields['idTutorado'].choices = [(motivo.id, motivo.idDepartamentoAcademico.abreviacion + " - " + motivo.user.first_name + " " + motivo.user.last_name) for motivo in tutorados]
+            return render(request, 'Psicologo_VisualizarCitas.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Citas',
+                'citasAsig': citas,
+                'citasSAsig': citas2,
+                'form': form2,
+                'error': 'No se ha podido hacer la cita',
+                'form2': formConcluir
+            })
+
+@login_required()
+@group_required('Psicológico')
+def AsignarCita(request, cita_id):
+    psicologo = PersonalMed.objects.get(user_id = request.user.id)
+    estadoEspera = Estado.objects.get(estado = 'Espera')
+    ordenPsico = Orden.objects.get(nombreOrden = 'Psicológico')
+    try:
+        cita = Cita.objects.get(id = cita_id, idInstitucion_id = psicologo.idInstitucion.id, idEstado_id = estadoEspera.id, idOrden_id = ordenPsico.id)
+    except:
+        return redirect('Psicologo_VisualizarCitas')
+    form = AsignarCitaPricologo(instance = cita)
+    if request.method == 'GET':
+        return render(request, 'Psicologo_AsignarCita.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Asignar Cita',
+            'form': form
+        })
+    else:
+        form2 = AsignarCitaPricologo(request.POST, instance = cita)
+        if form2.is_valid():
+            try:
+                estadoCitado = Estado.objects.get(estado = 'Citado')
+                nuevo = form2.save(commit = False)
+                nuevo.fechaAsignacion = datetime.now()
+                nuevo.idPersonalMed_id = psicologo.id
+                nuevo.idEstado_id = estadoCitado.id
+                nuevo.save()
+                return render(request, 'Psicologo_AsignarCita.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Asignar Cita',
+                    'exito': 'Se ha actualizado con éxito'
+                })
+            except:
+                return render(request, 'Psicologo_AsignarCita.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Asignar Cita',
+                    'error': 'No se ha actualizado con éxito',
+                    'form': form2
+                })
+        else:
+            return render(request, 'Psicologo_AsignarCita.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Asignar Cita',
+                'error': 'No se ha actualizado con éxito',
+                'form': form2
+            })
+
+@login_required()
+@group_required('Psicológico')
+def ConcluirCita(request, cita_id):
+    if request.method == 'GET':
+        return redirect('Psicologo_VisualizarCitas')
+    else:
+        psicologo = PersonalMed.objects.get(user_id = request.user.id)
+        estadoCitado = Estado.objects.get(estado = 'Citado')
+        ordenPsico = Orden.objects.get(nombreOrden = 'Psicológico')
+        try:
+            cita = Cita.objects.get(id = cita_id, idInstitucion_id = psicologo.idInstitucion.id, idEstado_id = estadoCitado.id, idOrden_id = ordenPsico.id, idPersonalMed_id = psicologo.id)
+        except:
+            return redirect('Psicologo_VisualizarCitas')
+        estadoAtendido = Estado.objects.get(estado = 'Atendido')
+        estadoNo = Estado.objects.get(estado = 'No atendido')
+        flag = False
+        copia = request.POST.copy()
+        if request.POST['idEstado'] == str(estadoAtendido.id) and (request.POST['horaCanalizacion'] != None and request.POST['horaCanalizacion'] != ''):
+            flag = True
+        elif request.POST['idEstado'] == str(estadoNo.id):
+            copia['horaCanalizacion'] = None
+            flag = True
+        if flag:
+            form = ConcluirCitaPsicologo(copia, instance = cita)
+            if form.is_valid():
+                form.save()
+        return redirect('Psicologo_VisualizarCitas')
+    
