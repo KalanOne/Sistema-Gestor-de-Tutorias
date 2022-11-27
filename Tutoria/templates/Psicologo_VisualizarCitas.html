@@ -90,6 +90,7 @@
                                 <th scope="col">Rango de atención</th>
                                 <th scope="col">Lugar de atención</th>
                                 <th scope="col">Hora de atención</th>
+                                <th scope="col">Tutorado</th>
                                 <th scope="col">Tutor (En caso de haber sido asignado por el tutor)</th>
                                 {% comment %} <th scope="col">Tutor</th> {% endcomment %}
                                 <th scope="col">Personal Médico</th>
@@ -139,6 +140,8 @@
                                     {% else %}
                                         <td>{{ cita.horaCanalizacion|time:"H:i (a)" }}</td>
                                     {% endif %}
+
+                                    <td>{{ cita.idTutorado.user.first_name }} {{ cita.idTutorado.user.last_name }}</td>
 
                                     {% if cita.idPersonalTec is none %}
                                         <td>------</td>
@@ -216,6 +219,8 @@
                                     {% else %}
                                         <td>{{ cita.horaCanalizacion|time:"H:i (a)" }}</td>
                                     {% endif %}
+
+                                    <td>{{ cita.idTutorado.user.first_name }} {{ cita.idTutorado.user.last_name }}</td>
 
                                     {% if cita.idPersonalTec is none %}
                                         <td>------</td>

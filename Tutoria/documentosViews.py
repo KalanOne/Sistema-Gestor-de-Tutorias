@@ -959,4 +959,58 @@ def ConcluirCita(request, cita_id):
             if form.is_valid():
                 form.save()
         return redirect('Psicologo_VisualizarCitas')
-    
+
+@login_required()
+@group_required('Médico')
+def CitasMedico(request):
+    medico = PersonalMed.objects.get(user_id = request.user.id)
+    ordenMedi = Orden.objects.get(nombreOrden = 'Médico')
+    citas2 = Cita.objects.filter(idOrden_id = ordenMedi.id, idPersonalMed_id = medico.id)
+    form = RegistroCitaMedico()
+    tutorados = Tutorado.objects.filter(idInstitucion_id = medico.idInstitucion.id)
+    form.fields['idTutorado'].choices = [(motivo.id, motivo.idDepartamentoAcademico.abreviacion + " - " + motivo.user.first_name + " " + motivo.user.last_name) for motivo in tutorados]
+    if request.method == 'GET':
+        return render(request, 'Medico_VisualizarCitas.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Citas',
+            'citasSAsig': citas2,
+            'form': form
+        })
+    else:
+        form2 = RegistroCitaMedico(request.POST)
+        if form2.is_valid():
+            try:
+                nuevo = form2.save(commit = False)
+                estadoAtendido = Estado.objects.get(estado = 'Atendido')
+                nuevo.folio = request.user.username + '-' + datetime.now().strftime("%Y/%m/%d") + '-' + nuevo.idTutorado.user.username
+                nuevo.fechaAsignacion = datetime.now()
+                nuevo.idOrden_id = ordenMedi.id
+                nuevo.idEstado_id = estadoAtendido.id
+                nuevo.idPersonalMed_id = medico.id
+                nuevo.idInstitucion_id = medico.idInstitucion.id
+                nuevo.save()
+                return render(request, 'Medico_VisualizarCitas.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Citas',
+                    'citasSAsig': citas2,
+                    'form': form,
+                    'exito': 'Resgitro realizado con éxito'
+                })
+            except:
+                form2.fields['idTutorado'].choices = [(motivo.id, motivo.idDepartamentoAcademico.abreviacion + " - " + motivo.user.first_name + " " + motivo.user.last_name) for motivo in tutorados]
+                return render(request, 'Medico_VisualizarCitas.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Citas',
+                    'citasSAsig': citas2,
+                    'form': form2,
+                    'error': 'No se ha podido registrar con éxito'
+                })
+        else:
+            form2.fields['idTutorado'].choices = [(motivo.id, motivo.idDepartamentoAcademico.abreviacion + " - " + motivo.user.first_name + " " + motivo.user.last_name) for motivo in tutorados]
+            return render(request, 'Medico_VisualizarCitas.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Citas',
+                'citasSAsig': citas2,
+                'form': form2,
+                'error': 'No se ha podido registrar con éxito'
+            })

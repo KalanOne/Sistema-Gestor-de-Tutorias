@@ -297,3 +297,30 @@ class ConcluirCitaPsicologo(forms.ModelForm):
             (estadoRechazado.id, estadoRechazado.estado)
         ]
         self.fields['idEstado'].choices = elecciones
+
+class RegistroCitaMedico(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = {'fechaCita', 'horaCanalizacion', 'lugar', 'descripcion', 'idMotivo', 'idTutorado'}
+        labels = {
+            'fechaCita': ('Fecha de atención'),
+            'horaCanalizacion': ('Hora de atención'),
+            'lugar': ('Lugar de atención'),
+            'descripcion': ('Descripción'),
+            'idMotivo': ('Motivo de atención'),
+            'idTutorado': ('Tutorado')
+        }
+        widgets = {
+            'fechaCita': forms.DateInput(attrs={'type': 'date'}),
+            'horaCanalizacion': forms.TimeInput(attrs={'type': 'time'}),
+            'descripcion': forms.Textarea(attrs={'rows' : 5}),
+        }
+        required = {'fechaCita', 'horaCanalizacion', 'lugar', 'descripcion', 'idMotivo', 'idTutorado'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.Meta.required:
+            self.fields[field].required = True
+        ordenMedi = Orden.objects.get(nombreOrden = 'Médico')
+        motivos = Motivo.objects.filter(idOrden_id = ordenMedi.id)
+        self.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]

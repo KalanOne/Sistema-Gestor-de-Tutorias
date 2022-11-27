@@ -83,6 +83,7 @@ urlpatterns = [
     path('Psicologo/Citas/', documentosViews.CitasPsicologo, name = 'Psicologo_VisualizarCitas'),
     path('Psicologo/Citas/Asignar/<int:cita_id>/', documentosViews.AsignarCita, name = 'Psicologo_AsignarCita'),
     path('Psicologo/Citas/Concluir/<int:cita_id>/', documentosViews.ConcluirCita, name = 'Psicologo_ConcluirCita'),
+    path('Medico/Citas/', documentosViews.CitasMedico, name = 'Medico_AsignarCita'),
 
 
     #fer

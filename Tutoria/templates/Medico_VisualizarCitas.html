@@ -1,0 +1,150 @@
+{% extends 'layout/basicCNMenu.html' %}{% block content %} {% load crispy_forms_tags %}
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12">
+                <h1 class="text-center h1">
+                    Registro de Atenciones Médicas
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            {% if error is not defined %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <div>{{ error }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>                
+            {% endif %}
+
+            {% if exito is not defined %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <div>{{ exito }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        </div>
+        <div class="row mb-5">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 d-grid gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSolicitudCita" style="background-color: #1B396A;">
+                    Registrar atención médica
+                </button>
+
+                <div class="modal fade" id="modalSolicitudCita" tabindex="-1" aria-labelledby="modalSolicitudCitaLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Registrar atención médica</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form.idMotivo|as_crispy_field }}
+                                    {{ form.fechaCita|as_crispy_field }}
+                                    {{ form.horaCanalizacion|as_crispy_field }}
+                                    {{ form.lugar|as_crispy_field }}
+                                    {{ form.descripcion|as_crispy_field }}
+                                    {{ form.idTutorado|as_crispy_field }}
+                                    <button type="submit" class="btn btn-primary">Enviar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-12">
+                <div class="table-responsive py-3 px-2">
+                    <table class="table table-hover datatable" id="tabla">
+                        <thead  >
+                            <tr class="text-white" style="background-color: #1B396A;">
+                                <th scope="col">#</th>
+                                <th scope="col">Motivo</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Fecha de solicitud</th>
+                                <th scope="col">Fecha de asignación</th>
+                                <th scope="col">Fecha de cita</th>
+                                <th scope="col">Hora de atención</th>
+                                <th scope="col">Lugar de atención</th>
+                                <th scope="col">Tutorado</th>
+                                <th scope="col">Personal Médico</th>
+                                <th scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-secondary">
+                            {% for cita in citasSAsig %}
+                                <tr>
+                                    <th scope="row">{{ cita.id }}</th>
+                                    <td>{{ cita.idMotivo.nombre }}</td>
+                                    {% if cita.descripcion == '' or cita.descripcion == none %}
+                                        <td>------</td>
+                                    {% else %}
+                                        <td>{{ cita.descripcion }}</td>
+                                    {% endif %}
+                                    {% comment %} <td>{{ cita.fechaSolicitud|date:"d/m/yy" }}</td> {% endcomment %}
+                                    <td>{{ cita.fechaSolicitud }}</td>
+
+                                    {% if cita.fechaAsignacion is none %}
+                                        <td>------</td>
+                                    {% else %}
+                                        <td>{{ cita.fechaAsignacion }}</td>
+                                    {% endif %}
+
+                                    {% if cita.fechaCita is none %}
+                                        <td>------</td>
+                                    {% else %}
+                                        <td>{{ cita.fechaCita }}</td>
+                                    {% endif %}
+
+                                    {% if cita.horaCanalizacion is none %}
+                                        <td>------</td>
+                                    {% else %}
+                                        <td>{{ cita.horaCanalizacion|time:"H:i (a)" }}</td>
+                                    {% endif %}
+
+                                    {% if cita.lugar is none %}
+                                        <td>------</td>
+                                    {% else %}
+                                        <td>{{ cita.lugar }}</td>
+                                    {% endif %}
+
+                                    <td>{{ cita.idTutorado.user.first_name }} {{ cita.idTutorado.user.last_name }}</td>
+
+                                    {% if cita.idPersonalMed is none %}
+                                        <td>------</td>
+                                    {% else %}
+                                        <td>{{ cita.idPersonalMed.user.first_name }} {{ cita.idPersonalMed.user.last_name }}</td>
+                                    {% endif %}
+
+                                    {% if cita.idEstado.estado == 'Espera' %}
+                                        <td class="text-warning">Espera</td>
+                                    {% elif cita.idEstado.estado == 'Citado' %}
+                                        <td class="text-warning">Citado</td>
+                                    {% elif cita.idEstado.estado == 'Atendido' %}
+                                        <td class="text-success">Atendido</td>
+                                    {% elif cita.idEstado.estado == 'No atendido' %}
+                                        <td class="text-danger">No atendido</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            {% comment %} <tr>
+                                <th scope="row">1</th>
+                                <td>20/10/2022</td>
+                                <td>21/10/2022</td>
+                                <td>22/10/2022</td>
+                                <td>13:00 - 18:00</td>
+                                <td>Edificio AG cubículo de psicólogo</td>
+                                <td>14:15</td>
+                            </tr> {% endcomment %}
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            <div class="col-md-1"></div>   
+        </div>
+    </div>
+{% endblock content %}
