@@ -78,6 +78,13 @@ urlpatterns = [
     path('JefeDesarrolloAcademico/V2/ProgramaInstitucional/Visualizar/', documentosViews.VisualizarProgramaInstitucionalTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarProgramaInstitucionalTutorialV2'),
     path('JefeDesarrolloAcademico/V2/PlanAccionTutorial/Visualizar/', documentosViews.VisualizarPlanAccionTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarPlanAccionTutorialV2'),
 
+
+    # Psicologo y medico
+    path('Psicologo/Citas/', documentosViews.CitasPsicologo, name = 'Psicologo_VisualizarCitas'),
+    path('Psicologo/Citas/Asignar/<int:cita_id>/', documentosViews.AsignarCita, name = 'Psicologo_AsignarCita'),
+    path('Psicologo/Citas/Concluir/<int:cita_id>/', documentosViews.ConcluirCita, name = 'Psicologo_ConcluirCita'),
+
+
     #fer
     path('credito/subir/', views.subir_credito, name = 'subir_credito'),
     path('credito/ver/', views.ver_credito_tutorado, name = 'ver_credito_tutorado'),
