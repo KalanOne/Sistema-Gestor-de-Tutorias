@@ -1,34 +1,91 @@
-{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}
+{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}{%load crispy_forms_tags %}
 <div class="container">
   <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
     <div class="row">
       <div class="col">
+        {% comment %}
         <a href="{% url 'registrarTutorados' grupo %}" class="btn btn-primary"
           >Agregar alumnos <i class="bi bi-person-plus-fill mx-2"></i
         ></a>
+        {% endcomment %}
+        <a
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          Agregar alumnos <i class="bi bi-person-plus-fill mx-2"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Alumnos</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %} {{form|crispy }} {% if Error == True %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+              <div>¡ERROR! verifica el archivo</div>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+            {% endif %}
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
+              <button
+                type="submit"
+                class="btn btn-sm btn-primary text-center m-1"
+              >
+                Enviar
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
   {% if tieneAlumnos == True %}
   <div class="table-resposive">
-    <table class="table table-hover datatable" id="tabla">
-      <thead>
+    <table
+      class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white"
+      id="tabla"
+    >
+      <thead class="bg-white">
         <tr>
-          <th scope="col">N°Control</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Apellidos</th>
-          <th scope="col">Grupo</th>
-          <th scope="col">Acciones</th>
+          <th scope="col" class="text-center">N°Control</th>
+          <th scope="col" class="text-center">Nombre</th>
+          <th scope="col" class="text-center">Apellidos</th>
+          <th scope="col" class="text-center">Grupo</th>
+          <th scope="col" class="text-center">Acciones</th>
         </tr>
       </thead>
       <tbody>
         {% for alumno in lista %}
         <tr>
-          <td>{{alumno.user.username}}</td>
-          <td>{{alumno.user.first_name}}</td>
-          <td>{{alumno.user.last_name}}</td>
-          <td>{{alumno.idGrupo}}</td>
-          <td>
+          <td class="text-center">{{alumno.user.username}}</td>
+          <td class="text-center">{{alumno.user.first_name}}</td>
+          <td class="text-center">{{alumno.user.last_name}}</td>
+          <td class="text-center">{{alumno.idGrupo}}</td>
+          <td class="text-center">
             <div class="row text">
               <div class="col">
                 <a
@@ -37,13 +94,6 @@
                   style="text-decoration: none; color: black"
                 >
                   <i class="bi bi-person-circle"></i>
-                </a>
-                <a
-                  class="mx-2"
-                  href="#"
-                  style="text-decoration: none; color: black"
-                >
-                  <i class="bi bi-pencil-square"></i>
                 </a>
               </div>
             </div>
