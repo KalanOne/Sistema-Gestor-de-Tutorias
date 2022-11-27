@@ -464,7 +464,6 @@ class Cita(models.Model):
     idPersonalMed = models.ForeignKey('PersonalMed', on_delete=models.CASCADE, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
     idOrden = models.ForeignKey('Orden', on_delete=models.CASCADE)
-    idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
     
 
     def Mostrar(self):
@@ -507,7 +506,7 @@ class registrarAlumno(models.Model):
     email = models.EmailField(blank=True)  
     domicilio = models.CharField(max_length=100)
     telefono = models.CharField(max_length=10)
-    semestre = models.IntegerField()
+    semestre = models.IntegerField(max_length=3)
 
     def Mostrar(self):
         return "{} - {}".format(self.nombres, self.apellidos)
