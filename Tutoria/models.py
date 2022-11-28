@@ -319,7 +319,7 @@ class registrarAlumno(models.Model):
         ordering= ['id']
 
 class registrarPersonalTec(models.Model):  
-    username = models.CharField(max_length=30)  
+    username = models.CharField(max_length=30)   
     nombres = models.CharField(max_length=35) 
     apellidos = models.CharField(max_length=35) 
     email = models.EmailField(blank=True)
