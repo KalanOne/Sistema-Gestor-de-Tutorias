@@ -87,3 +87,90 @@ class FormDiagnosticoInstitucionalV2(forms.ModelForm):
 
 class FormConfirmacionReporteInstitucional(forms.Form):
     confirmacion = forms.HiddenInput()
+
+class CambioPeriodo(forms.ModelForm):
+    class Meta:
+        model = FechaLimite
+        exclude = {'ano', 'periodo', 'institucion'}
+        labels = {
+            'diagnosticoInstitucional': ('Fecha límite para Diagnóstico Institucional'),
+            'planAccionTutorial': ('Fecha límite para Plan de Acción Tutorial Departamental'),
+            'programaInstitucionalTutorial': ('Fecha límite para Programa Institucional Tutorial'),
+            'reporteSemestralGrupal': ('Fecha límite para Reporte Semestral Grupal'),
+            'reporteSemestralDepartamental': ('Fecha límite para Reporte Semestral Departamental'),
+            'reporteSemestralInstitucional': ('Fecha límite para Reporte Semestral Institucional')
+        }
+        widgets = {
+            'diagnosticoInstitucional': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()}),
+            'planAccionTutorial': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()}),
+            'programaInstitucionalTutorial': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()}),
+            'reporteSemestralGrupal': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()}),
+            'reporteSemestralDepartamental': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()}),
+            'reporteSemestralInstitucional': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()})
+        }
+
+class ModFechaDiagnostico(forms.ModelForm):
+    class Meta:
+        model = FechaLimite
+        fields = {'diagnosticoInstitucional'}
+        labels = {
+            'diagnosticoInstitucional': ('Nueva fecha límite para Diagnóstico Institucional'),
+        }
+        widgets = {
+            'diagnosticoInstitucional': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()})
+        }
+
+class ModFechaPAT(forms.ModelForm):
+    class Meta:
+        model = FechaLimite
+        fields = {'planAccionTutorial'}
+        labels = {
+            'planAccionTutorial': ('Nueva fecha límite para Plan de Acción Tutorial Departamental'),
+        }
+        widgets = {
+            'planAccionTutorial': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()})
+        }
+
+class ModFechaPIT(forms.ModelForm):
+    class Meta:
+        model = FechaLimite
+        fields = {'programaInstitucionalTutorial'}
+        labels = {
+            'programaInstitucionalTutorial': ('Nueva fecha límite para Programa Institucional Tutorial'),
+        }
+        widgets = {
+            'programaInstitucionalTutorial': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()})
+        }
+
+class ModFechaReporteGrupal(forms.ModelForm):
+    class Meta:
+        model = FechaLimite
+        fields = {'reporteSemestralGrupal'}
+        labels = {
+            'reporteSemestralGrupal': ('Nueva fecha límite para Reporte Semestral Grupal'),
+        }
+        widgets = {
+            'reporteSemestralGrupal': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()})
+        }
+
+class ModFechaReporteDepartamental(forms.ModelForm):
+    class Meta:
+        model = FechaLimite
+        fields = {'reporteSemestralDepartamental'}
+        labels = {
+            'reporteSemestralDepartamental': ('Nueva fecha límite para Reporte Semestral Departamental'),
+        }
+        widgets = {
+            'reporteSemestralDepartamental': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()})
+        }
+
+class ModFechaReporteInstitucional(forms.ModelForm):
+    class Meta:
+        model = FechaLimite
+        fields = {'reporteSemestralInstitucional'}
+        labels = {
+            'reporteSemestralInstitucional': ('Nueva fecha límite para Reporte Semestral Institucional'),
+        }
+        widgets = {
+            'reporteSemestralInstitucional': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()})
+        }

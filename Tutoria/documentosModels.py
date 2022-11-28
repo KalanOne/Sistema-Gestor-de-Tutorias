@@ -167,3 +167,20 @@ class ConstanciaTutorV2(models.Model):
         verbose_name_plural= 'ConstanciasTutoresV2'
         db_table= 'constanciaTutorV2'
         ordering= ['id']
+
+class FechaLimite(models.Model):
+    diagnosticoInstitucional = models.DateField()
+    planAccionTutorial = models.DateField()
+    programaInstitucionalTutorial = models.DateField()
+    reporteSemestralGrupal = models.DateField()
+    reporteSemestralDepartamental = models.DateField()
+    reporteSemestralInstitucional = models.DateField()
+    ano = models.PositiveIntegerField()
+    periodo = models.PositiveIntegerField()
+    institucion = models.ForeignKey('Institucion', on_delete = models.CASCADE)
+    
+    class Meta:
+        verbose_name= 'FechaLimite'
+        verbose_name_plural= 'FechasLimites'
+        db_table= 'fechaLimite'
+        ordering= ['id']

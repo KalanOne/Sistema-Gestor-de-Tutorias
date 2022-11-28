@@ -235,7 +235,7 @@ class AsignarCitaPricologo(forms.ModelForm):
             'lugar': ('Lugar'),
         }
         widgets = {
-            'fechaCita': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today(),}),
+            'fechaCita': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()}),
             'horaCanalizacion': forms.TimeInput(attrs={'type': 'time'}),
             'horaInicio': forms.TimeInput(attrs={'type': 'time'}),
             'horaFinal': forms.TimeInput(attrs={'type': 'time'})

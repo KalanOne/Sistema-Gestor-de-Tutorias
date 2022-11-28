@@ -71,6 +71,16 @@ urlpatterns = [
     path('Medico/Citas/', documentosViews.CitasMedico, name = 'Medico_AsignarCita'),
 
 
+    # Subdirector
+    path('SubdirectorAcademico/Cambio/Periodo/', documentosViews.VisualizarFechasLimites, name = 'Subdirector_CambioPeriodo'),
+    path('SubdirectorAcademico/Cambio/DiagnosticoInstitucional/', documentosViews.ModFechaLimiteDiag, name = 'Subdirector_ModFechaLimiteDiag'),
+    path('SubdirectorAcademico/Cambio/PlanAccionTutorial/', documentosViews.ModFechaLimitePAT, name = 'Subdirector_ModFechaLimitePAT'),
+    path('SubdirectorAcademico/Cambio/ProgramaInstitucionalTutorial/', documentosViews.ModFechaLimitePIT, name = 'Subdirector_ModFechaLimitePIT'),
+    path('SubdirectorAcademico/Cambio/ReporteSemestralGrupal/', documentosViews.ModFechaLimiteGrupal, name = 'Subdirector_ModFechaLimiteGrupal'),
+    path('SubdirectorAcademico/Cambio/ReporteSemestralDepartamental/', documentosViews.ModFechaLimiteDepartamental, name = 'Subdirector_ModFechaLimiteDepartamental'),
+    path('SubdirectorAcademico/Cambio/ReporteSemestralInstitucional/', documentosViews.ModFechaLimiteInstitucional, name = 'Subdirector_ModFechaLimiteInstitucional'),
+
+
     #fer
     path('Credito/subir/', views.subir_credito, name = 'subir_credito'),
     path('Credito/ver/', views.ver_credito_tutorado, name = 'ver_credito_tutorado'),

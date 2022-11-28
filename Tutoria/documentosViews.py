@@ -1014,3 +1014,514 @@ def CitasMedico(request):
                 'form': form2,
                 'error': 'No se ha podido registrar con éxito'
             })
+
+@login_required()
+@group_required('Subdirector Académico')
+@transaction.atomic
+def VisualizarFechasLimites(request):
+    subdirector = PersonalMed.objects.get(user_id = request.user.id)
+    
+    if subdirector.idInstitucion.periodoActual == 2:
+        formCambioPeriodo = CambioPeriodo()
+        if request.method == 'GET':
+            return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Fechas Límtes',
+                'anoActual': subdirector.idInstitucion.anoActual,
+                'periodoActual': 2,
+                'advertenciaCambioPeriodo': False,
+                'formCambioPeriodo': formCambioPeriodo
+            })
+        else:
+            formCambioPeriodo = CambioPeriodo(request.POST)
+            if formCambioPeriodo.is_valid():
+                if request.POST['diagnosticoInstitucional'] < request.POST['planAccionTutorial']:
+                    if request.POST['programaInstitucionalTutorial'] > request.POST['planAccionTutorial']:
+                        if request.POST['programaInstitucionalTutorial'] < request.POST['reporteSemestralGrupal']:
+                            if request.POST['reporteSemestralDepartamental'] > request.POST['reporteSemestralGrupal']:
+                                if request.POST['reporteSemestralDepartamental'] < request.POST['reporteSemestralInstitucional']:
+                                    try:
+                                        nuevo = formCambioPeriodo.save(commit = False)
+                                        nuevo.ano = subdirector.idInstitucion.anoActual
+                                        nuevo.periodo = 3
+                                        nuevo.institucion_id = subdirector.idInstitucion.id
+                                        nuevo.save()
+                                        subdirector.idInstitucion.periodoActual = 3
+                                        subdirector.idInstitucion.save()
+                                        formNuevo = formCambioPeriodo()
+                                        dia = ModFechaDiagnostico()
+                                        pat = ModFechaPAT()
+                                        pit = ModFechaPIT()
+                                        grupal = ModFechaReporteGrupal()
+                                        departamental = ModFechaReporteDepartamental()
+                                        institucional = ModFechaReporteInstitucional()
+                                        return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                            'gruops': request.user.groups.all(),
+                                            'title': 'Fechas Límtes',
+                                            'anoActual': subdirector.idInstitucion.anoActual,
+                                            'periodoActual': 3,
+                                            'advertenciaCambioPeriodo': True,
+                                            'formCambioPeriodo': formNuevo,
+                                            'exito': 'Se ha cambiado el periodo',
+                                            'dia': dia,
+                                            'pat': pat,
+                                            'pit': pit,
+                                            'grupal': grupal,
+                                            'departamental': departamental,
+                                            'institucional': institucional,
+                                            'fechas': nuevo
+                                        })
+                                    except:
+                                        return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                            'gruops': request.user.groups.all(),
+                                            'title': 'Fechas Límtes',
+                                            'anoActual': subdirector.idInstitucion.anoActual,
+                                            'periodoActual': 2,
+                                            'advertenciaCambioPeriodo': False,
+                                            'formCambioPeriodo': formCambioPeriodo,
+                                            'error': 'No se podido procesar la solicitud'
+                                        })
+                                else:
+                                    return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                        'gruops': request.user.groups.all(),
+                                        'title': 'Fechas Límtes',
+                                        'anoActual': subdirector.idInstitucion.anoActual,
+                                        'periodoActual': 2,
+                                        'advertenciaCambioPeriodo': False,
+                                        'formCambioPeriodo': formCambioPeriodo,
+                                        'error': 'La fecha límite de Reporte Semestral Departamental es mayor a la fecha límite de Reporte Semestral Institucional'
+                                    })
+                            else:
+                                return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                    'gruops': request.user.groups.all(),
+                                    'title': 'Fechas Límtes',
+                                    'anoActual': subdirector.idInstitucion.anoActual,
+                                    'periodoActual': 2,
+                                    'advertenciaCambioPeriodo': False,
+                                    'formCambioPeriodo': formCambioPeriodo,
+                                    'error': 'La fecha límite de Reporte Semestral Grupal es mayor a la fecha límite de Reporte Semestral Departamental'
+                                })
+                        else:
+                            return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                'gruops': request.user.groups.all(),
+                                'title': 'Fechas Límtes',
+                                'anoActual': subdirector.idInstitucion.anoActual,
+                                'periodoActual': 2,
+                                'advertenciaCambioPeriodo': False,
+                                'formCambioPeriodo': formCambioPeriodo,
+                                'error': 'La fecha límite de Programa Institucional Tutorial es mayor a la fecha límite de Reporte Semestral Grupal'
+                            })
+                    else:
+                        return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                            'gruops': request.user.groups.all(),
+                            'title': 'Fechas Límtes',
+                            'anoActual': subdirector.idInstitucion.anoActual,
+                            'periodoActual': 2,
+                            'advertenciaCambioPeriodo': False,
+                            'formCambioPeriodo': formCambioPeriodo,
+                            'error': 'La fecha límite de Plan de Acción Tutorial es mayor a la fecha límite de Programa Institucional Tutorial'
+                        })
+                else:
+                    return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Fechas Límtes',
+                        'anoActual': subdirector.idInstitucion.anoActual,
+                        'periodoActual': 2,
+                        'advertenciaCambioPeriodo': False,
+                        'formCambioPeriodo': formCambioPeriodo,
+                        'error': 'La fecha límite de Diagnóstico Institucional es mayor a la fecha límite de Plan de Acción Tutorial'
+                    })
+            else:
+                return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Fechas Límtes',
+                    'anoActual': subdirector.idInstitucion.anoActual,
+                    'periodoActual': 2,
+                    'advertenciaCambioPeriodo': False,
+                    'formCambioPeriodo': formCambioPeriodo,
+                    'error': 'No se podido procesar la solicitud'
+                })
+
+    dia = ModFechaDiagnostico()
+    pat = ModFechaPAT()
+    pit = ModFechaPIT()
+    grupal = ModFechaReporteGrupal()
+    departamental = ModFechaReporteDepartamental()
+    institucional = ModFechaReporteInstitucional()
+    
+    if subdirector.idInstitucion.periodoActual == 1:
+        fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+        if datetime.today() > fechasActuales.reporteSemestralInstitucional:
+            advertenciaCambioPeriodo = False
+        else:
+            advertenciaCambioPeriodo = True
+        if request.method == 'GET':
+            return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Fechas Límtes',
+                'anoActual': subdirector.idInstitucion.anoActual,
+                'periodoActual': 1,
+                'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                'formCambioPeriodo': FormConfirmacionReporteInstitucional(),
+                'fechas': fechasActuales,
+                'dia': dia,
+                'pat': pat,
+                'pit': pit,
+                'grupal': grupal,
+                'departamental': departamental,
+                'institucional': institucional
+            })
+        else:
+            formCambioPeriodo = FormConfirmacionReporteInstitucional(request.POST)
+            if formCambioPeriodo.is_valid():
+                try:
+                    subdirector.idInstitucion.periodoActual = 2
+                    subdirector.idInstitucion.save()
+                    return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Fechas Límtes',
+                        'anoActual': subdirector.idInstitucion.anoActual,
+                        'periodoActual': 2,
+                        'advertenciaCambioPeriodo': False,
+                        'formCambioPeriodo': CambioPeriodo(),
+                        'exito': 'Se ha cambiado el periodo'
+                    })
+                except:
+                    return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Fechas Límtes',
+                        'anoActual': subdirector.idInstitucion.anoActual,
+                        'periodoActual': 1,
+                        'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                        'formCambioPeriodo': formCambioPeriodo,
+                        'fechas': fechasActuales,
+                        'error': 'No se podido procesar la solicitud',
+                        'dia': dia,
+                        'pat': pat,
+                        'pit': pit,
+                        'grupal': grupal,
+                        'departamental': departamental,
+                        'institucional': institucional
+                    })
+            else:
+                return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Fechas Límtes',
+                    'anoActual': subdirector.idInstitucion.anoActual,
+                    'periodoActual': 2,
+                    'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                    'formCambioPeriodo': formCambioPeriodo,
+                    'fechas': fechasActuales,
+                    'error': 'No se podido procesar la solicitud',
+                    'dia': dia,
+                    'pat': pat,
+                    'pit': pit,
+                    'grupal': grupal,
+                    'departamental': departamental,
+                    'institucional': institucional
+                })
+    
+    if subdirector.idInstitucion.periodoActual == 3:
+        fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+        if datetime.today() > fechasActuales.reporteSemestralInstitucional:
+            advertenciaCambioPeriodo = False
+        else:
+            advertenciaCambioPeriodo = True
+        formCambioPeriodo = CambioPeriodo()
+        if request.method == 'GET':
+            return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Fechas Límtes',
+                'anoActual': subdirector.idInstitucion.anoActual,
+                'periodoActual': 3,
+                'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                'formCambioPeriodo': formCambioPeriodo,
+                'fechas': fechasActuales,
+                'dia': dia,
+                'pat': pat,
+                'pit': pit,
+                'grupal': grupal,
+                'departamental': departamental,
+                'institucional': institucional
+            })
+        else:
+            formCambioPeriodo = CambioPeriodo(request.POST)
+            if formCambioPeriodo.is_valid():
+                if request.POST['diagnosticoInstitucional'] < request.POST['planAccionTutorial']:
+                    if request.POST['programaInstitucionalTutorial'] > request.POST['planAccionTutorial']:
+                        if request.POST['programaInstitucionalTutorial'] < request.POST['reporteSemestralGrupal']:
+                            if request.POST['reporteSemestralDepartamental'] > request.POST['reporteSemestralGrupal']:
+                                if request.POST['reporteSemestralDepartamental'] < request.POST['reporteSemestralInstitucional']:
+                                    try:
+                                        nuevo = formCambioPeriodo.save(commit = False)
+                                        nuevo.ano = subdirector.idInstitucion.anoActual + 1
+                                        nuevo.periodo = 1
+                                        nuevo.institucion_id = subdirector.idInstitucion.id
+                                        nuevo.save()
+                                        subdirector.idInstitucion.periodoActual = 1
+                                        subdirector.idInstitucion.anoActual = subdirector.idInstitucion.anoActual + 1
+                                        subdirector.idInstitucion.save()
+                                        formNuevo = formCambioPeriodo()
+                                        return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                            'gruops': request.user.groups.all(),
+                                            'title': 'Fechas Límtes',
+                                            'anoActual': subdirector.idInstitucion.anoActual,
+                                            'periodoActual': 1,
+                                            'advertenciaCambioPeriodo': True,
+                                            'formCambioPeriodo': formNuevo,
+                                            'exito': 'Se ha cambiado el periodo',
+                                            'dia': dia,
+                                            'pat': pat,
+                                            'pit': pit,
+                                            'grupal': grupal,
+                                            'departamental': departamental,
+                                            'institucional': institucional,
+                                            'fechas': nuevo
+                                        })
+                                    except:
+                                        return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                            'gruops': request.user.groups.all(),
+                                            'title': 'Fechas Límtes',
+                                            'anoActual': subdirector.idInstitucion.anoActual,
+                                            'periodoActual': 3,
+                                            'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                                            'formCambioPeriodo': formCambioPeriodo,
+                                            'error': 'No se podido procesar la solicitud',
+                                            'fechas': fechasActuales,
+                                            'dia': dia,
+                                            'pat': pat,
+                                            'pit': pit,
+                                            'grupal': grupal,
+                                            'departamental': departamental,
+                                            'institucional': institucional
+                                        })
+                                else:
+                                    return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                        'gruops': request.user.groups.all(),
+                                        'title': 'Fechas Límtes',
+                                        'anoActual': subdirector.idInstitucion.anoActual,
+                                        'periodoActual': 3,
+                                        'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                                        'formCambioPeriodo': formCambioPeriodo,
+                                        'error': 'La fecha límite de Reporte Semestral Departamental es mayor a la fecha límite de Reporte Semestral Institucional',
+                                        'fechas': fechasActuales,
+                                        'dia': dia,
+                                        'pat': pat,
+                                        'pit': pit,
+                                        'grupal': grupal,
+                                        'departamental': departamental,
+                                        'institucional': institucional
+                                    })
+                            else:
+                                return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                    'gruops': request.user.groups.all(),
+                                    'title': 'Fechas Límtes',
+                                    'anoActual': subdirector.idInstitucion.anoActual,
+                                    'periodoActual': 3,
+                                    'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                                    'formCambioPeriodo': formCambioPeriodo,
+                                    'error': 'La fecha límite de Reporte Semestral Grupal es mayor a la fecha límite de Reporte Semestral Departamental',
+                                    'fechas': fechasActuales,
+                                    'dia': dia,
+                                    'pat': pat,
+                                    'pit': pit,
+                                    'grupal': grupal,
+                                    'departamental': departamental,
+                                    'institucional': institucional
+                                })
+                        else:
+                            return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                                'gruops': request.user.groups.all(),
+                                'title': 'Fechas Límtes',
+                                'anoActual': subdirector.idInstitucion.anoActual,
+                                'periodoActual': 3,
+                                'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                                'formCambioPeriodo': formCambioPeriodo,
+                                'error': 'La fecha límite de Programa Institucional Tutorial es mayor a la fecha límite de Reporte Semestral Grupal',
+                                'fechas': fechasActuales,
+                                'dia': dia,
+                                'pat': pat,
+                                'pit': pit,
+                                'grupal': grupal,
+                                'departamental': departamental,
+                                'institucional': institucional
+                            })
+                    else:
+                        return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                            'gruops': request.user.groups.all(),
+                            'title': 'Fechas Límtes',
+                            'anoActual': subdirector.idInstitucion.anoActual,
+                            'periodoActual': 3,
+                            'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                            'formCambioPeriodo': formCambioPeriodo,
+                            'error': 'La fecha límite de Plan de Acción Tutorial es mayor a la fecha límite de Programa Institucional Tutorial',
+                            'fechas': fechasActuales,
+                            'dia': dia,
+                            'pat': pat,
+                            'pit': pit,
+                            'grupal': grupal,
+                            'departamental': departamental,
+                            'institucional': institucional
+                        })
+                else:
+                    return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                        'gruops': request.user.groups.all(),
+                        'title': 'Fechas Límtes',
+                        'anoActual': subdirector.idInstitucion.anoActual,
+                        'periodoActual': 3,
+                        'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                        'formCambioPeriodo': formCambioPeriodo,
+                        'error': 'La fecha límite de Diagnóstico Institucional es mayor a la fecha límite de Plan de Acción Tutorial',
+                        'fechas': fechasActuales,
+                        'dia': dia,
+                        'pat': pat,
+                        'pit': pit,
+                        'grupal': grupal,
+                        'departamental': departamental,
+                        'institucional': institucional
+                    })
+            else:
+                return render(request, 'Subdirector_VisualizarFechasLimites.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Fechas Límtes',
+                    'anoActual': subdirector.idInstitucion.anoActual,
+                    'periodoActual': 3,
+                    'advertenciaCambioPeriodo': advertenciaCambioPeriodo,
+                    'formCambioPeriodo': formCambioPeriodo,
+                    'error': 'No se podido procesar la solicitud',
+                    'fechas': fechasActuales,
+                    'dia': dia,
+                    'pat': pat,
+                    'pit': pit,
+                    'grupal': grupal,
+                    'departamental': departamental,
+                    'institucional': institucional
+                })
+
+@login_required()
+@group_required('Subdirector Académico')
+def ModFechaLimiteDiag(request):
+    if request.method == 'POST':
+        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        if subdirector.idInstitucion.periodoActual != 2:
+            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+            form = ModFechaDiagnostico(request.POST, instance = fechasActuales)
+            if form.is_valid():
+                if request.POST['diagnosticoInstitucional'] < fechasActuales.planAccionTutorial:
+                    try:
+                        form.save()
+                    except:
+                        pass
+    return redirect('Subdirector_CambioPeriodo')
+
+@login_required()
+@group_required('Subdirector Académico')
+def ModFechaLimitePAT(request):
+    if request.method == 'POST':
+        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        if subdirector.idInstitucion.periodoActual != 2:
+            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+            form = ModFechaPAT(request.POST, instance = fechasActuales)
+            if form.is_valid():
+                if request.POST['planAccionTutorial'] < fechasActuales.programaInstitucionalTutorial and request.POST['planAccionTutorial'] > fechasActuales.diagnosticoInstitucional:
+                    try:
+                        form.save()
+                    except:
+                        pass
+    return redirect('Subdirector_CambioPeriodo')
+
+@login_required()
+@group_required('Subdirector Académico')
+def ModFechaLimitePIT(request):
+    if request.method == 'POST':
+        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        if subdirector.idInstitucion.periodoActual != 2:
+            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+            form = ModFechaPIT(request.POST, instance = fechasActuales)
+            if form.is_valid():
+                if request.POST['programaInstitucionalTutorial'] < fechasActuales.reporteSemestralGrupal and request.POST['programaInstitucionalTutorial'] > fechasActuales.planAccionTutorial:
+                    try:
+                        form.save()
+                    except:
+                        pass
+    return redirect('Subdirector_CambioPeriodo')
+
+@login_required()
+@group_required('Subdirector Académico')
+def ModFechaLimiteGrupal(request):
+    if request.method == 'POST':
+        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        if subdirector.idInstitucion.periodoActual != 2:
+            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+            form = ModFechaReporteGrupal(request.POST, instance = fechasActuales)
+            if form.is_valid():
+                if request.POST['reporteSemestralGrupal'] < fechasActuales.reporteSemestralDepartamental and request.POST['reporteSemestralGrupal'] > fechasActuales.programaInstitucionalTutorial:
+                    try:
+                        form.save()
+                    except:
+                        pass
+    return redirect('Subdirector_CambioPeriodo')
+
+@login_required()
+@group_required('Subdirector Académico')
+def ModFechaLimiteDepartamental(request):
+    if request.method == 'POST':
+        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        if subdirector.idInstitucion.periodoActual != 2:
+            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+            form = ModFechaReporteDepartamental(request.POST, instance = fechasActuales)
+            if form.is_valid():
+                if request.POST['reporteSemestralDepartamental'] < fechasActuales.reporteSemestralInstitucional and request.POST['reporteSemestralDepartamental'] > fechasActuales.reporteSemestralGrupal:
+                    try:
+                        form.save()
+                    except:
+                        pass
+    return redirect('Subdirector_CambioPeriodo')
+
+@login_required()
+@group_required('Subdirector Académico')
+def ModFechaLimiteInstitucional(request):
+    if request.method == 'POST':
+        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        if subdirector.idInstitucion.periodoActual != 2:
+            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+            form = ModFechaReporteInstitucional(request.POST, instance = fechasActuales)
+            if form.is_valid():
+                if request.POST['reporteSemestralInstitucional'] > fechasActuales.reporteSemestralDepartamental:
+                    try:
+                        form.save()
+                    except:
+                        pass
+    return redirect('Subdirector_CambioPeriodo')
+
+@login_required()
+@group_required('Subdirector Académico')
+def ModFechaLimiteDiag(request):
+    if request.method == 'POST':
+        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        if subdirector.idInstitucion.periodoActual != 2:
+            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+            form = ModFechaDiagnostico(request.POST, instance = fechasActuales)
+            if form.is_valid():
+                if request.POST['diagnosticoInstitucional'] < fechasActuales.planAccionTutorial:
+                    try:
+                        form.save()
+                    except:
+                        pass
+    return redirect('Subdirector_CambioPeriodo')
+
+@login_required()
+@group_required('Subdirector Académico')
+def ModFechaLimiteDiag(request):
+    if request.method == 'POST':
+        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        if subdirector.idInstitucion.periodoActual != 2:
+            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
+            form = ModFechaDiagnostico(request.POST, instance = fechasActuales)
+            if form.is_valid():
+                if request.POST['diagnosticoInstitucional'] < fechasActuales.planAccionTutorial:
+                    try:
+                        form.save()
+                    except:
+                        pass
+    return redirect('Subdirector_CambioPeriodo')
