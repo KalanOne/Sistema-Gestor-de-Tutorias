@@ -143,3 +143,4 @@ Jefe de Desarrollo Academico -> Jefe de Departamento Academico 1 por Departament
 
 Coordinación Institucional de Tutoria -> Coordinador de Tutoria del Departamento Academia 1 por Departamento
 
+

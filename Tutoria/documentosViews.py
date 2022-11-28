@@ -101,107 +101,107 @@ def CrearReporteSemestralGrupal(request, grupo_id):
     else:
         formularios2 = formularios(request.POST)
         if formularios2.is_valid():
-            # try:
-            instancias = formularios2.save(commit = False)
-            estadoAceptado = Estado.objects.get(estado = 'Aceptado')
-            reporteGrupal = ReporteSemestralGrupalV2()
-            reporteGrupal.ano = tutor.idInstitucion.anoActual
-            reporteGrupal.periodo = tutor.idInstitucion.periodoActual
-            reporteGrupal.grupo_id = grupo_id
-            reporteGrupal.tutor_id = tutor.id
-            reporteGrupal.estado_id = estadoAceptado.id
-            reporteGrupal.save()
-            for item in instancias:
-                item.reporte_id = reporteGrupal.id
-                item.save()
-            
-            ahora = datetime.now()
+            try:
+                instancias = formularios2.save(commit = False)
+                estadoAceptado = Estado.objects.get(estado = 'Aceptado')
+                reporteGrupal = ReporteSemestralGrupalV2()
+                reporteGrupal.ano = tutor.idInstitucion.anoActual
+                reporteGrupal.periodo = tutor.idInstitucion.periodoActual
+                reporteGrupal.grupo_id = grupo_id
+                reporteGrupal.tutor_id = tutor.id
+                reporteGrupal.estado_id = estadoAceptado.id
+                reporteGrupal.save()
+                for item in instancias:
+                    item.reporte_id = reporteGrupal.id
+                    item.save()
+                
+                ahora = datetime.now()
 
-            coordTutoDeptAcade = PersonalTec.objects.filter(idDepartamentoAcademico_id = tutor.idDepartamentoAcademico.id)
-            coordTutoDeptAcade2 = []
-            for coor in coordTutoDeptAcade:
-                if pertenece_cualquier_grupo(coor.user, ['Coordinador de Tutoria del Departamento Académico']):
-                    coordTutoDeptAcade2.append(coor)
-            
-            jefeDeptAcade2 = []
-            for coor in coordTutoDeptAcade:
-                if pertenece_cualquier_grupo(coor.user, ['Jefe de Departamento Académico']):
-                    jefeDeptAcade2.append(coor)
+                coordTutoDeptAcade = PersonalTec.objects.filter(idDepartamentoAcademico_id = tutor.idDepartamentoAcademico.id)
+                coordTutoDeptAcade2 = []
+                for coor in coordTutoDeptAcade:
+                    if pertenece_cualquier_grupo(coor.user, ['Coordinador de Tutoria del Departamento Académico']):
+                        coordTutoDeptAcade2.append(coor)
+                
+                jefeDeptAcade2 = []
+                for coor in coordTutoDeptAcade:
+                    if pertenece_cualquier_grupo(coor.user, ['Jefe de Departamento Académico']):
+                        jefeDeptAcade2.append(coor)
 
-            context = {
-                'departamento': tutor.idDepartamentoAcademico.departamentoAcademico,
-                'tutor': tutor.user.first_name + ' ' + tutor.user.last_name,
-                'fecha': ahora.strftime("%d/%m/%Y"),
-                'hora': ahora.strftime("%H:%M:%S"),
-                'nombreGrupo': grupo.grupo,
-                'tutoradosInfo': instancias,
-                'coordTutoDeptAcade': coordTutoDeptAcade2[0].user,
-                'jefeDeptAcade': jefeDeptAcade2[0].user
-            }
+                context = {
+                    'departamento': tutor.idDepartamentoAcademico.departamentoAcademico,
+                    'tutor': tutor.user.first_name + ' ' + tutor.user.last_name,
+                    'fecha': ahora.strftime("%d/%m/%Y"),
+                    'hora': ahora.strftime("%H:%M:%S"),
+                    'nombreGrupo': grupo.grupo,
+                    'tutoradosInfo': instancias,
+                    'coordTutoDeptAcade': coordTutoDeptAcade2[0].user,
+                    'jefeDeptAcade': jefeDeptAcade2[0].user
+                }
 
-            templateReporte = DocxTemplate("Tutoria/static/Templates/Template_ReporteSemestralGrupalTutor.docx")
-            nombre = tutor.user.username + "ReporteSemestralGrupal" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
-            inicioRuta = "Tutoria/static/borrar/"
-            inicioRutaReporte = "Tutoria/static/Archivos/Reportes/"
-            templateReporte.render(context)
-            templateReporte.save(inicioRuta + nombre + ".docx")
-            pythoncom.CoInitialize()
-            convert(inicioRuta + nombre + ".docx", inicioRutaReporte + nombre + ".pdf")
+                templateReporte = DocxTemplate("Tutoria/static/Templates/Template_ReporteSemestralGrupalTutor.docx")
+                nombre = tutor.user.username + "ReporteSemestralGrupal" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
+                inicioRuta = "Tutoria/static/borrar/"
+                inicioRutaReporte = "Tutoria/static/Archivos/Reportes/"
+                templateReporte.render(context)
+                templateReporte.save(inicioRuta + nombre + ".docx")
+                pythoncom.CoInitialize()
+                convert(inicioRuta + nombre + ".docx", inicioRutaReporte + nombre + ".pdf")
 
-            estadoActivo = Estado.objects.get(estado = 'Activo')
-            if grupo.idEstado_id == estadoActivo.id:
-                for est in instancias:
-                    if est.credito == True or est.credito == 1:
-                        templateCredito = DocxTemplate("Tutoria/static/Templates/Template_ConstanciaTutorado.docx")
-                        nombreCredito = est.tutorado.user.username + "CreditoComplementario" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
-                        inicioRutaCredito = "Tutoria/static/Archivos/Creditos/"
-                        context2 = {
-                            'tutorado': est.tutorado.user.first_name + est.tutorado.user.last_name
-                        }
-                        templateCredito.render(context2)
-                        templateCredito.save(inicioRuta + nombreCredito + ".docx")
-                        convert(inicioRuta + nombreCredito + ".docx", inicioRutaCredito + nombreCredito + ".pdf")
-            
-            templateConst = DocxTemplate("Tutoria/static/Templates/Template_ConstanciaTutor.docx")
-            nombreConst = tutor.user.username + "Constancia" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
-            inicioRutaConst = "Tutoria/static/Archivos/Constancias/"
-            context3 = {
-                'tutor': tutor.user.first_name + tutor.user.last_name,
-                'grupo': grupo.grupo
-            }
-            templateConst.render(context3)
-            templateConst.save(inicioRuta + nombreConst + ".docx")
-            convert(inicioRuta + nombreConst + ".docx", inicioRutaConst + nombreConst + ".pdf")
+                estadoActivo = Estado.objects.get(estado = 'Activo')
+                if grupo.idEstado_id == estadoActivo.id:
+                    for est in instancias:
+                        if est.credito == True or est.credito == 1:
+                            templateCredito = DocxTemplate("Tutoria/static/Templates/Template_ConstanciaTutorado.docx")
+                            nombreCredito = est.tutorado.user.username + "CreditoComplementario" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
+                            inicioRutaCredito = "Tutoria/static/Archivos/Creditos/"
+                            context2 = {
+                                'tutorado': est.tutorado.user.first_name + est.tutorado.user.last_name
+                            }
+                            templateCredito.render(context2)
+                            templateCredito.save(inicioRuta + nombreCredito + ".docx")
+                            convert(inicioRuta + nombreCredito + ".docx", inicioRutaCredito + nombreCredito + ".pdf")
+                
+                templateConst = DocxTemplate("Tutoria/static/Templates/Template_ConstanciaTutor.docx")
+                nombreConst = tutor.user.username + "Constancia" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
+                inicioRutaConst = "Tutoria/static/Archivos/Constancias/"
+                context3 = {
+                    'tutor': tutor.user.first_name + tutor.user.last_name,
+                    'grupo': grupo.grupo
+                }
+                templateConst.render(context3)
+                templateConst.save(inicioRuta + nombreConst + ".docx")
+                convert(inicioRuta + nombreConst + ".docx", inicioRutaConst + nombreConst + ".pdf")
 
 
-            reporteGrupal.archivo = "Archivos/Reportes/" + nombre + ".pdf"
-            reporteGrupal.save()
+                reporteGrupal.archivo = "Archivos/Reportes/" + nombre + ".pdf"
+                reporteGrupal.save()
 
-            constancia = ConstanciaTutorV2()
-            constancia.archivo = "Archivos/Constancias/" + nombreConst + ".pdf"
-            constancia.ano = tutor.idInstitucion.anoActual
-            constancia.periodo = tutor.idInstitucion.periodoActual
-            constancia.grupo_id = grupo_id
-            constancia.tutor_id = tutor.id
-            constancia.estado_id = estadoAceptado.id
-            constancia.save()
+                constancia = ConstanciaTutorV2()
+                constancia.archivo = "Archivos/Constancias/" + nombreConst + ".pdf"
+                constancia.ano = tutor.idInstitucion.anoActual
+                constancia.periodo = tutor.idInstitucion.periodoActual
+                constancia.grupo_id = grupo_id
+                constancia.tutor_id = tutor.id
+                constancia.estado_id = estadoAceptado.id
+                constancia.save()
 
-            return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
-                'gruops': request.user.groups.all(),
-                'title': 'Seleccionar Grupos Para Reporte Semestral',
-                'tutor': tutor,
-                'realizado': 1,
-                'exito': 'Reporte enviado con éxito'
-            })
-            # except:
-            #     return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
-            #         'gruops': request.user.groups.all(),
-            #         'title': 'Seleccionar Grupos Para Reporte Semestral',
-            #         'tutor': tutor,
-            #         'realizado': 0,
-            #         'form': formularios2,
-            #         'error': 'No se ha podido enviar con éxito'
-            #     })
+                return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Seleccionar Grupos Para Reporte Semestral',
+                    'tutor': tutor,
+                    'realizado': 1,
+                    'exito': 'Reporte enviado con éxito'
+                })
+            except:
+                return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
+                    'gruops': request.user.groups.all(),
+                    'title': 'Seleccionar Grupos Para Reporte Semestral',
+                    'tutor': tutor,
+                    'realizado': 0,
+                    'form': formularios2,
+                    'error': 'No se ha podido enviar con éxito'
+                })
         else:
             return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
                 'gruops': request.user.groups.all(),
