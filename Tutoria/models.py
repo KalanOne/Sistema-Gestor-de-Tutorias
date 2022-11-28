@@ -304,8 +304,6 @@ class registrarAlumno(models.Model):
     nombres = models.CharField(max_length=35) 
     apellidos = models.CharField(max_length=35) 
     email = models.EmailField(blank=True)  
-    domicilio = models.CharField(max_length=100)
-    telefono = models.CharField(max_length=10)
     semestre = models.IntegerField()
 
     def Mostrar(self):
@@ -318,4 +316,22 @@ class registrarAlumno(models.Model):
         verbose_name= 'registrarAlumno'
         verbose_name_plural= 'registrarAlumnos'
         db_table= 'registrarAlumno'
+        ordering= ['id']
+
+class registrarPersonalTec(models.Model):  
+    username = models.CharField(max_length=30)  
+    nombres = models.CharField(max_length=35) 
+    apellidos = models.CharField(max_length=35) 
+    email = models.EmailField(blank=True)
+
+    def Mostrar(self):
+        return "{} - {}".format(self.nombres, self.apellidos)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'registrarPersonalTec'
+        verbose_name_plural= 'registrarPersonalTecs'
+        db_table= 'registrarPersonalTec'
         ordering= ['id']

@@ -176,6 +176,12 @@ class RegistrarTutoradosForm(forms.ModelForm):
         model = registrarAlumno
         fields = {'archivo'}
 
+class RegistrarPersonalTecForm(forms.ModelForm):
+    archivo= forms.FileField()
+    class Meta:
+        model = registrarPersonalTec
+        fields = {'archivo'}
+
 class SubirCreditoForm(forms.ModelForm):
     class Meta:
         model = Credito

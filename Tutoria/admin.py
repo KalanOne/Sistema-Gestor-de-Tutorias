@@ -18,6 +18,8 @@ admin.site.register(Cita)
 admin.site.register(CuestionarioContestado)
 admin.site.register(registrarAlumno)
 admin.site.register(Credito)
+admin.site.register(registrarPersonalTec)
+
 
 admin.site.register(ReporteSemestralGrupalV2)
 admin.site.register(TutoradoReporteSemestralGrupalV2)

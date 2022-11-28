@@ -5,10 +5,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
 from .forms import *
 import datetime
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from tablib import Dataset 
 from django.utils.datastructures import MultiValueDictKeyError
-from Tutoria.resources import ExcelResource
+from Tutoria.resources import *
 from django.contrib.auth.hashers import make_password
 # Create your views here.
 
@@ -624,30 +624,73 @@ def solicitudPsicologigaTutor(request, grupo_id, tutorado_id):
 @login_required
 @group_required('Jefe de Departamento Académico')
 def listaTutor(request):
-    vacio=0
-    try:
-        coordinador=PersonalTec.objects.get(user_id=request.user.id)
-        tutoresobtener = PersonalTec.objects.filter(idDepartamentoAcademico_id=coordinador.idDepartamentoAcademico_id, idInstitucion_id=coordinador.idInstitucion_id)
-        tutores=[]
-        for tutor in tutoresobtener:
-            if pertenece_cualquier_grupo(tutor.user, ['Tutor']):
-                tutores.append(tutor)
-                vacio=vacio+1
-
-        return render(request, 'listaTutor.html',{
-            'gruops': request.user.groups.all(),
-            'title': 'Listar Tutores',
-            'tutores': tutores,
-            'vacio': vacio
-        })
-
-    except:
+    if request.method == "GET":
         vacio=0
-        return render(request, 'listaTutor.html',{
-            'gruops': request.user.groups.all(),
-            'title': 'Listar Tutores',
-            'vacio': vacio
-        })
+        try:
+            coordinador=PersonalTec.objects.get(user_id=request.user.id)
+            tutoresobtener = PersonalTec.objects.filter(idDepartamentoAcademico_id=coordinador.idDepartamentoAcademico_id, idInstitucion_id=coordinador.idInstitucion_id)
+            tutores=[]
+            for tutor in tutoresobtener:
+                if pertenece_cualquier_grupo(tutor.user, ['Tutor']):
+                    tutores.append(tutor)
+                    vacio=vacio+1
+            form=RegistrarPersonalTecForm()
+            return render(request, 'listaTutor.html',{
+                'gruops': request.user.groups.all(),
+                'title': 'Listar Tutores',
+                'tutores': tutores,
+                'vacio': vacio,
+                'form':form
+            })
+        except:
+            vacio=0
+            form=RegistrarPersonalTecForm()
+            return render(request, 'listaTutor.html',{
+                'gruops': request.user.groups.all(),
+                'title': 'Listar Tutores',
+                'vacio': vacio,
+                'form':form
+            })
+    else:
+        vacio=0
+        persona_resource = ExcelPersonalTec()
+        dataset = Dataset()  
+        encargado = PersonalTec.objects.get(user_id = request.user.id)
+        escuela = encargado.idInstitucion
+        departamento = encargado.idDepartamentoAcademico
+        try:
+            nuevas_personas = request.FILES['archivo']  
+        except MultiValueDictKeyError:
+            return redirect('listaTutor')
+        imported_data = dataset.load(nuevas_personas.read())  
+        result = persona_resource.import_data(dataset, dry_run=True)
+        
+        if not result.has_errors(): 
+            persona_resource.import_data(dataset, dry_run=False)
+            for tutor in registrarPersonalTec.objects.all():
+                if User.objects.filter(username=tutor.username).exists():
+                    print(tutor.username+" - Usuario ya existente")
+                else:
+                    try:
+                        if tutor.username == "":
+                            print("username Vacio")
+                        else:
+                            password="sgtprofe"+tutor.username
+                            usr=User.objects.create(username=tutor.username, password=make_password(password), first_name=tutor.nombres, last_name=tutor.apellidos, email=tutor.email)
+                            grupo=Group.objects.get(name="Tutor")
+                            usr.groups.add(grupo.id)
+                            alm=PersonalTec.objects.create(idDepartamentoAcademico=departamento, idInstitucion=escuela, user=usr)
+                            print(tutor.username+"Registro exitoso")
+                    except:
+                        print("Error no pudo crear el usuario")
+
+            limpiar = registrarPersonalTec.objects.all()         
+            limpiar.delete()
+            return redirect ('listaTutor')
+        else:
+            print("Error de excel")
+            return redirect ('listaTutor')
+
 
     
 @login_required
@@ -815,10 +858,15 @@ def listarAlumnos(request, Grupoid):
                             semestreAlumno=Alumno.semestre
                         except:
                             semestreAlumno=1
-                        usr=User.objects.create(username=Alumno.control, password=make_password(Alumno.email), first_name=Alumno.nombres, last_name=Alumno.apellidos, email=(Alumno.control+"@morelia.tecnm.mx"))
-                        usr.groups.add(1)
-                        alm=Tutorado.objects.create(semestre=semestreAlumno,idGrupo_id=Grupoid, idDepartamentoAcademico=departamento, idInstitucion=escuela, user=usr)
-                        print("Registro exitoso")  
+                        if Alumno.control == "":
+                            print("Num control vacio")
+                        else:
+                            password="sgtalumno"+Alumno.control
+                            usr=User.objects.create(username=Alumno.control, password=make_password(password), first_name=Alumno.nombres, last_name=Alumno.apellidos, email=Alumno.email)
+                            grupo=Group.objects.get(name="Tutorado")
+                            usr.groups.add(grupo.id)
+                            alm=Tutorado.objects.create(semestre=semestreAlumno,idGrupo_id=Grupoid, idDepartamentoAcademico=departamento, idInstitucion=escuela, user=usr)
+                            print(Alumno.control+"Registro exitoso")  
                     except:
                         print("Erro no pudo crear el usuario")
 
@@ -829,18 +877,7 @@ def listarAlumnos(request, Grupoid):
             return redirect ('listarAlumnos',Grupoid)
         else:
             print("Error") 
-            Error=True
-            form=RegistrarTutoradosForm()
-            form.fields['archivo'].label = 'Archivo de Alumnos'
-            return render(request, 'agregarTutorado.html',{
-                'gruops': request.user.groups.all(),
-                'title': 'Listar alumnos',
-                'lista': listaAlumnos,
-                'tieneAlumnos':tieneAlumnos,
-                'grupo': Grupoid,
-                'form':form,
-                'Error':Error
-            })
+            return redirect ('listarAlumnos',Grupoid)
 
 # Coordinador de Tutoria del Departamento Académico
 
