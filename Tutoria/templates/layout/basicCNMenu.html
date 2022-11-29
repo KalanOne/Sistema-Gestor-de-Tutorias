@@ -140,6 +140,10 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     {% for grupito in gruops %}
+                                        {% if grupito.name == 'Subdirector Académico' %}
+                                            <li><a class="dropdown-item" href="{% url 'CoordinacionInstitucionalTutoria_VisualizarTodosLosDocumentosV2' %}">Visualizar todos los documentos</a></li>
+                                        {% endif %}
+
                                         {% if grupito.name == 'Coordinación Institucional de Tutoría' %}
                                             <li><a class="dropdown-item" href="{% url 'CoordinacionInstitucionalTutoria_CrearDiagnosticoInstitucionalTutoriaV2' %}">Diagnóstico Institucional de Tutorías</a></li>
                                             <li><a class="dropdown-item" href="{% url 'CoordinacionInstitucionalTutoria_IntregarReporteInstitucionalTutoriaV2' %}">Reporte Semestral Institucional</a></li>

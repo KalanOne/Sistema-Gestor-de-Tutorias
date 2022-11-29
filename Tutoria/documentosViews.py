@@ -1179,7 +1179,7 @@ def VisualizarFechasLimites(request):
     
     if subdirector.idInstitucion.periodoActual == 1:
         fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
-        if datetime.today() > fechasActuales.reporteSemestralInstitucional:
+        if datetime.today().date() > fechasActuales.reporteSemestralInstitucional:
             advertenciaCambioPeriodo = False
         else:
             advertenciaCambioPeriodo = True
@@ -1252,7 +1252,7 @@ def VisualizarFechasLimites(request):
     
     if subdirector.idInstitucion.periodoActual == 3:
         fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
-        if datetime.today() > fechasActuales.reporteSemestralInstitucional:
+        if datetime.today().date() > fechasActuales.reporteSemestralInstitucional:
             advertenciaCambioPeriodo = False
         else:
             advertenciaCambioPeriodo = True

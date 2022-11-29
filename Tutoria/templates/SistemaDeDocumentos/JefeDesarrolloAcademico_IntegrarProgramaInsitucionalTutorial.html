@@ -57,9 +57,9 @@
         </div>
         <div class="row mb-3">
             <div class="table-responsive">
-                <table class="table table-hover" id="tabla">
+                <table class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
                     <thead>
-                        <tr>
+                        <tr class="text-white" style="background-color: #1B396A;">
                             <th scope="col">#</th>
                             <th scope="col">Coordinador</th>
                             <th scope="col">Departamento</th>
@@ -89,7 +89,7 @@
                                         <td>{{reporte.fecha}}</td>
                                         <td>{{reporte.ano}}</td>
                                         <td>{{reporte.periodo}}</td>
-                                        <td>Realizada</td>
+                                        <td><span class="badge text-bg-success rounded-pill">Realizada</span></td>
                                         <td>
                                             <div class="d-grid gap-2">
                                                 <a href="{{reporte.archivo.url}}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver Reporte</a>
@@ -99,14 +99,14 @@
                                         <td>------</td>
                                         <td>------</td>
                                         <td>------</td>
-                                        <td>------</td>
+                                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
                                         <td></td>
                                     {% endif %}
                                     {% empty %}
                                         <td>------</td>
                                         <td>------</td>
                                         <td>------</td>
-                                        <td>------</td>
+                                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
                                         <td></td>
                                 {% endfor %}
                             </tr>

@@ -1,0 +1,38 @@
+{% extends 'layout/basicCNMenu.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% if periodoActual == 1 %}
+
+        <div class="container">
+            <div class="row mb-5">
+                <h1 class="text-center">{{anoActual}} - 1</h1>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 d-grid gap-2">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCambioPeriodo" style="background-color: #1B396A;">
+                        Cambiar de periodo
+                    </button>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+
+    {% elif periodoActual == 2 %}
+    
+        <div class="container">
+            <div class="row">
+                <h1 class="text-center">{{anoActual}} - 2</h1>
+            </div>
+        </div>
+    
+    {% elif periodoActual == 3 %}
+    
+        <div class="container">
+            <div class="row">
+                <h1 class="text-center">{{anoActual}} - 3</h1>
+            </div>
+        </div>
+
+    {% endif %}
+{% endblock content %}
