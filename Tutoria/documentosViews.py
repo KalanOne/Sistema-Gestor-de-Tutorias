@@ -1018,8 +1018,36 @@ def CitasMedico(request):
 @login_required()
 @group_required('Subdirector Académico')
 @transaction.atomic
+def CambiarSemestres(request):
+    subdirector = PersonalTec.objects.get(user_id = request.user.id)
+    inst = Institucion.objects.get(id = subdirector.idInstitucion.id)
+    tutorados = Tutorado.objects.filter(idInstitucion_id = inst.id)
+    for tutorado in tutorados:
+        if tutorado.semestre <= 15:
+            tutorado.semestre = tutorado.semestre + 1
+            tutorado.save()
+    estadoCerrado = Estado.objects.get(estado = 'Cerrado')
+    estadoActivo = Estado.objects.get(estado = 'Activo')
+    estadoInactivo = Estado.objects.get(estado = 'Inactivo')
+    grupos = Grupo.objects.filter(idInstitucion_id = inst.id).exclude(idEstado_id = estadoCerrado.id)
+    for grupo in grupos:
+        tutoradosGrupos = tutorados.filter(idInstitucion_id = inst.id, idGrupo_id = grupo.id)
+        suma = 0
+        for tutoradoGrupo in tutoradosGrupos:
+            suma = suma + tutoradoGrupo.semestre
+        promedio = suma / tutoradosGrupos.count()
+        if promedio >= 12:
+            grupo.idEstado_id = estadoCerrado.id
+        elif promedio >= 2:
+            grupo.idEstado_id = estadoInactivo.id
+        grupo.save()
+    return
+
+@login_required()
+@group_required('Subdirector Académico')
+@transaction.atomic
 def VisualizarFechasLimites(request):
-    subdirector = PersonalMed.objects.get(user_id = request.user.id)
+    subdirector = PersonalTec.objects.get(user_id = request.user.id)
     
     if subdirector.idInstitucion.periodoActual == 2:
         formCambioPeriodo = CambioPeriodo()
@@ -1177,6 +1205,7 @@ def VisualizarFechasLimites(request):
                 try:
                     subdirector.idInstitucion.periodoActual = 2
                     subdirector.idInstitucion.save()
+                    CambiarSemestres(request)
                     return render(request, 'Subdirector_VisualizarFechasLimites.html', {
                         'gruops': request.user.groups.all(),
                         'title': 'Fechas Límtes',
@@ -1261,6 +1290,7 @@ def VisualizarFechasLimites(request):
                                         subdirector.idInstitucion.periodoActual = 1
                                         subdirector.idInstitucion.anoActual = subdirector.idInstitucion.anoActual + 1
                                         subdirector.idInstitucion.save()
+                                        CambiarSemestres(request)
                                         formNuevo = formCambioPeriodo()
                                         return render(request, 'Subdirector_VisualizarFechasLimites.html', {
                                             'gruops': request.user.groups.all(),
