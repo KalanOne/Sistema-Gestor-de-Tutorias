@@ -12,6 +12,23 @@ from Tutoria.resources import *
 from django.contrib.auth.hashers import make_password
 # Create your views here.
 
+def group_required(*group_names):
+    """ Grupos, checar si pertenece a grupo """
+
+    def check(user):
+        # if user.groups.filter(name__in=group_names).exists() | user.is_superuser:
+        if user.groups.filter(name__in=group_names).exists():
+            return True
+        else:
+            return False
+    # Si no se pertenece al grupo, redirigir a pagina principal
+    return user_passes_test(check, login_url='inicioSesion')
+
+def pertenece_cualquier_grupo(usuario, lista_grupos):
+    return True if usuario.groups.filter(name__in=lista_grupos) else False
+
+
+@login_required
 def cambiarContraseña(request):
     if request.method == 'POST':
         changeform = CambiarPasswordForm(data=request.POST, user=request.user)
@@ -49,20 +66,6 @@ def cambiarContraseña(request):
         })
 
 #Vistas para login, logout y pagina principal para todos los usuarios
-def group_required(*group_names):
-    """ Grupos, checar si pertenece a grupo """
-
-    def check(user):
-        # if user.groups.filter(name__in=group_names).exists() | user.is_superuser:
-        if user.groups.filter(name__in=group_names).exists():
-            return True
-        else:
-            return False
-    # Si no se pertenece al grupo, redirigir a pagina principal
-    return user_passes_test(check, login_url='inicioSesion')
-
-def pertenece_cualquier_grupo(usuario, lista_grupos):
-    return True if usuario.groups.filter(name__in=lista_grupos) else False
 
 def inicioSesion(request):
     if request.method == 'GET':
