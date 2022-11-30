@@ -98,7 +98,7 @@ class CambioPeriodo(forms.ModelForm):
             'programaInstitucionalTutorial': ('Fecha límite para Programa Institucional Tutorial'),
             'reporteSemestralGrupal': ('Fecha límite para Reporte Semestral Grupal'),
             'reporteSemestralDepartamental': ('Fecha límite para Reporte Semestral Departamental'),
-            'reporteSemestralInstitucional': ('Fecha límite para Reporte Semestral Institucional')
+            'reporteSemestralInstitucional': ('Fecha límite para Reporte Semestral Departamental')
         }
         widgets = {
             'diagnosticoInstitucional': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()}),

@@ -1063,11 +1063,11 @@ def VisualizarFechasLimites(request):
         else:
             formCambioPeriodo = CambioPeriodo(request.POST)
             if formCambioPeriodo.is_valid():
-                if request.POST['diagnosticoInstitucional'] < request.POST['planAccionTutorial']:
-                    if request.POST['programaInstitucionalTutorial'] > request.POST['planAccionTutorial']:
-                        if request.POST['programaInstitucionalTutorial'] < request.POST['reporteSemestralGrupal']:
-                            if request.POST['reporteSemestralDepartamental'] > request.POST['reporteSemestralGrupal']:
-                                if request.POST['reporteSemestralDepartamental'] < request.POST['reporteSemestralInstitucional']:
+                if datetime.strptime(request.POST['diagnosticoInstitucional'], "%Y-%m-%d").date() < datetime.strptime(request.POST['planAccionTutorial'], "%Y-%m-%d").date():
+                    if datetime.strptime(request.POST['programaInstitucionalTutorial'], "%Y-%m-%d").date() > datetime.strptime(request.POST['planAccionTutorial'], "%Y-%m-%d").date():
+                        if datetime.strptime(request.POST['programaInstitucionalTutorial'], "%Y-%m-%d").date() < datetime.strptime(request.POST['reporteSemestralGrupal'], "%Y-%m-%d").date():
+                            if datetime.strptime(request.POST['reporteSemestralDepartamental'], "%Y-%m-%d").date() > datetime.strptime(request.POST['reporteSemestralGrupal'], "%Y-%m-%d").date():
+                                if datetime.strptime(request.POST['reporteSemestralDepartamental'], "%Y-%m-%d").date() < datetime.strptime(request.POST['reporteSemestralInstitucional'], "%Y-%m-%d").date():
                                     try:
                                         nuevo = formCambioPeriodo.save(commit = False)
                                         nuevo.ano = subdirector.idInstitucion.anoActual
@@ -1276,11 +1276,11 @@ def VisualizarFechasLimites(request):
         else:
             formCambioPeriodo = CambioPeriodo(request.POST)
             if formCambioPeriodo.is_valid():
-                if request.POST['diagnosticoInstitucional'] < request.POST['planAccionTutorial']:
-                    if request.POST['programaInstitucionalTutorial'] > request.POST['planAccionTutorial']:
-                        if request.POST['programaInstitucionalTutorial'] < request.POST['reporteSemestralGrupal']:
-                            if request.POST['reporteSemestralDepartamental'] > request.POST['reporteSemestralGrupal']:
-                                if request.POST['reporteSemestralDepartamental'] < request.POST['reporteSemestralInstitucional']:
+                if datetime.strptime(request.POST['diagnosticoInstitucional'], "%Y-%m-%d").date() < datetime.strptime(request.POST['planAccionTutorial'], "%Y-%m-%d").date():
+                    if datetime.strptime(request.POST['programaInstitucionalTutorial'], "%Y-%m-%d").date() > datetime.strptime(request.POST['planAccionTutorial'], "%Y-%m-%d").date():
+                        if datetime.strptime(request.POST['programaInstitucionalTutorial'], "%Y-%m-%d").date() < datetime.strptime(request.POST['reporteSemestralGrupal'], "%Y-%m-%d").date():
+                            if datetime.strptime(request.POST['reporteSemestralDepartamental'], "%Y-%m-%d").date() > datetime.strptime(request.POST['reporteSemestralGrupal'], "%Y-%m-%d").date():
+                                if datetime.strptime(request.POST['reporteSemestralDepartamental'], "%Y-%m-%d").date() < datetime.strptime(request.POST['reporteSemestralInstitucional'], "%Y-%m-%d").date():
                                     try:
                                         nuevo = formCambioPeriodo.save(commit = False)
                                         nuevo.ano = subdirector.idInstitucion.anoActual + 1
@@ -1291,7 +1291,7 @@ def VisualizarFechasLimites(request):
                                         subdirector.idInstitucion.anoActual = subdirector.idInstitucion.anoActual + 1
                                         subdirector.idInstitucion.save()
                                         CambiarSemestres(request)
-                                        formNuevo = formCambioPeriodo()
+                                        formNuevo = FormConfirmacionReporteInstitucional
                                         return render(request, 'Subdirector_VisualizarFechasLimites.html', {
                                             'gruops': request.user.groups.all(),
                                             'title': 'Fechas Límtes',
@@ -1432,12 +1432,12 @@ def VisualizarFechasLimites(request):
 @group_required('Subdirector Académico')
 def ModFechaLimiteDiag(request):
     if request.method == 'POST':
-        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        subdirector = PersonalTec.objects.get(user_id = request.user.id)
         if subdirector.idInstitucion.periodoActual != 2:
             fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
             form = ModFechaDiagnostico(request.POST, instance = fechasActuales)
             if form.is_valid():
-                if request.POST['diagnosticoInstitucional'] < fechasActuales.planAccionTutorial:
+                if datetime.strptime(request.POST['diagnosticoInstitucional'], "%Y-%m-%d").date() < fechasActuales.planAccionTutorial:
                     try:
                         form.save()
                     except:
@@ -1448,12 +1448,12 @@ def ModFechaLimiteDiag(request):
 @group_required('Subdirector Académico')
 def ModFechaLimitePAT(request):
     if request.method == 'POST':
-        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        subdirector = PersonalTec.objects.get(user_id = request.user.id)
         if subdirector.idInstitucion.periodoActual != 2:
             fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
             form = ModFechaPAT(request.POST, instance = fechasActuales)
             if form.is_valid():
-                if request.POST['planAccionTutorial'] < fechasActuales.programaInstitucionalTutorial and request.POST['planAccionTutorial'] > fechasActuales.diagnosticoInstitucional:
+                if datetime.strptime(request.POST['planAccionTutorial'], "%Y-%m-%d").date() < fechasActuales.programaInstitucionalTutorial and datetime.strptime(request.POST['planAccionTutorial'], "%Y-%m-%d").date() > fechasActuales.diagnosticoInstitucional:
                     try:
                         form.save()
                     except:
@@ -1464,12 +1464,12 @@ def ModFechaLimitePAT(request):
 @group_required('Subdirector Académico')
 def ModFechaLimitePIT(request):
     if request.method == 'POST':
-        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        subdirector = PersonalTec.objects.get(user_id = request.user.id)
         if subdirector.idInstitucion.periodoActual != 2:
             fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
             form = ModFechaPIT(request.POST, instance = fechasActuales)
             if form.is_valid():
-                if request.POST['programaInstitucionalTutorial'] < fechasActuales.reporteSemestralGrupal and request.POST['programaInstitucionalTutorial'] > fechasActuales.planAccionTutorial:
+                if datetime.strptime(request.POST['programaInstitucionalTutorial'], "%Y-%m-%d").date() < fechasActuales.reporteSemestralGrupal and datetime.strptime(request.POST['programaInstitucionalTutorial'], "%Y-%m-%d").date() > fechasActuales.planAccionTutorial:
                     try:
                         form.save()
                     except:
@@ -1480,12 +1480,12 @@ def ModFechaLimitePIT(request):
 @group_required('Subdirector Académico')
 def ModFechaLimiteGrupal(request):
     if request.method == 'POST':
-        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        subdirector = PersonalTec.objects.get(user_id = request.user.id)
         if subdirector.idInstitucion.periodoActual != 2:
             fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
             form = ModFechaReporteGrupal(request.POST, instance = fechasActuales)
             if form.is_valid():
-                if request.POST['reporteSemestralGrupal'] < fechasActuales.reporteSemestralDepartamental and request.POST['reporteSemestralGrupal'] > fechasActuales.programaInstitucionalTutorial:
+                if datetime.strptime(request.POST['reporteSemestralGrupal'], "%Y-%m-%d").date() < fechasActuales.reporteSemestralDepartamental and datetime.strptime(request.POST['reporteSemestralGrupal'], "%Y-%m-%d").date() > fechasActuales.programaInstitucionalTutorial:
                     try:
                         form.save()
                     except:
@@ -1496,12 +1496,12 @@ def ModFechaLimiteGrupal(request):
 @group_required('Subdirector Académico')
 def ModFechaLimiteDepartamental(request):
     if request.method == 'POST':
-        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        subdirector = PersonalTec.objects.get(user_id = request.user.id)
         if subdirector.idInstitucion.periodoActual != 2:
             fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
             form = ModFechaReporteDepartamental(request.POST, instance = fechasActuales)
             if form.is_valid():
-                if request.POST['reporteSemestralDepartamental'] < fechasActuales.reporteSemestralInstitucional and request.POST['reporteSemestralDepartamental'] > fechasActuales.reporteSemestralGrupal:
+                if datetime.strptime(request.POST['reporteSemestralDepartamental'], "%Y-%m-%d").date() < fechasActuales.reporteSemestralInstitucional and datetime.strptime(request.POST['reporteSemestralDepartamental'], "%Y-%m-%d").date() > fechasActuales.reporteSemestralGrupal:
                     try:
                         form.save()
                     except:
@@ -1512,46 +1512,16 @@ def ModFechaLimiteDepartamental(request):
 @group_required('Subdirector Académico')
 def ModFechaLimiteInstitucional(request):
     if request.method == 'POST':
-        subdirector = PersonalMed.objects.get(user_id = request.user.id)
+        subdirector = PersonalTec.objects.get(user_id = request.user.id)
         if subdirector.idInstitucion.periodoActual != 2:
             fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
             form = ModFechaReporteInstitucional(request.POST, instance = fechasActuales)
             if form.is_valid():
-                if request.POST['reporteSemestralInstitucional'] > fechasActuales.reporteSemestralDepartamental:
+                if datetime.strptime(request.POST['reporteSemestralInstitucional'], "%Y-%m-%d").date() > fechasActuales.reporteSemestralDepartamental:
                     try:
                         form.save()
                     except:
                         pass
     return redirect('Subdirector_CambioPeriodo')
 
-@login_required()
-@group_required('Subdirector Académico')
-def ModFechaLimiteDiag(request):
-    if request.method == 'POST':
-        subdirector = PersonalMed.objects.get(user_id = request.user.id)
-        if subdirector.idInstitucion.periodoActual != 2:
-            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
-            form = ModFechaDiagnostico(request.POST, instance = fechasActuales)
-            if form.is_valid():
-                if request.POST['diagnosticoInstitucional'] < fechasActuales.planAccionTutorial:
-                    try:
-                        form.save()
-                    except:
-                        pass
-    return redirect('Subdirector_CambioPeriodo')
-
-@login_required()
-@group_required('Subdirector Académico')
-def ModFechaLimiteDiag(request):
-    if request.method == 'POST':
-        subdirector = PersonalMed.objects.get(user_id = request.user.id)
-        if subdirector.idInstitucion.periodoActual != 2:
-            fechasActuales = FechaLimite.objects.get(ano = subdirector.idInstitucion.anoActual, periodo = subdirector.idInstitucion.periodoActual)
-            form = ModFechaDiagnostico(request.POST, instance = fechasActuales)
-            if form.is_valid():
-                if request.POST['diagnosticoInstitucional'] < fechasActuales.planAccionTutorial:
-                    try:
-                        form.save()
-                    except:
-                        pass
-    return redirect('Subdirector_CambioPeriodo')
+# datetime.strptime(, "%Y-%m-%d").date()

@@ -141,33 +141,33 @@
                                 <ul class="dropdown-menu">
                                     {% for grupito in gruops %}
                                         {% if grupito.name == 'Subdirector Académico' %}
-                                            <li><a class="dropdown-item" href="{% url 'CoordinacionInstitucionalTutoria_VisualizarTodosLosDocumentosV2' %}">Visualizar todos los documentos</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinacionInstitucionalTutoria_VisualizarTodosLosDocumentosV2' %}">Visualizar todos los documentos</a></li>
                                         {% endif %}
 
                                         {% if grupito.name == 'Coordinación Institucional de Tutoría' %}
-                                            <li><a class="dropdown-item" href="{% url 'CoordinacionInstitucionalTutoria_CrearDiagnosticoInstitucionalTutoriaV2' %}">Diagnóstico Institucional de Tutorías</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'CoordinacionInstitucionalTutoria_IntregarReporteInstitucionalTutoriaV2' %}">Reporte Semestral Institucional</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'CoordinacionInstitucionalTutoria_VisualizarTodosLosDocumentosV2' %}">Visualizar todos los documentos</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinacionInstitucionalTutoria_CrearDiagnosticoInstitucionalTutoriaV2' %}">Diagnóstico Institucional de Tutorías</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinacionInstitucionalTutoria_IntregarReporteInstitucionalTutoriaV2' %}">Reporte Semestral Institucional</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinacionInstitucionalTutoria_VisualizarTodosLosDocumentosV2' %}">Visualizar todos los documentos</a></li>
                                         {% endif %}
 
                                         {% if grupito.name == 'Coordinador de Tutoria del Departamento Académico' %}
-                                            <li><a class="dropdown-item" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_SelectDiagnosticoInstitucionalV2' %}">Plan de Acción Tutorial</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_SelectReporteSemestralGrupalV2' %}">Reporte Semestral Departamental</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralGrupalV2' %}">Visualizar Reportes Semestrales Grupales</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralDepartamentalV2' %}">Visualizar Reportes Semestrales Departamentales</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarPlanDeAccionTutorialV2' %}">Visualizar Planes de Acción Tutorial</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarDiagnosticoInstitucionalV2' %}">Visualizar Diagnósticos Institucionales de Tutorías</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_SelectDiagnosticoInstitucionalV2' %}">Plan de Acción Tutorial</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_SelectReporteSemestralGrupalV2' %}">Reporte Semestral Departamental</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralGrupalV2' %}">Visualizar Reportes Semestrales Grupales</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralDepartamentalV2' %}">Visualizar Reportes Semestrales Departamentales</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarPlanDeAccionTutorialV2' %}">Visualizar Planes de Acción Tutorial</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarDiagnosticoInstitucionalV2' %}">Visualizar Diagnósticos Institucionales de Tutorías</a></li>
                                         {% endif %}
 
                                         {% if grupito.name == 'Jefe de Desarrollo Académico' %}
-                                            <li><a class="dropdown-item" href="{% url 'JefeDesarrolloAcademico_IntregarProgramaInstitucionalTutorialV2' %}">Programa Institucional Tutorial</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'JefeDesarrolloAcademico_VisualizarProgramaInstitucionalTutorialV2' %}">Visualizar Programas Institucionales Tutoriales</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'JefeDesarrolloAcademico_VisualizarPlanAccionTutorialV2' %}">Visualizar Planes de Acción Tutorial</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'JefeDesarrolloAcademico_IntregarProgramaInstitucionalTutorialV2' %}">Programa Institucional Tutorial</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'JefeDesarrolloAcademico_VisualizarProgramaInstitucionalTutorialV2' %}">Visualizar Programas Institucionales Tutoriales</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'JefeDesarrolloAcademico_VisualizarPlanAccionTutorialV2' %}">Visualizar Planes de Acción Tutorial</a></li>
                                         {% endif %}
 
                                         {% if grupito.name == 'Tutor' %}
-                                            <li><a class="dropdown-item" href="{% url 'Tutor_SelectGruposReporteSemestralV2' %}">Reporte Semestral Grupal</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'Tutor_VerReportesSemestralesV2' %}">Visualizar Reportes Semestrales Grupales</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'Tutor_SelectGruposReporteSemestralV2' %}">Reporte Semestral Grupal</a></li>
+                                            <li><a class="dropdown-item text-wrap" href="{% url 'Tutor_VerReportesSemestralesV2' %}">Visualizar Reportes Semestrales Grupales</a></li>
                                         {% endif %}
                                     {% endfor %}
                                 </ul>
