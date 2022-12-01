@@ -1078,3 +1078,129 @@ def ver_credito_tutor(request):
         'Credito': credito,
         'nocreditos':nocreditos
     })
+
+@login_required
+@group_required('Subdirector Académico')
+def registrarJefeDesarrolloAca(request):
+
+    if request.method=="GET":
+        form=RegistrarUserForm()
+        return render(request, 'registrarJefeDesarrolloAca.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Registrar Jefe de Desarrollo Academico',
+            'form': form
+        })
+    else:
+        form=RegistrarUserForm(request.POST)
+        if form.is_valid():
+            postform=form.save(commit=False)
+            password="sgtjefedesarrollo"+postform.username
+            postform.password= make_password(password)
+            postform.save()
+            print('valido form')
+        else:
+            print('no valido form')
+
+        try:
+            next_usr = User.objects.order_by('-id').first().id
+        except:
+            next_usr = 1
+
+        usr = PersonalTec.objects.get(user_id = request.user.id)
+        usr2= User.objects.get(id=next_usr)
+        grupo=Group.objects.get(name="Jefe de Desarrollo Académico")
+        usr2.groups.add(grupo.id)
+        PersonalTec.objects.create(idInstitucion=usr.idInstitucion, user=usr2)
+
+        return redirect('/Inicio')
+
+
+@login_required
+@group_required('Subdirector Académico')
+def registrarCoordinacionInstitucional(request):
+
+    if request.method=="GET":
+        form=RegistrarUserForm()
+        return render(request, 'registrarCoordinacionInstitucional.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Registrar Coordinación Institucional de Tutoría',
+            'form': form
+        })
+    else:
+        form=RegistrarUserForm(request.POST)
+        if form.is_valid():
+            postform=form.save(commit=False)
+            password="sgtcoordinacioninstitucional"+postform.username
+            postform.password= make_password(password)
+            postform.save()
+            print('valido form')
+        else:
+            print('no valido form')
+
+        try:
+            next_usr = User.objects.order_by('-id').first().id
+        except:
+            next_usr = 1
+
+        usr = PersonalTec.objects.get(user_id = request.user.id)
+        usr2= User.objects.get(id=next_usr)
+        grupo=Group.objects.get(name="Coordinación Institucional de Tutoría")
+        usr2.groups.add(grupo.id)
+        PersonalTec.objects.create(idInstitucion=usr.idInstitucion, user=usr2)
+
+        return redirect('/Inicio')
+    
+
+
+@login_required
+@group_required('Jefe de Desarrollo Académico')
+def registrarJefeDepartamentoAcademico(request):
+
+    if request.method=="GET":
+        Existen=False
+        form=RegistrarUserForm()
+        formpersonal=RegistrarPersonalTecForm2()
+        jefeDesarrollo=PersonalTec.objects.get(user_id=request.user.id)
+        usuarios=User.objects.filter(groups__name='Jefe de Departamento Académico')
+        jefes=PersonalTec.objects.filter(user__in = usuarios, idInstitucion=jefeDesarrollo.idInstitucion)
+        if(jefes.count()>0):
+            Existen=True
+
+        return render(request, 'registrarCoordinacionInstitucional.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Registrar Coordinación Institucional de Tutoría',
+            'form': form,
+            'formpersonal': formpersonal,
+            'jefes':jefes,
+            'existe':Existen
+        })
+    else:
+        form=RegistrarUserForm(request.POST)
+        formpersonal=RegistrarPersonalTecForm2(request.POST)
+        if form.is_valid():
+            postform=form.save(commit=False)
+            password="sgtjefedepartamento"+postform.username
+            postform.password= make_password(password)
+            postform.save()
+            print('valido form')
+        else:
+            print('no valido form')
+
+        if formpersonal.is_valid():
+            try:
+                next_usr = User.objects.order_by('-id').first().id
+            except:
+                next_usr = 1
+            usr = PersonalTec.objects.get(user_id = request.user.id)
+            usr2= User.objects.get(id=next_usr)
+            postformpersonal=formpersonal.save(commit=False)
+            postformpersonal.idInstitucion= usr.idInstitucion
+            postformpersonal.user=usr2
+            grupo=Group.objects.get(name="Jefe de Departamento Académico")
+            usr2.groups.add(grupo.id)
+            postformpersonal.save()
+            print('valido formpersonal')
+        else:
+            print('no valido formpersonal')
+
+        return redirect('/Inicio')

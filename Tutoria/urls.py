@@ -62,6 +62,7 @@ urlpatterns = [
     path('JefeDesarrolloAcademico/V2/ProgramaInstitucional/Integrar/', documentosViews.IntegrarProgramaInstitucionalTutorialJefe, name = 'JefeDesarrolloAcademico_IntregarProgramaInstitucionalTutorialV2'),
     path('JefeDesarrolloAcademico/V2/ProgramaInstitucional/Visualizar/', documentosViews.VisualizarProgramaInstitucionalTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarProgramaInstitucionalTutorialV2'),
     path('JefeDesarrolloAcademico/V2/PlanAccionTutorial/Visualizar/', documentosViews.VisualizarPlanAccionTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarPlanAccionTutorialV2'),
+     path('JefeDesarrolloAcademico/Registrar/JefeDepartamentoAcademico/', views.registrarJefeDepartamentoAcademico, name = 'registrarJefeDepartamentoAcademico'),
 
 
     # Psicologo y medico
@@ -79,6 +80,8 @@ urlpatterns = [
     path('SubdirectorAcademico/Cambio/ReporteSemestralGrupal/', documentosViews.ModFechaLimiteGrupal, name = 'Subdirector_ModFechaLimiteGrupal'),
     path('SubdirectorAcademico/Cambio/ReporteSemestralDepartamental/', documentosViews.ModFechaLimiteDepartamental, name = 'Subdirector_ModFechaLimiteDepartamental'),
     path('SubdirectorAcademico/Cambio/ReporteSemestralInstitucional/', documentosViews.ModFechaLimiteInstitucional, name = 'Subdirector_ModFechaLimiteInstitucional'),
+    path('SubdirectorAcademico/Registrar/JefeDesarrolloAcademico/', views.registrarJefeDesarrolloAca, name = 'registrarJefeDesarrolloAca'),
+    path('SubdirectorAcademico/Registrar/CoordinacionInstitucionalTutoria/', views.registrarCoordinacionInstitucional, name = 'registrarCoordinacionInstitucional'),
 
 
     #fer

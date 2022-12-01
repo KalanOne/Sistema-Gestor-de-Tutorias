@@ -130,10 +130,10 @@ class Tutorado(models.Model):
 
 
 class PersonalTec(models.Model):
-    domicilio = models.CharField(max_length=100, null = True, blank = True)
-    telefono = models.CharField(max_length=10, null = True, blank = True)
-    correoPersonal = models.EmailField(max_length = 254, null = True, blank = True)
-    edificio = models.CharField(max_length=100, null = True, blank = True)
+    domicilio = models.CharField(max_length=100, blank = True)
+    telefono = models.CharField(max_length=10, blank = True)
+    correoPersonal = models.EmailField(max_length = 254, blank = True)
+    edificio = models.CharField(max_length=100, blank = True)
     idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE, null = True, blank = True)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)

@@ -102,6 +102,12 @@
                         </li>
                     {% endif %}
 
+                    {% if group.name == 'Jefe de Desarrollo Académico' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'registrarJefeDepartamentoAcademico' %}">Registrar Jefe de Desarrollo Académico</a>
+                        </li>
+                    {% endif %}
+
                     {% if group.name == 'Jefe de Departamento Académico' %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'listaTutor' %}">Tutores</a>
@@ -117,6 +123,12 @@
                     {% if group.name == 'Subdirector Académico' %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'Subdirector_CambioPeriodo' %}">Periodo Escolar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'registrarJefeDesarrolloAca' %}">Registrar Jefe Desarrollo Academico</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'registrarCoordinacionInstitucional' %}">Registrar Coordinación Institucional de Tutoría</a>
                         </li>
                     {% endif %}
 

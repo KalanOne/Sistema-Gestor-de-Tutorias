@@ -17,6 +17,23 @@ class UserForm(forms.ModelForm):
             'email': forms.TextInput(attrs={'class':'form-control', 'id':'User_email','required':'true'}),
         }
 
+class RegistrarUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = {'username','first_name','last_name','email'}
+        labels = {
+            'username': ('Nombre de usuario'),
+            'first_name': ('Nombre'),
+            'last_name': ('Apellidos'),
+            'email': ('Correo Institucional')
+        }
+        widgets = {
+            'username': forms.TextInput(attrs={'required':'true'}),
+            'first_name': forms.TextInput(attrs={'required':'true'}),
+            'last_name': forms.TextInput(attrs={'required':'true'}),
+            'email': forms.EmailInput(attrs={'required':'true'}),
+        }
+
 class EditarUserForm(forms.ModelForm):
     class Meta:
         model = User
@@ -181,6 +198,17 @@ class RegistrarPersonalTecForm(forms.ModelForm):
     class Meta:
         model = registrarPersonalTec
         fields = {'archivo'}
+
+class RegistrarPersonalTecForm2(forms.ModelForm):
+    class Meta:
+        model = PersonalTec
+        fields = {'idDepartamentoAcademico'}
+        labels = {
+            'idDepartamentoAcademico': ('Departamento Académico')
+        }
+        widgets = {
+            'idDepartamentoAcademico': forms.Select(attrs={'required':'true'})
+        }
 
 class SubirCreditoForm(forms.ModelForm):
     class Meta:
