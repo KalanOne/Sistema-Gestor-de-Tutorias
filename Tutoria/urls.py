@@ -56,6 +56,7 @@ urlpatterns = [
     path('CoordinacionInstitucionalTutoria/V2/DiagnosticoInstitucional/Crear/', documentosViews.CrearDiagonsticoInstitucionalTutoriaCoordinacion, name = 'CoordinacionInstitucionalTutoria_CrearDiagnosticoInstitucionalTutoriaV2'),
     path('CoordinacionInstitucionalTutoria/V2/Documentos/Visualizar/', documentosViews.VisualizarTodosLosDocumentosCoordinacion, name = 'CoordinacionInstitucionalTutoria_VisualizarTodosLosDocumentosV2'),
     path('CoordinacionInstitucionalTutoria/V2/ReporteSemestralInstitucional/Integrar/', documentosViews.IntegrarReporteSemestralInstitucionalCoordinacion, name = 'CoordinacionInstitucionalTutoria_IntregarReporteInstitucionalTutoriaV2'),
+    path('CoordinacionInstitucionalTutoria/Registrar/CoordinadorTutoriaDepartamentoAcademico/', views.registrarCoordinadorTutoria, name = 'registrarCoordinadorTutoria'),
 
 
 

@@ -1166,9 +1166,9 @@ def registrarJefeDepartamentoAcademico(request):
         if(jefes.count()>0):
             Existen=True
 
-        return render(request, 'registrarCoordinacionInstitucional.html', {
+        return render(request, 'registrarJefeDepartamento.html', {
             'gruops': request.user.groups.all(),
-            'title': 'Registrar Coordinación Institucional de Tutoría',
+            'title': 'Registrar Jefe de Departamento Académico',
             'form': form,
             'formpersonal': formpersonal,
             'jefes':jefes,
@@ -1197,6 +1197,60 @@ def registrarJefeDepartamentoAcademico(request):
             postformpersonal.idInstitucion= usr.idInstitucion
             postformpersonal.user=usr2
             grupo=Group.objects.get(name="Jefe de Departamento Académico")
+            usr2.groups.add(grupo.id)
+            postformpersonal.save()
+            print('valido formpersonal')
+        else:
+            print('no valido formpersonal')
+
+        return redirect('/Inicio')
+
+
+@login_required
+@group_required('Coordinación Institucional de Tutoría')
+def registrarCoordinadorTutoria(request):
+
+    if request.method=="GET":
+        Existen=False
+        form=RegistrarUserForm()
+        formpersonal=RegistrarPersonalTecForm2()
+        jefeDesarrollo=PersonalTec.objects.get(user_id=request.user.id)
+        usuarios=User.objects.filter(groups__name='Coordinador de Tutoria del Departamento Académico')
+        jefes=PersonalTec.objects.filter(user__in = usuarios, idInstitucion=jefeDesarrollo.idInstitucion)
+        if(jefes.count()>0):
+            Existen=True
+
+        return render(request, 'registrarCoordinadorTutoria.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Registrar Coordinador de Tutoria del Departamento Académico',
+            'form': form,
+            'formpersonal': formpersonal,
+            'jefes':jefes,
+            'existe':Existen
+        })
+    else:
+        form=RegistrarUserForm(request.POST)
+        formpersonal=RegistrarPersonalTecForm2(request.POST)
+        if form.is_valid():
+            postform=form.save(commit=False)
+            password="sgtcoordinadortutoria"+postform.username
+            postform.password= make_password(password)
+            postform.save()
+            print('valido form')
+        else:
+            print('no valido form')
+
+        if formpersonal.is_valid():
+            try:
+                next_usr = User.objects.order_by('-id').first().id
+            except:
+                next_usr = 1
+            usr = PersonalTec.objects.get(user_id = request.user.id)
+            usr2= User.objects.get(id=next_usr)
+            postformpersonal=formpersonal.save(commit=False)
+            postformpersonal.idInstitucion= usr.idInstitucion
+            postformpersonal.user=usr2
+            grupo=Group.objects.get(name="Coordinador de Tutoria del Departamento Académico")
             usr2.groups.add(grupo.id)
             postformpersonal.save()
             print('valido formpersonal')

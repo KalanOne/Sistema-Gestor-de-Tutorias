@@ -102,9 +102,15 @@
                         </li>
                     {% endif %}
 
+                    {% if group.name == 'Coordinación Institucional de Tutoría' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'registrarCoordinadorTutoria' %}">Registrar Jefe de Departamento Académico</a>
+                        </li>
+                    {% endif %}
+
                     {% if group.name == 'Jefe de Desarrollo Académico' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'registrarJefeDepartamentoAcademico' %}">Registrar Jefe de Desarrollo Académico</a>
+                            <a class="nav-link" href="{% url 'registrarJefeDepartamentoAcademico' %}">Registrar Jefe de Departamento Académico</a>
                         </li>
                     {% endif %}
 
