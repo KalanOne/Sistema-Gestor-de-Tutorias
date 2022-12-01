@@ -117,7 +117,7 @@ class Tutorado(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def Mostrar(self):
-        return "{} - {}".format(self.correoPersonal, self.semestre)
+        return "{} {} - {}".format(self.user.first_name, self.user.last_name, self.user.username)
 
     def __str__(self):
         return self.Mostrar()
@@ -160,7 +160,7 @@ class PersonalMed(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null = True, blank = True)
 
     def Mostrar(self):
-        return "{} - {}".format(self.correoPersonal, self.edificio)
+        return "{} {} - {}".format(self.user.first_name, self.user.last_name, self.user.username)
 
     def __str__(self):
         return self.Mostrar()
