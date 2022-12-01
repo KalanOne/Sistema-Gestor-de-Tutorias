@@ -105,7 +105,7 @@
 
                     {% if group.name == 'Coordinación Institucional de Tutoría' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'registrarCoordinadorTutoria' %}">Registrar Jefe de Departamento Académico</a>
+                            <a class="nav-link" href="{% url 'registrarCoordinadorTutoria' %}">Registrar Coordinador de Tutoría del Departamento Académico</a>
                         </li>
                     {% endif %}
 
@@ -131,11 +131,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'Subdirector_CambioPeriodo' %}">Periodo Escolar</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'registrarJefeDesarrolloAca' %}">Registrar Jefe Desarrollo Academico</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'registrarCoordinacionInstitucional' %}">Registrar Coordinación Institucional de Tutoría</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Registrar
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'registrarJefeDesarrolloAca' %}">Jefe Desarrollo Académico</a></li>
+                                <li><a class="dropdown-item" href="{% url 'registrarCoordinacionInstitucional' %}">Coordinación Institucional de Tutoría</a></li>
+                            </ul>
                         </li>
                     {% endif %}
 
@@ -152,7 +155,7 @@
                     {% endif %}
 
                     {% if forloop.last %}
-                        {% if group.name == 'Coordinación Institucional de Tutoría' or group.name == 'Coordinador de Tutoria del Departamento Académico' or group.name == 'Jefe de Desarrollo Académico' or group.name == 'Tutor' %}
+                        {% if group.name == 'Coordinación Institucional de Tutoría' or group.name == 'Coordinador de Tutoria del Departamento Académico' or group.name == 'Jefe de Desarrollo Académico' or group.name == 'Tutor' or group.name == 'Subdirector Académico' %}
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Reportes

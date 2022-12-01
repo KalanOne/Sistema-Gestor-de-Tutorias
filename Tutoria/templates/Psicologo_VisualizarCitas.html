@@ -78,9 +78,9 @@
             <div class="col-md-1"></div>
             <div class="col-md-12">
                 <div class="table-responsive py-3 px-2">
-                    <table class="table table-hover datatable" id="tabla">
+                    <table class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
                         <thead>
-                            <tr style="background-color: #e3f2fd;">
+                            <tr class="text-white" style="background-color: #1B396A;">
                                 <th scope="col">#</th>
                                 <th scope="col">Motivo</th>
                                 <th scope="col">Descripción</th>
@@ -170,10 +170,10 @@
                                             </div>
                                         </td>
                                     {% elif cita.idEstado.estado == 'Atendido' %}
-                                        <td class="text-success">Atendido</td>
+                                        <td><span class="badge text-bg-success rounded-pill">Atendido</span></td>
                                         <td></td>
                                     {% elif cita.idEstado.estado == 'No atendido' %}
-                                        <td class="text-danger">No atendido</td>
+                                        <td><span class="badge text-bg-danger rounded-pill">No atendido</span></td>
                                         <td></td>
                                     {% endif %}
                                 </tr>
@@ -235,24 +235,24 @@
                                     {% endif %}
 
                                     {% if cita.idEstado.estado == 'Espera' %}
-                                        <td class="text-warning">Espera</td>
+                                        <td><span class="badge text-bg-warning rounded-pill">Espera</span></td>
                                         <td>
                                             <div class="d-grid gap-2">
                                                 <a href="{% url 'Psicologo_AsignarCita' cita.id %}" class="btn btn-primary" role="button" style="background-color: #1b396a" >Asignar cita</a>
                                             </div>
                                         </td>
                                     {% elif cita.idEstado.estado == 'Citado' %}
-                                        <td class="text-warning">Citado</td>
+                                        <td><span class="badge text-bg-warning rounded-pill">Citado</span></td>
                                         <td>
                                             <div class="d-grid gap-2">
                                                 <a class="btn btn-primary" role="button" style="background-color: #1b396a" onclick="asigConclusion({{cita.id}})" data-bs-toggle="modal" data-bs-target="#modalConcluirCita">Concluir</a>
                                             </div>
                                         </td>
                                     {% elif cita.idEstado.estado == 'Atendido' %}
-                                        <td class="text-success">Atendido</td>
+                                        <td><span class="badge text-bg-success rounded-pill">Atendido</span></td>
                                         <td></td>
                                     {% elif cita.idEstado.estado == 'No atendido' %}
-                                        <td class="text-danger">No atendido</td>
+                                        <td><span class="badge text-bg-danger rounded-pill">No atendido</span></td>
                                         <td></td>
                                     {% endif %}
                                 </tr>

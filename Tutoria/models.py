@@ -49,7 +49,8 @@ class Grupo(models.Model):
     opciones=(
             ('A','A'),
             ('B','B'),
-            ('C','C')
+            ('C','C'),
+            ('D','D')
     )   
     grupo = models.CharField(max_length=100, blank=True, null=True, choices = opciones)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE, null = True, blank = True)

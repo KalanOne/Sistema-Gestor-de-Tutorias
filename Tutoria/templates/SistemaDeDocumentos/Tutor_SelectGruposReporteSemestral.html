@@ -16,8 +16,8 @@
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {% for grupo in grupos %}
+                    <tbody id="tablita">
+                        <!-- {% for grupo in grupos %}
                             <tr>
                                 <td>{{grupo.id}}</td>
                                 <td>{{grupo.grupo}}</td>
@@ -50,10 +50,61 @@
                                     </td>
                                 {% endfor %}
                             </tr>
-                        {% endfor %}
+                        {% endfor %} -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script>
+        grupos = [];
+        {% for grupo in grupos %}
+        var u = "{% url 'Tutor_CrearReporteSemestralV2' grupo.id %}"
+        grupos.push({id:{{grupo.id}},tutor: "{{grupo.idPersonalTec.user.first_name}} {{grupo.idPersonalTec.user.last_name}}", nombre: "{{grupo.grupo}}", urlRe: u});
+        {% endfor %}
+        reportesSemestrales = [];
+        {% for reporte in reportes %}
+        reportesSemestrales.push({grupo: "{{reporte.grupo_id}}", fecha: "{{reporte.fecha|date:'d/m/Y'}}", archivo: "{% static reporte.archivo %}" });
+        {% endfor %}
+        var linea = ""
+        grupos.forEach( function(valor, indice, array) {
+            linea += `<tr><td>`+valor['id']+`</td>
+            <td>`+valor['nombre']+`</td>
+            <td>`+valor['tutor']+`</td>`;
+            var encontrado = false;
+            if(reportesSemestrales.length == 0){
+                linea += `<td>------</td>
+                    <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                    <td>
+                        <div class="d-grid gap-2">
+                            <a href="`+ valor['urlRe'] +`" class="btn btn-primary" role="button" style="background-color: #1b396a">Crear Reporte</a>
+                        </div>
+                    </td></tr>`;
+            } else {
+                reportesSemestrales.forEach((valor2, indice2, array2) => {
+                    if(valor['id'] == valor2['grupo']){
+                        linea += `<td>`+valor2['fecha']+`</td>
+                        <td><span class="badge text-bg-success rounded-pill">Realizada</span></td>
+                        <td>
+                            <div class="d-grid gap-2">
+                                <a href="`+valor2['archivo']+`" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver Reporte</a>
+                            </div>
+                        </td></tr>`;
+                        encontrado = true;
+                    }
+                    if(indice2 == reportesSemestrales.length - 1 && encontrado == false){
+                        linea += `<td>------</td>
+                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                        <td>
+                            <div class="d-grid gap-2">
+                                <a href="`+ valor['urlRe'] +`" class="btn btn-primary" role="button" style="background-color: #1b396a">Crear Reporte</a>
+                            </div>
+                        </td></tr>`;
+                    }
+                });
+            }
+            $("#tablita").html(linea);
+        });
+    </script>
 {% endblock content %}

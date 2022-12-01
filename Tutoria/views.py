@@ -116,18 +116,24 @@ def paginaInicio(request):
             'title': 'Página de inicio'
         })
     else:
-        personal = PersonalTec.objects.get(user_id = request.user.id)
-        if personal.idInstitucion.periodoActual == 2:
+        try:
+            personal = PersonalTec.objects.get(user_id = request.user.id)
+            if personal.idInstitucion.periodoActual == 2:
+                return render(request, 'paginaInicio.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Página de inicio'
+                })
+            else:
+                fechasActuales = FechaLimite.objects.get(ano = personal.idInstitucion.anoActual, periodo = personal.idInstitucion.periodoActual)
+                return render(request, 'paginaInicio.html', {
+                    'gruops': request.user.groups.all(),
+                    'title': 'Página de inicio',
+                    'fechas': fechasActuales
+                })
+        except:
             return render(request, 'paginaInicio.html', {
                 'gruops': request.user.groups.all(),
                 'title': 'Página de inicio'
-            })
-        else:
-            fechasActuales = FechaLimite.objects.get(ano = personal.idInstitucion.anoActual, periodo = personal.idInstitucion.periodoActual)
-            return render(request, 'paginaInicio.html', {
-                'gruops': request.user.groups.all(),
-                'title': 'Página de inicio',
-                'fechas': fechasActuales
             })
 
 
@@ -719,11 +725,9 @@ def crearGrupo(request, Tutor):
         grupoform=GrupoForm()
         estadoActivo = Estado.objects.get(estado = 'Activo')
         estadoInactivo = Estado.objects.get(estado = 'Inactivo')
-        estadoCerrado = Estado.objects.get(estado = 'Cerrado')
         elecciones = [
             (estadoActivo.id, estadoActivo.estado),
-            (estadoInactivo.id, estadoInactivo.estado),
-            (estadoCerrado.id, estadoCerrado.estado)
+            (estadoInactivo.id, estadoInactivo.estado)
         ]
         grupoform.fields['idEstado'].choices = elecciones
         return render(request, 'crearGrupo.html', {
@@ -775,11 +779,9 @@ def verGruposDelTutor(request, Tutor):
         grupoform=GrupoForm()
         estadoActivo = Estado.objects.get(estado = 'Activo')
         estadoInactivo = Estado.objects.get(estado = 'Inactivo')
-        estadoCerrado = Estado.objects.get(estado = 'Cerrado')
         elecciones = [
             (estadoActivo.id, estadoActivo.estado),
-            (estadoInactivo.id, estadoInactivo.estado),
-            (estadoCerrado.id, estadoCerrado.estado)
+            (estadoInactivo.id, estadoInactivo.estado)
         ]
         grupoform.fields['idEstado'].choices = elecciones
 
@@ -880,7 +882,7 @@ def listarAlumnos(request, Grupoid):
                         if Alumno.control == "":
                             print("Num control vacio")
                         else:
-                            password="sgtalumno"+Alumno.control
+                            password="sgttutorado"+Alumno.control
                             usr=User.objects.create(username=Alumno.control, password=make_password(password), first_name=Alumno.nombres, last_name=Alumno.apellidos, email=Alumno.email)
                             grupo=Group.objects.get(name="Tutorado")
                             usr.groups.add(grupo.id)
@@ -900,67 +902,67 @@ def listarAlumnos(request, Grupoid):
 
 # Coordinador de Tutoria del Departamento Académico
 
-@login_required
-@group_required('Jefe de Departamento Académico')
-def registrarTutorados(request, Grupoid):  
-    Error=False
-    if request.method == 'POST':  
-        persona_resource = ExcelResource()  
-        dataset = Dataset()  
-        encargado = PersonalTec.objects.get(user_id = request.user.id)
-        escuela = encargado.idInstitucion
-        departamento = encargado.idDepartamentoAcademico 
+# @login_required
+# @group_required('Jefe de Departamento Académico')
+# def registrarTutorados(request, Grupoid):  
+#     Error=False
+#     if request.method == 'POST':  
+#         persona_resource = ExcelResource()  
+#         dataset = Dataset()  
+#         encargado = PersonalTec.objects.get(user_id = request.user.id)
+#         escuela = encargado.idInstitucion
+#         departamento = encargado.idDepartamentoAcademico 
 
-        try:
-            nuevas_personas = request.FILES['archivo']  
-        except MultiValueDictKeyError:
-            return render(request, 'agregarTutorado.html')
+#         try:
+#             nuevas_personas = request.FILES['archivo']  
+#         except MultiValueDictKeyError:
+#             return render(request, 'agregarTutorado.html')
 
-        imported_data = dataset.load(nuevas_personas.read())  
-        result = persona_resource.import_data(dataset, dry_run=True)
+#         imported_data = dataset.load(nuevas_personas.read())  
+#         result = persona_resource.import_data(dataset, dry_run=True)
 
-        if not result.has_errors(): 
-            persona_resource.import_data(dataset, dry_run=False) # Actually import now  
-            for Alumno in registrarAlumno.objects.all():
-                if User.objects.filter(username=Alumno.control).exists():
-                    print(Alumno.control+" - Usuario ya existente")
-                else:
-                    try:
-                        try:
-                            semestreAlumno=Alumno.semestre
-                        except:
-                            semestreAlumno=1
-                        usr=User.objects.create(username=Alumno.control, password=make_password(Alumno.email), first_name=Alumno.nombres, last_name=Alumno.apellidos, email=(Alumno.control+"@morelia.tecnm.mx"))
-                        usr.groups.add(1)
-                        alm=Tutorado.objects.create(semestre=semestreAlumno,idGrupo_id=Grupoid, idDepartamentoAcademico=departamento, idInstitucion=escuela, user=usr)
-                        print("Registro exitoso")  
-                    except:
-                        print("Erro no pudo crear el usuario")
+#         if not result.has_errors(): 
+#             persona_resource.import_data(dataset, dry_run=False) # Actually import now  
+#             for Alumno in registrarAlumno.objects.all():
+#                 if User.objects.filter(username=Alumno.control).exists():
+#                     print(Alumno.control+" - Usuario ya existente")
+#                 else:
+#                     try:
+#                         try:
+#                             semestreAlumno=Alumno.semestre
+#                         except:
+#                             semestreAlumno=1
+#                         usr=User.objects.create(username=Alumno.control, password=make_password(Alumno.email), first_name=Alumno.nombres, last_name=Alumno.apellidos, email=(Alumno.control+"@morelia.tecnm.mx"))
+#                         usr.groups.add(1)
+#                         alm=Tutorado.objects.create(semestre=semestreAlumno,idGrupo_id=Grupoid, idDepartamentoAcademico=departamento, idInstitucion=escuela, user=usr)
+#                         print("Registro exitoso")  
+#                     except:
+#                         print("Erro no pudo crear el usuario")
 
-            limpiar = registrarAlumno.objects.all()         
-            limpiar.delete()
+#             limpiar = registrarAlumno.objects.all()         
+#             limpiar.delete()
 
             
-            return redirect ('listarAlumnos',Grupoid)
-        else:
-            print("Error") 
-            Error=True
-            form=RegistrarTutoradosForm()
-            form.fields['archivo'].label = 'Archivo de Alumnos'
-            return render(request, 'agregarTutorado.html',{
-                'gruops': request.user.groups.all(),
-                'form':form,
-                'Error':Error
-            })
-    else:
-        Error=False
-        form=RegistrarTutoradosForm()
-        form.fields['archivo'].label = 'Archivo de Alumnos'
-        return render(request, 'agregarTutorado.html',{
-            'gruops': request.user.groups.all(),
-            'form':form,
-            'Error':Error
-        })
+#             return redirect ('listarAlumnos',Grupoid)
+#         else:
+#             print("Error") 
+#             Error=True
+#             form=RegistrarTutoradosForm()
+#             form.fields['archivo'].label = 'Archivo de Alumnos'
+#             return render(request, 'agregarTutorado.html',{
+#                 'gruops': request.user.groups.all(),
+#                 'form':form,
+#                 'Error':Error
+#             })
+#     else:
+#         Error=False
+#         form=RegistrarTutoradosForm()
+#         form.fields['archivo'].label = 'Archivo de Alumnos'
+#         return render(request, 'agregarTutorado.html',{
+#             'gruops': request.user.groups.all(),
+#             'form':form,
+#             'Error':Error
+#         })
 
 #vista subir credito
 @login_required
@@ -1115,7 +1117,11 @@ def registrarJefeDesarrolloAca(request):
             postform.save()
             print('valido form')
         else:
-            print('no valido form')
+            return render(request, 'registrarJefeDesarrolloAca.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Registrar Jefe de Desarrollo Academico',
+                'form': form
+            })
 
         try:
             next_usr = User.objects.order_by('-id').first().id
@@ -1151,7 +1157,11 @@ def registrarCoordinacionInstitucional(request):
             postform.save()
             print('valido form')
         else:
-            print('no valido form')
+            return render(request, 'registrarCoordinacionInstitucional.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Registrar Coordinación Institucional de Tutoría',
+                'form': form
+            })
 
         try:
             next_usr = User.objects.order_by('-id').first().id
@@ -1200,7 +1210,20 @@ def registrarJefeDepartamentoAcademico(request):
             postform.save()
             print('valido form')
         else:
-            print('no valido form')
+            Existen=False
+            jefeDesarrollo=PersonalTec.objects.get(user_id=request.user.id)
+            usuarios=User.objects.filter(groups__name='Jefe de Departamento Académico')
+            jefes=PersonalTec.objects.filter(user__in = usuarios, idInstitucion=jefeDesarrollo.idInstitucion)
+            if(jefes.count()>0):
+                Existen=True
+            return render(request, 'registrarJefeDepartamento.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Registrar Jefe de Departamento Académico',
+                'form': form,
+                'formpersonal': formpersonal,
+                'jefes':jefes,
+                'existe':Existen
+            })
 
         if formpersonal.is_valid():
             try:
@@ -1217,9 +1240,38 @@ def registrarJefeDepartamentoAcademico(request):
             postformpersonal.save()
             print('valido formpersonal')
         else:
-            print('no valido formpersonal')
+            Existen=False
+            jefeDesarrollo=PersonalTec.objects.get(user_id=request.user.id)
+            usuarios=User.objects.filter(groups__name='Jefe de Departamento Académico')
+            jefes=PersonalTec.objects.filter(user__in = usuarios, idInstitucion=jefeDesarrollo.idInstitucion)
+            if(jefes.count()>0):
+                Existen=True
+            return render(request, 'registrarJefeDepartamento.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Registrar Jefe de Departamento Académico',
+                'form': form,
+                'formpersonal': formpersonal,
+                'jefes':jefes,
+                'existe':Existen
+            })
 
-        return redirect('/Inicio')
+        Existen=False
+        form=RegistrarUserForm()
+        formpersonal=RegistrarPersonalTecForm2()
+        jefeDesarrollo=PersonalTec.objects.get(user_id=request.user.id)
+        usuarios=User.objects.filter(groups__name='Jefe de Departamento Académico')
+        jefes=PersonalTec.objects.filter(user__in = usuarios, idInstitucion=jefeDesarrollo.idInstitucion)
+        if(jefes.count()>0):
+            Existen=True
+
+        return render(request, 'registrarJefeDepartamento.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Registrar Jefe de Departamento Académico',
+            'form': form,
+            'formpersonal': formpersonal,
+            'jefes':jefes,
+            'existe':Existen
+        })
 
 
 @login_required
@@ -1254,7 +1306,20 @@ def registrarCoordinadorTutoria(request):
             postform.save()
             print('valido form')
         else:
-            print('no valido form')
+            Existen=False
+            jefeDesarrollo=PersonalTec.objects.get(user_id=request.user.id)
+            usuarios=User.objects.filter(groups__name='Coordinador de Tutoria del Departamento Académico')
+            jefes=PersonalTec.objects.filter(user__in = usuarios, idInstitucion=jefeDesarrollo.idInstitucion)
+            if(jefes.count()>0):
+                Existen=True
+            return render(request, 'registrarCoordinadorTutoria.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Registrar Coordinador de Tutoria del Departamento Académico',
+                'form': form,
+                'formpersonal': formpersonal,
+                'jefes':jefes,
+                'existe':Existen
+            })
 
         if formpersonal.is_valid():
             try:
@@ -1271,6 +1336,35 @@ def registrarCoordinadorTutoria(request):
             postformpersonal.save()
             print('valido formpersonal')
         else:
-            print('no valido formpersonal')
+            Existen=False
+            jefeDesarrollo=PersonalTec.objects.get(user_id=request.user.id)
+            usuarios=User.objects.filter(groups__name='Coordinador de Tutoria del Departamento Académico')
+            jefes=PersonalTec.objects.filter(user__in = usuarios, idInstitucion=jefeDesarrollo.idInstitucion)
+            if(jefes.count()>0):
+                Existen=True
+            return render(request, 'registrarCoordinadorTutoria.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Registrar Coordinador de Tutoria del Departamento Académico',
+                'form': form,
+                'formpersonal': formpersonal,
+                'jefes':jefes,
+                'existe':Existen
+            })
 
-        return redirect('/Inicio')
+        Existen=False
+        form=RegistrarUserForm()
+        formpersonal=RegistrarPersonalTecForm2()
+        jefeDesarrollo=PersonalTec.objects.get(user_id=request.user.id)
+        usuarios=User.objects.filter(groups__name='Coordinador de Tutoria del Departamento Académico')
+        jefes=PersonalTec.objects.filter(user__in = usuarios, idInstitucion=jefeDesarrollo.idInstitucion)
+        if(jefes.count()>0):
+            Existen=True
+
+        return render(request, 'registrarCoordinadorTutoria.html', {
+            'gruops': request.user.groups.all(),
+            'title': 'Registrar Coordinador de Tutoria del Departamento Académico',
+            'form': form,
+            'formpersonal': formpersonal,
+            'jefes':jefes,
+            'existe':Existen
+        })

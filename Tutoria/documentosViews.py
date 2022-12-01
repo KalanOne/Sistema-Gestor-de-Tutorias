@@ -87,7 +87,7 @@ def CrearReporteSemestralGrupal(request, grupo_id):
     formularios = modelformset_factory(TutoradoReporteSemestralGrupalV2, form = FormTutoradoReporteSemestralGrupalCreditoV2, extra = noTutorados)
     
     if request.method == 'GET':
-        formularios2 = formularios()
+        formularios2 = formularios(queryset = TutoradoReporteSemestralGrupalV2.objects.none())
         for indice, form in enumerate(formularios2):
             ele = [(tutorados[indice].id, tutorados[indice])]
             form.fields['tutorado'].choices = ele
@@ -259,7 +259,7 @@ def CrearReporteSemestralDepartamentalCoordinador(request):
     formularios = modelformset_factory(TutorReporteSemestralDepartamentalV2, form = FormTutorReporteSemestralDepartamentalV2, extra = noGrupos)
 
     if request.method == 'GET':
-        formularios2 = formularios()
+        formularios2 = formularios(queryset = TutorReporteSemestralDepartamentalV2.objects.none())
         for indice, form in enumerate(formularios2):
             ele1 = [(grupos[indice].id, grupos[indice].grupo)]
             ele2 = [(grupos[indice].idPersonalTec.id, grupos[indice].idPersonalTec)]

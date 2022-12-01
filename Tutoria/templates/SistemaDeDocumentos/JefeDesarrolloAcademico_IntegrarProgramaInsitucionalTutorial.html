@@ -116,4 +116,60 @@
             </div>
         </div>    
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script>
+        departamentos = [];
+        {% for departamento in departamentos %}
+        departamentos.push({id:{{departamento.id}},departamento: "{{departamento}}"});
+        {% endfor %}
+        reportesSemestrales = [];
+        {% for reporte in patDepartamentales %}
+        reportesSemestrales.push({id: "{{reporte.grupo_id}}", fecha: "{{reporte.fecha|date:'d/m/Y'}}", archivo: "{% static reporte.archivo %}", ano: "{{reporte.ano}}", periodo: "{{reporte.periodo}}" });
+        {% endfor %}
+        console.log(reportesSemestrales)
+        coordinadores = [];
+        {% for coor in coordinadores %}
+        coordinadores.push({idDep: "{{coor.idDepartamentoAcademico_id}}", nombre: "{{coor.user.first_name}} {{coor.user.last_name}}"});
+        {% endfor %}
+        var linea = ""
+        departamentos.forEach( function(valor, indice, array) {
+            linea += `<tr><td>`+valor['id']+`</td>`;
+            coordinadores.forEach( function(valor3, indice3, array3) {
+                if(valor['id'] == valor3['idDep']){
+                    linea += `<td>`+valor3['nombre']+`</td>`
+                }
+            });
+            linea += `<td>`+valor['departamento']+`</td>
+            <td>Plan de Acción Tutorial</td>`;
+            var encontrado = false;
+            if(reportesSemestrales.length == 0){
+                linea += `<td>------</td>
+                    <td>------</td>
+                    <td>------</td>
+                    <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                    <td></td>`;
+            }else{
+                reportesSemestrales.forEach((valor2, indice2, array2) => {
+                    if(valor['id'] == valor2['id']){
+                        linea += `<td>`+valor2['fecha']+`</td><td>`+ valor2['ano'] +`</td><td>`+ valor2['ano'] +`
+                        <td><span class="badge text-bg-success rounded-pill">Realizada</span></td>
+                        <td>
+                            <div class="d-grid gap-2">
+                                <a href="`+valor2['archivo']+`" class="btn btn-primary" role="button" target="_blank">Ver Reporte</a>
+                            </div>
+                        </td></tr>`;
+                        encontrado = true;
+                    }
+                    if(indice2 == reportesSemestrales.length - 1 && encontrado == false){
+                        linea += `<td>------</td>
+                        <td>------</td>
+                        <td>------</td>
+                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                        <td></td>`;
+                    }
+                });
+            }
+            $("#tablita").html(linea);
+        });
+    </script>
 {% endblock content %}

@@ -5,8 +5,8 @@ $(document).ready(function () {
     autoWidth: false,
     dom: "Bfrtip",
     lengthMenu: [
-      [3, 5, 10, 25, 50, -1],
-      ["3 rows", "5 rows", "10 rows", "25 rows", "50 rows", "Show all"],
+      [5, 10, 25, 50, -1],
+      ["5 filas", "10 filas", "25 filas", "50 filas", "Show filas"],
     ],
     buttons: ["pageLength", "copy", "csv", "excel", "pdf", "print"],
     language: {

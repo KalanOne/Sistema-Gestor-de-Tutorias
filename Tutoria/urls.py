@@ -33,7 +33,7 @@ urlpatterns = [
     path('Todos/EditarInformacion/', views.editarInformacionTodos, name='editarInformacionTodos'),
 
     #pruebas
-    path('Registrar/Tutorados/<int:Grupoid>/', views.registrarTutorados, name = 'registrarTutorados'),
+    #path('Registrar/Tutorados/<int:Grupoid>/', views.registrarTutorados, name = 'registrarTutorados'),
     
 
     # urls Para documentos
