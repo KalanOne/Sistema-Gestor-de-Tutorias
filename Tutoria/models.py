@@ -139,7 +139,7 @@ class PersonalTec(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def Mostrar(self):
-        return "{} - {}".format(self.correoPersonal, self.edificio)
+        return "{} {} - {}".format(self.user.first_name, self.user.last_name, self.user.username)
 
     def __str__(self):
         return self.Mostrar()
