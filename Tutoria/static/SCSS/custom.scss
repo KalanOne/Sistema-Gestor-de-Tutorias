@@ -1,0 +1,7 @@
+$primary: #1B396A;
+
+$theme-colors: (
+  "primary": $primary,
+);
+
+@import "../node_modules/bootstrap/scss/bootstrap";

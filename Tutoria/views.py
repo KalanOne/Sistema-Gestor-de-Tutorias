@@ -10,6 +10,7 @@ from tablib import Dataset
 from django.utils.datastructures import MultiValueDictKeyError
 from Tutoria.resources import *
 from django.contrib.auth.hashers import make_password
+from .documentosModels import *
 # Create your views here.
 
 def group_required(*group_names):
@@ -109,11 +110,26 @@ def paginaInicio(request):
                 'title': 'Página de inicio',
                 'cuentaGrupo': 1
             })
-    else:
+    elif request.user.groups.filter(name__in=['Psicológico', 'Médico']).exists():
         return render(request, 'paginaInicio.html', {
             'gruops': request.user.groups.all(),
             'title': 'Página de inicio'
         })
+    else:
+        personal = PersonalTec.objects.get(user_id = request.user.id)
+        if personal.idInstitucion.periodoActual == 2:
+            return render(request, 'paginaInicio.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Página de inicio'
+            })
+        else:
+            fechasActuales = FechaLimite.objects.get(ano = personal.idInstitucion.anoActual, periodo = personal.idInstitucion.periodoActual)
+            return render(request, 'paginaInicio.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Página de inicio',
+                'fechas': fechasActuales
+            })
+
 
 @login_required
 def cierreSesion(request):
