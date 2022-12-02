@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'import_export'
 ]
 
+X_FRAME_OPTIONS = 'SAMEORIGIN' #Antes de los MIDDLEWARE
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

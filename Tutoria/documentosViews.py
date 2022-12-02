@@ -16,7 +16,7 @@ from PyPDF2 import *
 from datetime import date
 from datetime import datetime
 import pythoncom
-from django.http import HttpResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 def group_required(*group_names):
     """ Grupos, checar si pertenece a grupo """
@@ -406,6 +406,7 @@ def VisualizarReportesSemestralesDepartamentalesCoordinador(request):
 
 @login_required()
 @group_required('Coordinador de Tutoria del Departamento Académico')
+@xframe_options_exempt
 def SelectDiagnosticoInstitucionalCoordinador(request):
     coordinador = PersonalTec.objects.get(user_id = request.user.id)
     try:
