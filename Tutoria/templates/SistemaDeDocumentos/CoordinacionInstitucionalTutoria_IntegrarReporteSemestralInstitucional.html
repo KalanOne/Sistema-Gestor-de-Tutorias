@@ -124,9 +124,8 @@
         {% endfor %}
         reportesSemestrales = [];
         {% for reporte in reportesDepartamentales %}
-        reportesSemestrales.push({id: "{{reporte.grupo_id}}", fecha: "{{reporte.fecha|date:'d/m/Y'}}", archivo: "{% static reporte.archivo %}", ano: "{{reporte.ano}}", periodo: "{{reporte.periodo}}" });
+        reportesSemestrales.push({id: "{{reporte.departamento_id}}", fecha: "{{reporte.fecha|date:'d/m/Y'}}", archivo: "{% static reporte.archivo %}", ano: "{{reporte.ano}}", periodo: "{{reporte.periodo}}" });
         {% endfor %}
-        console.log(reportesSemestrales)
         coordinadores = [];
         {% for coor in coordinadores %}
         coordinadores.push({idDep: "{{coor.idDepartamentoAcademico_id}}", nombre: "{{coor.user.first_name}} {{coor.user.last_name}}"});
