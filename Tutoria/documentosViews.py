@@ -170,13 +170,16 @@ def CrearReporteSemestralGrupal(request, grupo_id):
                     'grupo': grupo.grupo
                 }
                 templateConst.render(context3)
+                print("173")
                 templateConst.save(inicioRuta + nombreConst + ".docx")
+                print("175")
                 convert(inicioRuta + nombreConst + ".docx", inicioRutaConst + nombreConst + ".pdf")
 
-
+                print("178")
                 reporteGrupal.archivo = "Archivos/Reportes/" + nombre + ".pdf"
+                print("180")
                 reporteGrupal.save()
-
+                print("182")
                 constancia = ConstanciaTutorV2()
                 constancia.archivo = "Archivos/Constancias/" + nombreConst + ".pdf"
                 constancia.ano = tutor.idInstitucion.anoActual
