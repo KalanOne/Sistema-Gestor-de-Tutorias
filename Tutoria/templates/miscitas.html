@@ -25,7 +25,7 @@
         <div class="row mb-5">
             <div class="col-md-3"></div>
             <div class="col-md-6 d-grid gap-2">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSolicitudCita" style="background-color: #1B396A;">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSolicitudCita">
                     Solicitar ayuda
                 </button>
 
@@ -54,15 +54,15 @@
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-10">
-                <div class="table-responsive" id="tabla">
-                    <table class="table table-hover">
-                        <thead>
+                <div class="table-responsive py-3 px-2">
+                    <table class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
+                        {% comment %} <thead>
                             <tr>
-                                <th colspan="10" style="background-color: #1B396A;" class="rounded-top text-center text-white">Citas agendadas</th>
+                                <th colspan="9" style="background-color: #1B396A;" class="rounded-top text-center text-white">Citas agendadas</th>
                             </tr>
-                        </thead>
+                        </thead> {% endcomment %}
                         <thead>
-                            <tr style="background-color: #e3f2fd;">
+                            <tr class="text-white" style="background-color: #1B396A;">
                                 <th scope="col">#</th>
                                 <th scope="col">Motivo</th>
                                 <th scope="col">Fecha de solicitud</th>
@@ -120,34 +120,20 @@
             </div>
             <div class="col-md-1"></div>   
         </div>
-        <div class="row my-3">
-            <div class="col-auto mx-auto">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        {% if citas.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="{% url 'misCitasTutorado' citas.previous_page_number %}#tabla">Anterior</a>
-                            </li>
-                        {% endif %}
-                        {% for i in citas.paginator.page_range %}
-                            {% if i == citas.number %}
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">{{ i }}</a>
-                                </li>
-                            {% else %}
-                                <li class="page-item">
-                                    <a class="page-link" href="{% url 'misCitasTutorado' i %}#tabla">{{ i }}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                        {% if citas.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="{% url 'misCitasTutorado' citas.next_page_number %}#tabla">Siguiente</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            </div>
-        </div>
     </div>
 {% endblock content %}
+
+{% comment %} {% block JS %}
+    <script>
+        $('#tabla').DataTable( {
+            dom: 'Bfrtip',
+            lengthMenu: [
+                [ 3, 5, 10, 25, 50, -1 ],
+                [ '3 rows', '5 rows', '10 rows', '25 rows', '50 rows', 'Show all' ]
+            ],
+            buttons: [
+                'pageLength','spacer','print','copy','excel','pdf'
+            ]
+        } );
+    </script>
+{% endblock JS %} {% endcomment %}

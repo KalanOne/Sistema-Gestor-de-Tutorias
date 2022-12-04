@@ -1,0 +1,173 @@
+Institucion: (Dentro)
+    Instituto Tecnologico de Morelia
+
+Departamentos: (Dentro)
+    Ingeniería en Sistemas Computacionales
+    Ingeniería Mecatrónica
+    Ingeniería Bioquimica
+
+Subdirector Academico: (Dentro)
+    Carlos Fabián Escudero García
+    carlos.es
+    mansion123
+
+Jefe de Desarrollo Académico:
+    Aurora Mayol Fuentes
+    aurora.ma
+    aurora.ma@morelia.tecnm.mx
+    sgtjefedesarrolloaurora.ma
+
+Coordinación Institucional de Tutoría:
+    Mirian Jiménez García
+    miriam.ji
+    mirian.ji@morelia.tecnm.mx
+    sgtcoordinacioninstitucionalmiriam.ji
+
+Coordinador de Tutoria del Departamento Académico:
+    ISC:
+        Alan García Díaz
+        alan.ga
+        alan.ga@morelia.tecnm.mx
+        sgtcoordinadortutoriaalan.ga
+    IMC: (Dentro)
+        Ulises Rojas Ferreyra
+        ulises.ro
+        ulises.ro@morelia.tecnm.mx
+        sgtcoordinadortutoriaulises.ro
+    IBQ: (Dentro)
+        Carlos Abraham Garcia Díaz
+        carlos.ga
+        carlos.ga@morelia.tecnm.mx
+        sgtcoordinadortutoriacarlos.ga
+
+
+Jefe de Departamento Académico:
+    ISC:
+        Edna Valencia López
+        edna.va
+        edna.va@morelia.tecnm.mx
+        sgtjefedepartamentoedna.va
+    IMC:(Dentro)
+        Kevin Yair Díaz Alejandre
+        kevin.di
+        kevin.di@morelia.tecnm.mx
+        sgtjefedepartamentokevin.di
+    IBQ:(Dentro)
+        Johan Jesus Díaz Alejandre
+        johan.di
+        johan.di@morelia.tecnm.mx
+        sgtjefedepartamentojohan.di
+
+Tutor:
+    ISC:
+        Jorge Sanchez Vega
+        jorge.sa
+        jorge.sa@morelia.tecnm.mx
+        sgtprofejorge.sa
+
+        Abel Pintor Estrada
+        abel.pe
+        abel.pe@morelia.tecnm.mx
+        sgtprofeabel.pe
+
+    IMC:(Dentro)
+        Felipe Magallan Avila
+        felipe.ma
+        felipe.ma@morelia.tecnm.mx
+        sgtprofefelipe.ma
+
+        Ruth Vargas Villa
+        ruth.va
+        ruth.va@morelia.tecnm.mx
+        sgtproferuth.va
+
+    IBQ:(Dentro)
+        Ruth Diaz Granados
+        ruth.di
+        ruth.di@morelia.tecnm.mx
+        sgtproferuth.di
+
+        Adrian Rojas Ferreyra
+        adrian.ro
+        adrian.ro@morelia.tecnm.mx
+        sgtprofeadrian.ro
+
+        
+Tutorados:
+    ISC1:
+        Diego Ruiz Ayala
+        diego.ru
+        diego.ru@morelia.tecnm.mx
+        sgttutoradodiego.ru
+
+        Angel Gallegos Perez
+        angel.ga
+        angel.ga@morelia.tecnm.mx
+        sgttutoradoangel.ga
+
+    ISC2:
+        Pablo Juarez Castillo
+        pablo.ju
+        pablo.ju@morelia.tecnm.mx
+        sgttutoradopablo.ju
+
+        Arturo Martinez Fuentes
+        arturo.ma
+        arturo.ma@morelia.tecnm.mx
+        sgttutoradoarturo.ma
+
+    IMC:(Dentro)
+        David Avila Villa
+        david.av
+        david.av@morelia.tecnm.mx
+        sgttutoradodavid.av
+
+        Jose Daniel Velazquez Herrera
+        jose.ve
+        jose.ve@morelia.tecnm.mx
+        sgttutoradojose.ve
+
+    IMC2:(Dentro)
+        Laura Ferreyra Ortiz
+        laura.fe
+        laura.fe@morelia.tecnm.mx
+        sgttutoradolaura.fe
+
+        Alejandra Paola Murillo Guizar
+        alejandra.mu
+        alejandra.mu@morelia.tecnm.mx
+        sgttutoradoalejandra.mu
+
+    IBQ:(Dentro)
+        Alejandro Herrera Ferreyra
+        alejandro.he
+        alejandro.he@morelia.tecnm.mx
+        sgttutoradoalejandro.he
+
+        Rocio Sanchez Ferreyra
+        rocio.sa
+        rocio.sa@morelia.tecnm.mx
+        sgttutoradorocio.sa
+
+    IBQ2:(Dentro)
+        Natali Herrera Ferreyra
+        natali.he
+        natali.he@morelia.tecnm.mx
+        sgttutoradonatali.he
+
+        Sergio Sanchez Ferreyra
+        sergio.sa
+        sergio.sa@morelia.tecnm.mx
+        sgttutoradosergio.sa
+
+Medico
+    Juan Escutia Jimenez
+    juan.es
+    juan.es@morelia.tecnm.mx
+    sgtmedicojuan.es
+
+Psicologo
+    Irving Lozano Martinez
+    irving.lo
+    irving.lo@morelia.tecnm.mx
+    sgtpsicologoirving.lo

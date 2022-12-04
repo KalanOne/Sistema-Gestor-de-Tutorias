@@ -1,0 +1,175 @@
+{% extends 'layout/basicCNMenu.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container mb-3">
+        <div class="row mb-5">
+            <h3 class="text-center">Programa Institucional Tutorial</h3>
+        </div>
+        <div class="row my-3">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                {% if realizado == 1 %}
+                    <div class="alert alert-success mb-2" role="alert">
+                        <div>Ya haz hecho este reporte</div>
+                    </div>
+                    <div class="alert alert-info mb-2" role="alert">
+                        <div>Al volver a integrar se integrarán los reportes departamentales actuales</div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-2" role="alert">
+                        <div>Al integrar se integrarán los reportes departamentales actuales, podrás volver a integrar los reportes más tarde cuando estén todos los reportes departamentales</div>
+                    </div>
+                {% endif %}
+                {% if error is not defined %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <div>{{error}}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                {% if exito is not defined %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <div>{{exito}}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row my-3">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 text-center">
+                {% if realizado == 1 %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <button type="submit" class="btn btn-primary" style="background-color: #1b396a">Volver a integrar</button>
+                    </form>
+                {% else %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <button type="submit" class="btn btn-primary" style="background-color: #1b396a">Integrar</button>
+                    </form>
+                {% endif %}
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row mb-3">
+            <div class="table-responsive">
+                <table class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
+                    <thead>
+                        <tr class="text-white" style="background-color: #1B396A;">
+                            <th scope="col">#</th>
+                            <th scope="col">Coordinador</th>
+                            <th scope="col">Departamento</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Año</th>
+                            <th scope="col">Periodo</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for departamento in departamentos %}
+                            <tr>
+                                <td>{{departamento.id}}</td>
+                                <td>
+                                    {% for coor in coordinadores %}
+                                        {% if coor.idDepartamentoAcademico_id == departamento.id %}
+                                            {{coor.user.first_name}} {{coor.user.last_name}}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>{{departamento}}</td>
+                                <td>Plan de Acción Tutorial</td>
+                                {% for reporte in patDepartamentales %}
+                                    {% if reporte.grupo_id == grupo.id %}
+                                        <td>{{reporte.fecha}}</td>
+                                        <td>{{reporte.ano}}</td>
+                                        <td>{{reporte.periodo}}</td>
+                                        <td><span class="badge text-bg-success rounded-pill">Realizada</span></td>
+                                        <td>
+                                            <div class="d-grid gap-2">
+                                                <a href="{{reporte.archivo.url}}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver Reporte</a>
+                                            </div>
+                                        </td>
+                                    {% elif forloop.counter == reportesGrupales|length %}
+                                        <td>------</td>
+                                        <td>------</td>
+                                        <td>------</td>
+                                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                                        <td></td>
+                                    {% endif %}
+                                    {% empty %}
+                                        <td>------</td>
+                                        <td>------</td>
+                                        <td>------</td>
+                                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                                        <td></td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>    
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script>
+        departamentos = [];
+        {% for departamento in departamentos %}
+        departamentos.push({id:{{departamento.id}},departamento: "{{departamento}}"});
+        {% endfor %}
+        reportesSemestrales = [];
+        {% for reporte in patDepartamentales %}
+        reportesSemestrales.push({id: "{{reporte.grupo_id}}", fecha: "{{reporte.fecha|date:'d/m/Y'}}", archivo: "{% static reporte.archivo %}", ano: "{{reporte.ano}}", periodo: "{{reporte.periodo}}" });
+        {% endfor %}
+        console.log(reportesSemestrales)
+        coordinadores = [];
+        {% for coor in coordinadores %}
+        coordinadores.push({idDep: "{{coor.idDepartamentoAcademico_id}}", nombre: "{{coor.user.first_name}} {{coor.user.last_name}}"});
+        {% endfor %}
+        var linea = ""
+        departamentos.forEach( function(valor, indice, array) {
+            linea += `<tr><td>`+valor['id']+`</td>`;
+            coordinadores.forEach( function(valor3, indice3, array3) {
+                if(valor['id'] == valor3['idDep']){
+                    linea += `<td>`+valor3['nombre']+`</td>`
+                }
+            });
+            linea += `<td>`+valor['departamento']+`</td>
+            <td>Plan de Acción Tutorial</td>`;
+            var encontrado = false;
+            if(reportesSemestrales.length == 0){
+                linea += `<td>------</td>
+                    <td>------</td>
+                    <td>------</td>
+                    <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                    <td></td>`;
+            }else{
+                reportesSemestrales.forEach((valor2, indice2, array2) => {
+                    if(valor['id'] == valor2['id']){
+                        linea += `<td>`+valor2['fecha']+`</td><td>`+ valor2['ano'] +`</td><td>`+ valor2['ano'] +`
+                        <td><span class="badge text-bg-success rounded-pill">Realizada</span></td>
+                        <td>
+                            <div class="d-grid gap-2">
+                                <a href="`+valor2['archivo']+`" class="btn btn-primary" role="button" target="_blank">Ver Reporte</a>
+                            </div>
+                        </td></tr>`;
+                        encontrado = true;
+                    }
+                    if(indice2 == reportesSemestrales.length - 1 && encontrado == false){
+                        linea += `<td>------</td>
+                        <td>------</td>
+                        <td>------</td>
+                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                        <td></td>`;
+                    }
+                });
+            }
+            $("#tablita").html(linea);
+        });
+    </script>
+{% endblock content %}

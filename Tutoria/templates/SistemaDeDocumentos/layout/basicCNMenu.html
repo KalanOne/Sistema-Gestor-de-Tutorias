@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.1/af-2.5.1/b-2.3.2/b-colvis-2.3.2/b-html5-2.3.2/b-print-2.3.2/cr-1.6.1/date-1.2.0/fc-4.2.1/fh-3.3.1/kt-2.8.0/r-2.4.0/rg-1.3.0/rr-1.3.1/sc-2.0.7/sb-1.4.0/sp-2.1.0/sl-1.5.0/sr-1.2.0/datatables.min.css"/>
+  </head>
+
+  <body style="background-color: #f3f4f6">
+    <header class="p-3 text-white" style="background-color: #1b396a">
+      <div class="container">
+        <div
+          class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+        >
+          <a
+            href="#"
+            class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
+          >
+            <img
+              src="{% static 'LOGO_TECNM.png' %}"
+              height="50"
+              class="bi me-2"
+            />
+          </a>
+          <ul
+            class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"
+          ></ul>
+          <div class="text-end my-sm-2 my-md-0">
+            <a class="navbar-brand text-wrap" href="#"
+              >Sistema de Gestión de Tutorías</a
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+    <nav class="navbar navbar-expand-lg mb-5" style="background-color: #e3f2fd">
+      <div class="container">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navMenuOpciones"
+          aria-controls="navMenuOpciones"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenuOpciones">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="{% url 'paginaInicio' %}"
+                ><i class="bi bi-house"></i
+              ></a>
+            </li>
+            {% for group in gruops %}
+                {% if group.name == 'Tutorado' %}
+                    {% if cuentaGrupo == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cuestionariosTutorado' %}">Cuestionarios</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'misCitasTutorado' %}">Ayuda Psicologica</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'perfilTutorado' %}">Perfil</a>
+                    </li>
+                {% else %}
+                    {% if group.name == 'Tutor' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Tutor_SelectGruposReporteSemestralV2' %}">Reporte Semestral Grupal</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Tutor_VerReportesSemestralesV2' %}">Ver Reportes Semestrales Grupales</a>
+                        </li>
+                    {% endif %}
+                    {% if group.name == 'Coordinador de Tutoria del Departamento Académico' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_SelectReporteSemestralGrupalV2' %}">Reporte Semestral Departamental</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralGrupalV2' %}">Ver Reportes Semestrales Grupales</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarReporteSemestralDepartamentalV2' %}">Ver Reportes Semestrales Departamentales</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_SelectDiagnosticoInstitucionalV2' %}">Plan de Acción Tutorial</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarPlanDeAccionTutorialV2' %}">Ver Planes de Acción Tutorial</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinadorTutoriaDepartamentoAcademico_VisualizarDiagnosticoInstitucionalV2' %}">Ver Diagnósticos Institucionales</a>
+                        </li>
+                    {% endif %}
+                    {% if group.name == 'Jefe de Departamento Académico' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listaTutor' %}">Lista de Tutores</a>
+                        </li>
+                    {% endif %}
+                    {% if group.name == 'Coordinación Institucional de Tutoría' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinacionInstitucionalTutoria_CrearDiagnosticoInstitucionalTutoriaV2' %}">Diagnóstico Institucional</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinacionInstitucionalTutoria_VisualizarTodosLosDocumentosV2' %}">Todos Los Documentos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'CoordinacionInstitucionalTutoria_IntregarReporteInstitucionalTutoriaV2' %}">Reporte Semestral Institucional</a>
+                        </li>
+                    {% endif %}
+                    {% if group.name == 'Jefe de Desarrollo Académico' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'JefeDesarrolloAcademico_IntregarProgramaInstitucionalTutorialV2' %}">Programa Institucional Tutorial</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'JefeDesarrolloAcademico_VisualizarPlanAccionTutorialV2' %}">Ver Planes de Acción Tutorial</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'JefeDesarrolloAcademico_VisualizarProgramaInstitucionalTutorialV2' %}">Ver Programa Institucional Tutorial</a>
+                        </li>
+                    {% endif %}
+                    {% if forloop.counter == gruops|length %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'perfilTodos' %}">Perfil</a>
+                    </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="text-end my-sm-2 my-md-0">
+          <a href="{% url 'cierreSesion' %}" class="nav-link"
+            ><i class="bi bi-box-arrow-left"></i
+          ></a>
+        </div>
+      </div>
+    </nav>
+
+    {% block content %}{% endblock content %}
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.13.1/af-2.5.1/b-2.3.2/b-colvis-2.3.2/b-html5-2.3.2/b-print-2.3.2/cr-1.6.1/date-1.2.0/fc-4.2.1/fh-3.3.1/kt-2.8.0/r-2.4.0/rg-1.3.0/rr-1.3.1/sc-2.0.7/sb-1.4.0/sp-2.1.0/sl-1.5.0/sr-1.2.0/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#tabla').DataTable({
+                "dom": 'Bfrtip',
+                lengthMenu: [
+                    [ 3, 5, 10, 25, 50, -1 ],
+                    [ '3 rows', '5 rows', '10 rows', '25 rows', '50 rows', 'Show all' ]
+                ],
+                "buttons": ["pageLength","copy", "csv", "excel", "pdf", "print"],
+                "language": {
+                    url: '//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json'
+                },
+                "ordering": true,
+            });
+        });
+     </script>
+
+    {% block JS %}{% endblock JS %}
+  </body>
+</html>

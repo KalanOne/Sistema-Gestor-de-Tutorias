@@ -13,8 +13,8 @@ Estados:
     Cita:
         Espera
         Citado
-        Alta (Si se atendio)
-        Baja (No se atendio)
+        Atendido (Si se atendio)
+        No atendido (No se atendio)
 
     Credito complementario:
         Espera
@@ -51,11 +51,10 @@ Estados:
         Cerrado
         Espera
         Citado
-        Alta
-        Baja
+        Atendido
+        No atendido
         Aceptado
         Rechazado
-
 
 Grupo de respuestas:
 
@@ -114,7 +113,7 @@ Motivo:
         Depresión
         Ansiedad
         Estrés
-        Adicción o transtorno por sustancias
+        Adicción o trastorno por sustancias
     
     Médico:
         Dolor de cabeza
@@ -123,3 +122,25 @@ Motivo:
         Dolor de estómago
         Dolor de pierna
         Dolor de pie
+
+Grupos:
+    Academia
+    Coordinación Institucional de Tutoría
+    Coordinador de Tutoria del Departamento Académico
+    Jefe de Departamento Académico
+    Jefe de Desarrollo Académico
+    Subdirector Académico
+    Tutor
+    Encargado de Créditos Complementarios
+    Tutorado
+    Psicológico
+    Médico
+
+Subdirector -> Jefe de Desarrollo Academico 1 por institucion
+                Coordinación Institucional de Tutoria 1 por institucion
+
+Jefe de Desarrollo Academico -> Jefe de Departamento Academico 1 por Departamento
+
+Coordinación Institucional de Tutoria -> Coordinador de Tutoria del Departamento Academia 1 por Departamento
+
+

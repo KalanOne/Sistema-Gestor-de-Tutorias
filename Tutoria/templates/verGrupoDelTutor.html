@@ -1,28 +1,164 @@
-{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}
+{% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}{%load crispy_forms_tags %}
 <div class="container">
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
-    <div class="row">
-      <div class="col">
-        <a href="{% url 'crearGrupo' tutor %}" class="btn btn-primary">Crear grupo <i class="bi bi-plus-circle"></i></a>
-        
+  <div class="text">
+    {% if sobrecargaGrupo == True %}
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+      <div class="row">
+        <div class="col">
+          <button type="button" class="btn btn-primary" id="liveToastBtn">
+            Crear grupo <i class="bi bi-plus-circle"></i>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row row-cols-1 row-cols-md-3 g-3">
-    {% for grupo in grupos %}
-    <div class="col">
-      <div class="card h-100 text-center">
-        <div class="card-body">
-          <h5 class="card-title">{{grupo.grupo}}</h5>
-          <p class="card-text my-4">{{grupo.idEstado}}</p>
-          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a href="{% url 'listarAlumnos' grupo.id%}" class="btn btn-primary">Listar alumnos</a>
-            <a href="#" class="btn btn-primary">Editar grupo</a>
+    <div
+      class="toast-container position-fixed bottom-0 end-0 p-3"
+      style="z-index: 100"
+    >
+      <div
+        id="liveToast"
+        class="toast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header" style="background-color: #1b396a">
+          <i class="bi bi-circle-fill" style="color: red"></i>
+          <strong class="me-auto" style="color: white"> &nbsp;SGT</strong>
+          <small style="color: white">Ahora</small>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">
+          No se puede crear otro grupo, se ha alcanzado el límite
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+      <div class="row">
+        <div class="col">
+          <a
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            Crear grupo <i class="bi bi-plus-circle"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    {% comment %} Modal para subir grupo {% endcomment %}
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header text-white" style="background-color: #1B396A;">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Agregar Grupo
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form method="POST">
+              {% csrf_token %} {{ formgrupo|crispy }}
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-primary text-center m-1"
+                >
+                  Crear
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
-    {% endfor %}
+    {% endif %}
   </div>
+
+  {% if vacio == True %}
+  <div class="container">
+    <div class="row">
+      <div class="col-1 col-md-3"></div>
+      <div class="col-10 col-md-6 bg-light shadow p-3 mb-5 rounded">
+        <h6 class="text-center">El tutor no tiene grupos registrados</h6>
+      </div>
+      <div class="col-1 col-md-3"></div>
+    </div>
+  </div>
+  {% else %}
+  <div class="table-resposive">
+    <table
+      class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white"
+      id="tabla"
+    >
+      <thead>
+        <tr class="text-white" style="background-color: #1B396A;">
+          <th scope="col" class="text-center">Grupo</th>
+          <th scope="col" class="text-center">Tutor</th>
+          <th scope="col" class="text-center">Institución</th>
+          <th scope="col" class="text-center">Estado</th>
+          <th scope="col" class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="table-secondary">
+        {% for grupo in grupos %}
+        <tr>
+          <td class="text-center">{{grupo.grupo}}</td>
+          <td class="text-center">
+            {{grupo.idPersonalTec.user.first_name}}
+            {{grupo.idPersonalTec.user.last_name}}
+          </td>
+          <td class="text-center">{{grupo.idInstitucion.nombreInstitucion}}</td>
+          <td class="text-center">
+            {% if grupo.idEstado.estado == "Activo" %}
+              <span class="badge text-bg-success rounded-pill">{{grupo.idEstado.estado}}</span>
+            {% else %}
+              {% if grupo.idEstado.estado == "Cerrado" %}
+                <span class="badge text-bg-danger rounded-pill">{{grupo.idEstado.estado}}</span>
+              {% else %}
+                <span class="badge text-bg-warning rounded-pill">{{grupo.idEstado.estado}}</span>
+              {% endif %}
+              
+            {% endif %}
+          </td>
+          <td class="text-center">
+            <div class="row text">
+              <div class="col">
+                <a
+                  class="mx-2"
+                  href="{% url 'listarAlumnos' grupo.id%}"
+                  style="text-decoration: none; color: black"
+                >
+                  <i class="bi bi-card-list"></i>
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
 </div>
-{% endblock content %}
+{% endblock content %} {% block JS %}
+<script src="{% static 'JS/perfilTutorado.js' %}"></script>
+{% endblock JS %}

@@ -1,0 +1,48 @@
+{% extends 'layout\basicCNMenu.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-5">
+            <h1 class="text-center h1">
+                Plan de Acción Tutorial
+            </h1>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            {% if exito is not defined %}
+                <div class="alert alert-success" role="alert">
+                    <div>{{exito}}</div>
+                </div>
+            {% endif %}
+            {% if error is not defined %}
+                <div class="alert alert-danger" role="alert">
+                    <div>{{error}}</div>
+                </div>
+            {% endif %}
+            {% if info is not defined %}
+                <div class="alert alert-info" role="alert">
+                    <div>{{info}}</div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            {% if exito is defined %}
+                <form method="post" enctype = "multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary" style="background-color: #1b396a">Enviar</button>
+                </form>
+            {% endif %}
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+{% endblock content %}

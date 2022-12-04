@@ -4,6 +4,7 @@ from .models import *
 from django.contrib.auth.models import User
 import datetime
 from crispy_forms.helper import FormHelper
+from django.contrib.auth.forms import PasswordChangeForm
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -12,8 +13,34 @@ class UserForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(attrs={'class':'form-control', 'id':'User_username','required':'true'}),
             'first_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_first_name','required':'true'}),
-            'last_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_last_name', 'hidden':'true','required':'true'}),
+            'last_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_last_name','required':'true'}),
             'email': forms.TextInput(attrs={'class':'form-control', 'id':'User_email','required':'true'}),
+        }
+
+class RegistrarUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = {'username','first_name','last_name','email'}
+        labels = {
+            'username': ('Nombre de usuario'),
+            'first_name': ('Nombre'),
+            'last_name': ('Apellidos'),
+            'email': ('Correo Institucional')
+        }
+        widgets = {
+            'username': forms.TextInput(attrs={'required':'true'}),
+            'first_name': forms.TextInput(attrs={'required':'true'}),
+            'last_name': forms.TextInput(attrs={'required':'true'}),
+            'email': forms.EmailInput(attrs={'required':'true'}),
+        }
+
+class EditarUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = {'first_name','last_name'}
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_first_name','required':'true'}),
+            'last_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_last_name','required':'true'}),
         }
 
 class PerfilTutoradoForm(forms.ModelForm):
@@ -63,6 +90,16 @@ class PerfilPersonalTecForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_telefono'}),
             'correoPersonal': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_correoPersonal'}),
             'edificio': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_edificio'})
+        }
+
+class EditarPerfilPersonalTecForm(forms.ModelForm):
+    class Meta:
+        model = PersonalTec
+        fields = {'domicilio','telefono', 'correoPersonal'}
+        widgets = {
+            'domicilio': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_domicilio'}),
+            'telefono': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_telefono'}),
+            'correoPersonal': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_correoPersonal'}),
         }
 
 class EnviarCuestionario(forms.ModelForm):
@@ -130,3 +167,161 @@ class CrearCuestionarioForm(forms.ModelForm):
         widgets = {
             'fechaLimite': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today(),})
         }
+
+class CambioDePeriodoInstitucion(forms.ModelForm):
+    class Meta:
+        model = Institucion
+        fields = {'anoActual', 'periodoActual'}
+        labels = {
+            'anoActual': ('Año nuevo'),
+            'periodoActual': ('Periodo nuevo')
+        }
+
+class CambiarPasswordForm(PasswordChangeForm):
+    old_password= forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
+    new_password1= forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
+    new_password2= forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
+
+    class Meta:
+        model = User
+        fields = ('old_password','new_password1','new_password2')
+
+
+class RegistrarTutoradosForm(forms.ModelForm):
+    archivo= forms.FileField()
+    class Meta:
+        model = registrarAlumno
+        fields = {'archivo'}
+
+class RegistrarPersonalTecForm(forms.ModelForm):
+    archivo= forms.FileField()
+    class Meta:
+        model = registrarPersonalTec
+        fields = {'archivo'}
+
+class RegistrarPersonalTecForm2(forms.ModelForm):
+    class Meta:
+        model = PersonalTec
+        fields = {'idDepartamentoAcademico'}
+        labels = {
+            'idDepartamentoAcademico': ('Departamento Académico')
+        }
+        widgets = {
+            'idDepartamentoAcademico': forms.Select(attrs={'required':'true'})
+        }
+
+class SubirCreditoForm(forms.ModelForm):
+    class Meta:
+        model = Credito
+        fields = {'nombre_doc','archivo'}
+        labels = {
+            'archivo': ('Sube tu archivo')
+        }
+
+class DecisionCreditoForm(forms.ModelForm):
+    class Meta:
+        model = Credito
+        fields = {'idEstado','comentarios'}
+        labels = {
+            'idEstado': ('Seleccione el estado del credito'),
+            'comentarios': ('Comentarios')
+        }
+
+class SolicitudCitaPsicologo(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = {'idMotivo', 'descripcion', 'fechaCita', 'horaCanalizacion', 'lugar', 'idTutorado'}
+        labels = {
+            'idMotivo': ('Motivo'),
+            'descripcion': ('Descripción'),
+            'fechaCita': ('Fecha'),
+            'horaCanalizacion': ('Hora'),
+            'lugar': ('Lugar'),
+            'idTutorado': ('Tutorado'),
+        }
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'rows' : 3}),
+            'fechaCita': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today(),}),
+            'horaCanalizacion': forms.TimeInput(attrs={'type': 'time'}),
+        }
+        required = {'descripcion', 'fechaCita', 'horaCanalizacion', 'lugar'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.Meta.required:
+            self.fields[field].required = True
+
+class AsignarCitaPricologo(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = {'fechaCita', 'horaInicio', 'horaFinal', 'lugar'}
+        labels = {
+            'fechaCita': ('Fecha'),
+            'horaInicio': ('Rango de hora (Inicio)'),
+            'horaFinal': ('Rango de hora (Final)'),
+            'lugar': ('Lugar'),
+        }
+        widgets = {
+            'fechaCita': forms.DateInput(attrs={'type': 'date', 'min': datetime.date.today()}),
+            'horaCanalizacion': forms.TimeInput(attrs={'type': 'time'}),
+            'horaInicio': forms.TimeInput(attrs={'type': 'time'}),
+            'horaFinal': forms.TimeInput(attrs={'type': 'time'})
+        }
+        required = {'fechaCita', 'horaInicio', 'lugar', 'horaFinal'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.Meta.required:
+            self.fields[field].required = True
+
+class ConcluirCitaPsicologo(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = {'horaCanalizacion', 'idEstado'}
+        labels = {
+            'horaCanalizacion': ("Hora canalizada"),
+            'idEstado': ('Estado final'),
+        }
+        widgets = {
+            'horaCanalizacion': forms.TimeInput(attrs={'type': 'time'})
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        estadoAceptado = Estado.objects.get(estado = 'Atendido')
+        estadoRechazado = Estado.objects.get(estado = 'No atendido')
+        elecciones = [
+            ("", "------"),
+            (estadoAceptado.id, estadoAceptado.estado),
+            (estadoRechazado.id, estadoRechazado.estado)
+        ]
+        self.fields['idEstado'].choices = elecciones
+
+class RegistroCitaMedico(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = {'fechaCita', 'horaCanalizacion', 'lugar', 'descripcion', 'idMotivo', 'idTutorado'}
+        labels = {
+            'fechaCita': ('Fecha de atención'),
+            'horaCanalizacion': ('Hora de atención'),
+            'lugar': ('Lugar de atención'),
+            'descripcion': ('Descripción'),
+            'idMotivo': ('Motivo de atención'),
+            'idTutorado': ('Tutorado')
+        }
+        widgets = {
+            'fechaCita': forms.DateInput(attrs={'type': 'date'}),
+            'horaCanalizacion': forms.TimeInput(attrs={'type': 'time'}),
+            'descripcion': forms.Textarea(attrs={'rows' : 5}),
+        }
+        required = {'fechaCita', 'horaCanalizacion', 'lugar', 'descripcion', 'idMotivo', 'idTutorado'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.Meta.required:
+            self.fields[field].required = True
+        ordenMedi = Orden.objects.get(nombreOrden = 'Médico')
+        motivos = Motivo.objects.filter(idOrden_id = ordenMedi.id)
+        self.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]

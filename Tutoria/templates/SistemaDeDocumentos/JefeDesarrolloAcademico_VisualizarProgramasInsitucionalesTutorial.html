@@ -1,0 +1,43 @@
+{% extends 'layout/basicCNMenu.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row mb-5"><h1 class="text-center">Programas Institucionales Tutoriales</h1></div>
+        <div class="row mb-3">
+            <div class="table-responsive">
+                <table class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
+                    <thead>
+                        <tr class="text-white" style="background-color: #1B396A;">
+                            <th scope="col">#</th>
+                            <th scope="col">Institución</th>
+                            <th scope="col">Jefe de Desarrollo</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Año</th>
+                            <th scope="col">Periodo</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reporte in programas %}
+                            <tr>
+                                <th scope="row">{{reporte.id}}</th>
+                                <td>{{reporte.institucion}}</td>
+                                <td>{{reporte.jefe.user.first_name}} {{reporte.jefe.user.last_name}}</td>
+                                <td>Programa Institucional Tutorial</td>
+                                <td>{{reporte.fecha}}</td>
+                                <td>{{reporte.ano}}</td>
+                                <td>{{reporte.periodo}}</td>
+                                <td>
+                                    <div class="d-grid gap-2">
+                                        <a href="{% static reporte.archivo %}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

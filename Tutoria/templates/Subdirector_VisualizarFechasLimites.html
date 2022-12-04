@@ -1,0 +1,408 @@
+{% extends 'layout/basicCNMenu.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% if periodoActual == 1 %}
+
+        <div class="container">
+            <div class="row mb-5">
+                <h1 class="text-center">{{anoActual}} - 1</h1>
+            </div>
+            <div class="row mb-5">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 d-grid gap-2">
+                    <button type="button" id="btnCambio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCambioPeriodo" style="background-color: #1B396A;">
+                        Cambiar de periodo
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <div class="modal fade" id="modalCambioPeriodo" tabindex="-1" aria-labelledby="modalCambioPeriodoLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar de Periodo</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post">
+                                        {% if advertenciaCambioPeriodo %}
+                                            <div class="alert alert-warning" role="alert">
+                                                <div>Aún no pasan las fechas limites para todos los reportes. Al cambiar de periodo los reportes ya no podrán ser entregados.</div>
+                                            </div> 
+                                        {% endif %}
+                                        {% if error is not defined %}
+                                            <div class="alert alert-danger" role="alert">
+                                                <div>{{ error }}</div>
+                                            </div>                
+                                        {% endif %}
+                                        {% csrf_token %}
+                                        {{ formCambioPeriodo|crispy }}
+                                        <button type="submit" class="btn btn-primary">Cambiar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <h3 class="text-center">Fechas Límites Actuales</h3>
+            </div>
+            <div class="row mb-5">
+                <div class="col-md-10 mx-auto">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
+                            <thead>
+                                <tr class="text-white" style="background-color: #1B396A;">
+                                    <th scope="col">Reporte</th>
+                                    <th scope="col">Fecha Límite</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Diagnóstico Institucional</th>
+                                    <td>{{fechas.diagnosticoInstitucional}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDia" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Plan de Acción Tutorial Departamental</th>
+                                    <td>{{fechas.planAccionTutorial}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalpat" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Programa Institucional Tutorial</th>
+                                    <td>{{fechas.programaInstitucionalTutorial}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalpit" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Reporte Semestral Grupal</th>
+                                    <td>{{fechas.reporteSemestralGrupal}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalgrupal" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Reporte Semestral Departamental</th>
+                                    <td>{{fechas.reporteSemestralDepartamental}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modaldepartamental" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Reporte Semestral Institucional</th>
+                                    <td>{{fechas.reporteSemestralInstitucional}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalinstitucional" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% elif periodoActual == 2 %}
+    
+        <div class="container">
+            <div class="row mb-5">
+                <h1 class="text-center">{{anoActual}} - 2</h1>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 d-grid gap-2">
+                    <button type="button" id="btnCambio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCambioPeriodo" style="background-color: #1B396A;">
+                        Cambiar de periodo
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <div class="modal fade" id="modalCambioPeriodo" tabindex="-1" aria-labelledby="modalCambioPeriodoLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar de Periodo</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post">
+                                        {% if advertenciaCambioPeriodo %}
+                                            <div class="alert alert-warning" role="alert">
+                                                <div>Aún no pasan las fechas limites para todos los reportes. Al cambiar de periodo los reportes ya no podrán ser entregados.</div>
+                                            </div>
+                                        {% endif %}
+                                        {% if error is not defined %}
+                                            <div class="alert alert-danger" role="alert">
+                                                <div>{{ error }}</div>
+                                            </div>                
+                                        {% endif %}
+                                        {% csrf_token %}
+                                        {{ formCambioPeriodo|crispy }}
+                                        <button type="submit" class="btn btn-primary">Cambiar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    {% elif periodoActual == 3 %}
+    
+        <div class="container">
+            <div class="row mb-5">
+                <h1 class="text-center">{{anoActual}} - 3</h1>
+            </div>
+            <div class="row mb-5">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 d-grid gap-2">
+                    <button type="button" id="btnCambio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCambioPeriodo" style="background-color: #1B396A;">
+                        Cambiar de periodo
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <div class="modal fade" id="modalCambioPeriodo" tabindex="-1" aria-labelledby="modalCambioPeriodoLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar de Periodo</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post">
+                                        {% if advertenciaCambioPeriodo %}
+                                            <div class="alert alert-warning" role="alert">
+                                                <div>Aún no pasan las fechas limites para todos los reportes. Al cambiar de periodo los reportes ya no podrán ser entregados.</div>
+                                            </div> 
+                                        {% endif %}
+                                        {% if error is not defined %}
+                                            <div class="alert alert-danger" role="alert">
+                                                <div>{{ error }}</div>
+                                            </div>                
+                                        {% endif %}
+                                        {% csrf_token %}
+                                        {{ formCambioPeriodo|crispy }}
+                                        <button type="submit" class="btn btn-primary">Cambiar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <h3 class="text-center">Fechas Límites Actuales</h3>
+            </div>
+            <div class="row mb-5">
+                <div class="col-md-10 mx-auto">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
+                            <thead>
+                                <tr class="text-white" style="background-color: #1B396A;">
+                                    <th scope="col">Reporte</th>
+                                    <th scope="col">Fecha Límite</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Diagnóstico Institucional</th>
+                                    <td>{{fechas.diagnosticoInstitucional}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDia" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Plan de Acción Tutorial Departamental</th>
+                                    <td>{{fechas.planAccionTutorial}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPat" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Programa Institucional Tutorial</th>
+                                    <td>{{fechas.programaInstitucionalTutorial}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPit" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Reporte Semestral Grupal</th>
+                                    <td>{{fechas.reporteSemestralGrupal}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalGrupal" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Reporte Semestral Departamental</th>
+                                    <td>{{fechas.reporteSemestralDepartamental}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDepartamental" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Reporte Semestral Institucional</th>
+                                    <td>{{fechas.reporteSemestralInstitucional}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalInstitucional" style="background-color: #1B396A;">
+                                            Cambiar fecha
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+    {% if periodoActual == 1 or periodoActual == 3 %}
+        <div class="modal fade" id="modalDia" tabindex="-1" aria-labelledby="modalDiaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalDiaLabel">Cambio fecha Diagnóstico Institucional</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'Subdirector_ModFechaLimiteDiag' %}" method="post">
+                            {% csrf_token %}
+                            {{ dia|crispy }}
+                            <button type="submit" class="btn btn-primary">Cambiar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalPat" tabindex="-1" aria-labelledby="modalPatLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalPatLabel">Cambio fecha Plan de Acción Tutorial</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'Subdirector_ModFechaLimitePAT' %}" method="post">
+                            {% csrf_token %}
+                            {{ pat|crispy }}
+                            <button type="submit" class="btn btn-primary">Cambiar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalPit" tabindex="-1" aria-labelledby="modalPitLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalPitLabel">Cambio fecha Programa Institucional Tutorial</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'Subdirector_ModFechaLimitePIT' %}" method="post">
+                            {% csrf_token %}
+                            {{ pit|crispy }}
+                            <button type="submit" class="btn btn-primary">Cambiar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalGrupal" tabindex="-1" aria-labelledby="modalGrupalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalGrupalLabel">Cambio fecha Reporte Semestral Grupal</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'Subdirector_ModFechaLimiteGrupal' %}" method="post">
+                            {% csrf_token %}
+                            {{ grupal|crispy }}
+                            <button type="submit" class="btn btn-primary">Cambiar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalDepartamental" tabindex="-1" aria-labelledby="modalDepartamentalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalDepartamentalLabel">Cambio fecha Reporte Semestral Departamental</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'Subdirector_ModFechaLimiteDepartamental' %}" method="post">
+                            {% csrf_token %}
+                            {{ departamental|crispy }}
+                            <button type="submit" class="btn btn-primary">Cambiar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalInstitucional" tabindex="-1" aria-labelledby="modalInstitucionalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalInstitucionalLabel">Cambio fecha Reporte Semestral Institucional</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'Subdirector_ModFechaLimiteInstitucional' %}" method="post">
+                            {% csrf_token %}
+                            {{ institucional|crispy }}
+                            <button type="submit" class="btn btn-primary">Cambiar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content %}
+
+{% block JS %}
+    {% if error is not defined %}
+    <script>
+        $(document).ready(function() {
+            $("#btnCambio").click()
+        });
+    </script>
+    {% endif %}
+{% endblock JS %}

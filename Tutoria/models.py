@@ -21,8 +21,16 @@ class Estado(models.Model):
 
 
 class Institucion(models.Model):
+    opciones=(
+            (1, 1),
+            (2, 2),
+            (3, 3)
+    )
+
     nombreInstitucion = models.CharField(max_length=100)
     ruta = models.CharField(max_length=300, blank = True, null = True)
+    anoActual = models.IntegerField()
+    periodoActual = models.IntegerField(choices = opciones)
 
     def Mostrar(self):
         return "{}".format(self.nombreInstitucion)
@@ -41,9 +49,10 @@ class Grupo(models.Model):
     opciones=(
             ('A','A'),
             ('B','B'),
-            ('C','C')
+            ('C','C'),
+            ('D','D')
     )   
-    grupo = models.CharField(max_length=100, blank=True, null=True, choices=opciones)
+    grupo = models.CharField(max_length=100, blank=True, null=True, choices = opciones)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE, null = True, blank = True)
     idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
@@ -98,10 +107,10 @@ class PadreMadreTutor(models.Model):
 
 
 class Tutorado(models.Model):
-    domicilio = models.CharField(max_length=100)
-    telefono = models.CharField(max_length=10)
-    correoPersonal = models.EmailField(max_length = 254)
-    semestre = models.PositiveIntegerField()
+    domicilio = models.CharField(max_length=100, blank = True)
+    telefono = models.CharField(max_length=10, blank = True)
+    correoPersonal = models.EmailField(max_length = 254, blank = True)
+    semestre = models.PositiveIntegerField(blank = True)
     idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE, null = True, blank = True)
     idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
@@ -109,7 +118,7 @@ class Tutorado(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def Mostrar(self):
-        return "{} - {}".format(self.correoPersonal, self.semestre)
+        return "{} {} - {}".format(self.user.first_name, self.user.last_name, self.user.username)
 
     def __str__(self):
         return self.Mostrar()
@@ -122,16 +131,16 @@ class Tutorado(models.Model):
 
 
 class PersonalTec(models.Model):
-    domicilio = models.CharField(max_length=100)
-    telefono = models.CharField(max_length=10)
-    correoPersonal = models.EmailField(max_length = 254)
-    edificio = models.CharField(max_length=100)
-    idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
+    domicilio = models.CharField(max_length=100, blank = True)
+    telefono = models.CharField(max_length=10, blank = True)
+    correoPersonal = models.EmailField(max_length = 254, blank = True)
+    edificio = models.CharField(max_length=100, blank = True)
+    idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE, null = True, blank = True)
     idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null = True, blank = True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def Mostrar(self):
-        return "{} - {}".format(self.correoPersonal, self.edificio)
+        return "{} {} - {}".format(self.user.first_name, self.user.last_name, self.user.username)
 
     def __str__(self):
         return self.Mostrar()
@@ -152,7 +161,7 @@ class PersonalMed(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null = True, blank = True)
 
     def Mostrar(self):
-        return "{} - {}".format(self.correoPersonal, self.edificio)
+        return "{} {} - {}".format(self.user.first_name, self.user.last_name, self.user.username)
 
     def __str__(self):
         return self.Mostrar()
@@ -201,198 +210,6 @@ class CuestionarioContestado(models.Model):
         verbose_name= 'CuestionarioContestado'
         verbose_name_plural= 'CuestionarioContestados'
         db_table= 'cuestionarioContestado'
-        ordering= ['id']
-
-
-class GrupoRespuesta(models.Model):
-    grupoRespuesta = models.CharField(max_length=100)
-
-    def Mostrar(self):
-        return "{}".format(self.grupoRespuesta)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'GrupoRespuesta'
-        verbose_name_plural= 'GrupoRespuesta'
-        db_table= 'grupoRespuesta'
-        ordering= ['id']
-
-
-class Pregunta(models.Model):
-    pregunta = models.CharField(max_length=100)
-    idGrupoRespuesta = models.ForeignKey('GrupoRespuesta', on_delete=models.CASCADE)
-    def Mostrar(self):
-        return "{}".format(self.pregunta)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'Pregunta'
-        verbose_name_plural= 'Preguntas'
-        db_table= 'pregunta'
-        ordering= ['id']
-
-
-class Respuesta(models.Model):
-    respuesta = models.CharField(max_length=100)
-    idGrupoRespuesta = models.ForeignKey('GrupoRespuesta', on_delete=models.CASCADE)
-    def Mostrar(self):
-        return "{}".format(self.respuesta)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'Respuesta'
-        verbose_name_plural= 'Respuestas'
-        db_table= 'respuesta'
-        ordering= ['id']
-
-
-class RespuestaContestada(models.Model):
-    idCuestionario = models.ForeignKey('Cuestionario', on_delete=models.CASCADE)
-    idPregunta = models.ForeignKey('Pregunta', on_delete=models.CASCADE)
-    idRespuesta = models.ForeignKey('Respuesta', on_delete=models.CASCADE)
-    idTutorado = models.ForeignKey('Tutorado', on_delete=models.CASCADE)
-    def Mostrar(self):
-        return "{} - {} - {} - {}".format(self.idCuestionario, self.idPregunta, self.idRespuesta, self.idTutorado)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'RespuestaContestada'
-        verbose_name_plural= 'RespuestasContestadas'
-        db_table= 'respuestaContestada'
-        ordering= ['id']
-
-
-class PIT(models.Model):
-    folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    fechaLimite = models.DateField()
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
-    idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
-
-    def Mostrar(self):
-        return "{}".format(self.folio)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'PIT'
-        verbose_name_plural= 'PITs'
-        db_table= 'pit'
-        ordering= ['id']
-
-
-class PAT(models.Model):
-    folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    estadoEdicion = models.CharField(max_length=50)
-    fechaLimite = models.DateField()
-    idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
-    
-
-    def Mostrar(self):
-        return "{}".format(self.folio)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'PAT'
-        verbose_name_plural= 'PATs'
-        db_table= 'pat'
-        ordering= ['id']
-
-
-class ReporteSemestralGrupal(models.Model):
-    folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    fechaLimite = models.DateField()
-    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
-    idGrupo = models.ForeignKey('Grupo', on_delete=models.CASCADE, null = True, blank = True)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
-    
-
-    def Mostrar(self):
-        return "{}".format(self.folio)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'ReporteSemestralGrupal'
-        verbose_name_plural= 'ReportesSemestralesGrupales'
-        db_table= 'reporteSemestralGrupal'
-        ordering= ['id']
-
-
-class ReporteSemestralDepartamento(models.Model):
-    folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    fechaLimite = models.DateField()
-    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
-    idDepartamentoAcademico = models.ForeignKey('DepartamentoAcademico', on_delete=models.CASCADE)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
-    
-
-    def Mostrar(self):
-        return "{}".format(self.folio)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'ReporteSemestralDepartamento'
-        verbose_name_plural= 'ReportesSemestralesDepartamentos'
-        db_table= 'reporteSemestralDepartamento'
-        ordering= ['id']
-
-
-class ReporteSemestralInstitucional(models.Model):
-    folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    fechaLimite = models.DateField()
-    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
-    idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE, null = True, blank = True)
-    
-
-    def Mostrar(self):
-        return "{}".format(self.folio)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'ReporteSemestralInstitucional'
-        verbose_name_plural= 'ReportesSemestralesInstitucionales'
-        db_table= 'reporteSemestralInstitucional'
-        ordering= ['id']
-
-
-class ConstanciaTutor(models.Model):
-    folio = models.CharField(max_length=50)
-    ruta = models.CharField(max_length=300, blank = True, null = True)
-    idPersonalTec = models.ForeignKey('PersonalTec', on_delete=models.CASCADE)
-    
-
-    def Mostrar(self):
-        return "{}".format(self.folio)
-
-    def __str__(self):
-        return self.Mostrar()
-
-    class Meta:
-        verbose_name= 'ConstanciaTutor'
-        verbose_name_plural= 'ConstanciaTutores'
-        db_table= 'constanciaTutor'
         ordering= ['id']
 
 
@@ -447,6 +264,7 @@ class Cita(models.Model):
     idPersonalMed = models.ForeignKey('PersonalMed', on_delete=models.CASCADE, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
     idOrden = models.ForeignKey('Orden', on_delete=models.CASCADE)
+    idInstitucion = models.ForeignKey('Institucion', on_delete=models.CASCADE)
     
 
     def Mostrar(self):
@@ -463,6 +281,7 @@ class Cita(models.Model):
 
 
 class Credito(models.Model):
+    nombre_doc = models.CharField(max_length=100, null = True, blank = True)
     archivo = models.FileField(upload_to = 'Tutorado/Creditos')
     comentarios = models.CharField(max_length=200, null = True, blank = True)
     idEstado = models.ForeignKey('Estado', on_delete=models.CASCADE)
@@ -478,4 +297,42 @@ class Credito(models.Model):
         verbose_name= 'Credito'
         verbose_name_plural= 'Creditos'
         db_table= 'credito'
+        ordering= ['id']
+
+
+class registrarAlumno(models.Model):  
+    control = models.CharField(max_length=8)  
+    nombres = models.CharField(max_length=35) 
+    apellidos = models.CharField(max_length=35) 
+    email = models.EmailField(blank=True)  
+    semestre = models.IntegerField()
+
+    def Mostrar(self):
+        return "{} - {}".format(self.nombres, self.apellidos)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'registrarAlumno'
+        verbose_name_plural= 'registrarAlumnos'
+        db_table= 'registrarAlumno'
+        ordering= ['id']
+
+class registrarPersonalTec(models.Model):  
+    username = models.CharField(max_length=30)   
+    nombres = models.CharField(max_length=35) 
+    apellidos = models.CharField(max_length=35) 
+    email = models.EmailField(blank=True)
+
+    def Mostrar(self):
+        return "{} - {}".format(self.nombres, self.apellidos)
+
+    def __str__(self):
+        return self.Mostrar()
+
+    class Meta:
+        verbose_name= 'registrarPersonalTec'
+        verbose_name_plural= 'registrarPersonalTecs'
+        db_table= 'registrarPersonalTec'
         ordering= ['id']

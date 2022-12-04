@@ -1,0 +1,19 @@
+{% extends 'layout/basicCNMenu.html' %} {% block content %} {% load static %}{%load crispy_forms_tags %}
+<div class="container">
+  <form method="POST" autocomplete="off">
+    {% csrf_token %} 
+    {{form|crispy}} 
+    {{formpersonal|crispy}}
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
+      <button type="submit" class="btn btn-sm btn-primary text-center m-1">
+        Crear
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock content %} {% block JS %}
+<script>
+  $(".helptext").hide();
+  $("#hint_id_username").hide();
+</script>
+{% endblock JS %}

@@ -1,0 +1,102 @@
+{% extends 'layout/basicCNMenu.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row mb-5"><h1 class="text-center">Tutores Actuales</h1></div>
+        <div class="row my-5">
+            <div class="col-auto mx-auto">
+                <a href="{% url 'CoordinadorTutoriaDepartamentoAcademico_CrearReporteSemestralDepartamentalV2' %}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Crear Reporte Semestral Departamental</a>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="table-responsive">
+                <table class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
+                    <thead>
+                        <tr class="text-white" style="background-color: #1B396A;">
+                            <th scope="col">#</th>
+                            <th scope="col">Tutor</th>
+                            <th scope="col">Grupo</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablita">
+                        {% comment %} {% for grupo in grupos %}
+                            <tr>
+                                <td>{{grupo.id}}</td>
+                                <td>{{grupo.idPersonalTec.user.first_name}} {{grupo.idPersonalTec.user.last_name}}</td>
+                                <td>{{grupo.grupo}}</td>
+                                <td>Reporte Semestral Grupal</td>
+                                {% for reporte in reportesGrupales %}
+                                    {% if reporte.grupo_id == grupo.id %}
+                                        <td>{{reporte.fecha}}</td>
+                                        <td><span class="badge text-bg-success rounded-pill">Realizada {{forloop.last}}</span></td>
+                                        <td>
+                                            <div class="d-grid gap-2">
+                                                <a href="{% static reporte.archivo %}" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver Reporte</a>
+                                            </div>
+                                        </td>
+                                    {% elif forloop.counter == reportesGrupales|length %}
+                                        <td>------</td>
+                                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                                        <td></td>
+                                    {% endif %}
+                                    {% empty %}
+                                        <td>------</td>
+                                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                                        <td></td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %} {% endcomment %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script>
+        grupos = [];
+        {% for grupo in grupos %}
+        grupos.push({id:{{grupo.id}},tutor: "{{grupo.idPersonalTec.user.first_name}} {{grupo.idPersonalTec.user.last_name}}", nombre: "{{grupo.grupo}}" });
+        {% endfor %}
+        reportesSemestrales = [];
+        {% for reporte in reportesGrupales %}
+        reportesSemestrales.push({grupo: "{{reporte.grupo_id}}", fecha: "{{reporte.fecha|date:'d/m/Y'}}", archivo: "{% static reporte.archivo %}" });
+        {% endfor %}
+        var linea = ""
+        grupos.forEach( function(valor, indice, array) {
+            linea += `<tr><td>`+valor['id']+`</td>
+            <td>`+valor['tutor']+`</td>
+            <td>`+valor['nombre']+`</td>
+            <td>Reporte Semestral Grupal</td>`;
+            var encontrado = false;
+            if(reportesSemestrales.length == 0){
+                linea += `<td>------</td>
+                    <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                    <td></td></tr>`;
+            } else {
+                reportesSemestrales.forEach((valor2, indice2, array2) => {
+                    if(valor['id'] == valor2['grupo']){
+                        linea += `<td>`+valor2['fecha']+`</td>
+                        <td><span class="badge text-bg-success rounded-pill">Realizada</span></td>
+                        <td>
+                            <div class="d-grid gap-2">
+                                <a href="`+valor2['archivo']+`" class="btn btn-primary" role="button" style="background-color: #1b396a" target="_blank">Ver Reporte</a>
+                            </div>
+                        </td></tr>`;
+                        encontrado = true;
+                    }
+                    if(indice2 == reportesSemestrales.length - 1 && encontrado == false){
+                        linea += `<td>------</td>
+                        <td><span class="badge text-bg-danger rounded-pill">No realizada</span></td>
+                        <td></td></tr>`;
+                    }
+                });
+            }
+            $("#tablita").html(linea);
+        });
+    </script>
+{% endblock content %}
