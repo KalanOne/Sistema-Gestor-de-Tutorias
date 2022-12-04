@@ -5,8 +5,6 @@ $(document).ready(function () {
       var btn = $("#boton1");
       var html = "<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span>Cargando..";
       btn.html(html);
-      //alert(html);
-      wait(1000); 
     });
 
 
