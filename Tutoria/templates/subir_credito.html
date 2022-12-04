@@ -1,12 +1,15 @@
-{% extends 'layout/basicCNMenu.html' %}{% block content %}{% load crispy_forms_tags %}
+{% extends 'layout/basicCNMenu.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load static %}
 <div class="container">
   <div class="container">
     <div class="row vh-705 justify-content-center rounded mt-4">
       <div class="col-10">
-        <form method="post" enctype="multipart/form-data">
+        <form id="formCredito" method="post" enctype="multipart/form-data">
           {% csrf_token %} {{form|crispy}}
           <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" type="submit">Subir</button>
+            <button id="boton2" class="btn btn-primary" type="submit">Subir</button>
           </div>
         </form>
         <br />
@@ -14,4 +17,11 @@
     </div>
   </div>
 </div>
+
+  {% block JS %}
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+
+    <script src="{% static 'JS/spinner.js' %}"></script>
+  {% endblock JS %}
+
 {% endblock content %}
