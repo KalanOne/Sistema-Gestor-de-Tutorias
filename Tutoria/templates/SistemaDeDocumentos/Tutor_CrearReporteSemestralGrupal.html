@@ -23,7 +23,7 @@
                 <h3 class="text-center">Reporte Semestral Grupal</h3>
             </div>
             <div class="row">
-                <form action="" method="post">
+                <form action="" method="post" id="formIntegrar">
                     {% csrf_token %}
                     <div class="table-responsive">
                         <table class="table">
@@ -57,7 +57,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <button type="submit" class="btn btn-primary" id="boton1">Enviar</button>
                 </form>
             </div>
         </div>
@@ -83,3 +83,7 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block JS %}
+    <script src="{% static 'JS/spinner.js' %}"></script>
+{% endblock JS %}

@@ -40,16 +40,16 @@
             <div class="col-md-3"></div>
             <div class="col-md-6 text-center">
                 {% if realizado == 1 %}
-                    <form action="" method="post">
+                    <form id="formIntegrar" action="" method="post">
                         {% csrf_token %}
                         {{form|crispy}}
-                        <button type="submit" class="btn btn-primary" style="background-color: #1b396a">Volver a integrar</button>
+                        <button id="boton1" type="submit" class="btn btn-primary" style="background-color: #1b396a">Volver a integrar</button>
                     </form>
                 {% else %}
-                    <form action="" method="post">
+                    <form id="formIntegrar" action="" method="post">
                         {% csrf_token %}
                         {{form|crispy}}
-                        <button type="submit" class="btn btn-primary" style="background-color: #1b396a">Integrar</button>
+                        <button id="boton1" type="submit" class="btn btn-primary" style="background-color: #1b396a">Integrar</button>
                     </form>
                 {% endif %}
             </div>
@@ -172,4 +172,9 @@
             $("#tablita").html(linea);
         });
     </script>
+   
+    {% block JS %}
+        <script src="{% static 'JS/spinner.js' %}"></script>
+    {% endblock JS %}
+
 {% endblock content %}

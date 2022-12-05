@@ -85,7 +85,7 @@ class TutorReporteSemestralDepartamentalV2(models.Model):
     tutor = models.ForeignKey('PersonalTec', on_delete = models.CASCADE)
 
     def __str__(self):
-        return "{} - {} - {} - {} - {}".format(self.tutoriaGrupal, self.tutoriaIndividual, self.observaciones, self.asistencia, self.grupo)
+        return "{} - {} - {}".format(self.tutoriaGrupal, self.tutoriaIndividual, self.grupo)
 
     class Meta:
         verbose_name= 'TutorReporteSemestralDepartamentalV2'

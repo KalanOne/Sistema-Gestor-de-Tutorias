@@ -61,7 +61,7 @@
                 <div class="col-md-3"></div>
             </div>
             <div class="row">
-                <form action="" method="post">
+                <form action="" method="post" id="formIntegrar">
                     {% csrf_token %}
                     <div class="table-responsive">
                         <table class="table">
@@ -125,9 +125,13 @@
                         <div class="col-md-6">{{ formPrincipal.acciones|as_crispy_field }}</div>
                         <div class="col-md-3"></div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <button type="submit" class="btn btn-primary" id="boton1">Enviar</button>
                 </form>
             </div>
         </div>
     {% endif %}
 {% endblock content %}
+
+{% block JS %}
+    <script src="{% static 'JS/spinner.js' %}"></script>
+{% endblock JS %}
