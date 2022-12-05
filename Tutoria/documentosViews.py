@@ -1,11 +1,8 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
 from .forms import *
 import datetime
-from django.contrib.auth.models import User
 from .documentosForms import *
 from .documentosModels import *
 from django.forms import modelformset_factory
@@ -13,10 +10,10 @@ from django.db import transaction
 from docxtpl import *
 from docx2pdf import *
 from PyPDF2 import *
-from datetime import date
 from datetime import datetime
 import pythoncom
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django import forms
 
 def group_required(*group_names):
     """ Grupos, checar si pertenece a grupo """
@@ -91,6 +88,7 @@ def CrearReporteSemestralGrupal(request, grupo_id):
         for indice, form in enumerate(formularios2):
             ele = [(tutorados[indice].id, tutorados[indice])]
             form.fields['tutorado'].choices = ele
+            form.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : noTutorados}
         return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
             'gruops': request.user.groups.all(),
             'title': 'Seleccionar Grupos Para Reporte Semestral',
@@ -101,6 +99,36 @@ def CrearReporteSemestralGrupal(request, grupo_id):
     else:
         formularios2 = formularios(request.POST)
         if formularios2.is_valid():
+            for indice, form in enumerate(formularios2):
+                if form.cleaned_data['tutorado'] != tutorados[indice]:
+                    for indice2, form2 in enumerate(formularios2):
+                        ele = [(tutorados[indice2].id, tutorados[indice2])]
+                        form2.fields['tutorado'].choices = ele
+                        form2.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : noTutorados}
+
+                        form2.fields['tutoriaGrupal'].initial = form.cleaned_data['tutoriaGrupal']
+                        form2.fields['tutoriaIndividual'].initial = form.cleaned_data['tutoriaIndividual']
+                        form2.fields['observaciones'].initial = form.cleaned_data['observaciones']
+                        form2.fields['asistencia'].initial = form.cleaned_data['asistencia']
+                        form2.fields['credito'].initial = form.cleaned_data['credito']
+                        form2.fields['estudianteCanalizado'].initial = form.cleaned_data['estudianteCanalizado']
+                    return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
+                        'gruops': request.user.groups.all(),
+                        'title': 'Seleccionar Grupos Para Reporte Semestral',
+                        'tutor': tutor,
+                        'realizado': 0,
+                        'form': formularios2,
+                        'error': 'Opción de tutorado inválida. Vuelva a enviar, ya se ha corregido.'
+                    })
+                if 0 > form.cleaned_data['estudianteCanalizado'] or form.cleaned_data['estudianteCanalizado'] > noTutorados:
+                    return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
+                        'gruops': request.user.groups.all(),
+                        'title': 'Seleccionar Grupos Para Reporte Semestral',
+                        'tutor': tutor,
+                        'realizado': 0,
+                        'form': formularios2,
+                        'error': 'El número de estudiantes canalizados debe estar entre 0 y ' + str(noTutorados)
+                    })
             try:
                 instancias = formularios2.save(commit = False)
                 estadoAceptado = Estado.objects.get(estado = 'Aceptado')

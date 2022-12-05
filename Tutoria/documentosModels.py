@@ -32,9 +32,9 @@ class TutoradoReporteSemestralGrupalV2(models.Model):
     tutoriaGrupal = models.CharField(max_length = 200)
     tutoriaIndividual = models.CharField(max_length = 200)
     observaciones = models.CharField(max_length = 20,choices = desempeno)
-    estudianteCanalizado = models.TextField()
+    estudianteCanalizado = models.IntegerField()
     asistencia = models.FloatField()
-    credito = models.BooleanField(null = True)
+    credito = models.BooleanField()
     reporte = models.ForeignKey('ReporteSemestralGrupalV2', on_delete = models.CASCADE)
 
     def __str__(self):
