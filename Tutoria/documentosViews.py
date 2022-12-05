@@ -121,6 +121,17 @@ def CrearReporteSemestralGrupal(request, grupo_id):
                         'error': 'Opción de tutorado inválida. Vuelva a enviar, ya se ha corregido.'
                     })
                 if 0 > form.cleaned_data['estudianteCanalizado'] or form.cleaned_data['estudianteCanalizado'] > noTutorados:
+                    for indice2, form2 in enumerate(formularios2):
+                        ele = [(tutorados[indice2].id, tutorados[indice2])]
+                        form2.fields['tutorado'].choices = ele
+                        form2.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : noTutorados}
+
+                        form2.fields['tutoriaGrupal'].initial = form.cleaned_data['tutoriaGrupal']
+                        form2.fields['tutoriaIndividual'].initial = form.cleaned_data['tutoriaIndividual']
+                        form2.fields['observaciones'].initial = form.cleaned_data['observaciones']
+                        form2.fields['asistencia'].initial = form.cleaned_data['asistencia']
+                        form2.fields['credito'].initial = form.cleaned_data['credito']
+                        form2.fields['estudianteCanalizado'].initial = form.cleaned_data['estudianteCanalizado']
                     return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
                         'gruops': request.user.groups.all(),
                         'title': 'Seleccionar Grupos Para Reporte Semestral',
