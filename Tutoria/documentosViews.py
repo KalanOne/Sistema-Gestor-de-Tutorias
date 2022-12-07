@@ -1,11 +1,8 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
 from .forms import *
 import datetime
-from django.contrib.auth.models import User
 from .documentosForms import *
 from .documentosModels import *
 from django.forms import modelformset_factory
@@ -13,7 +10,7 @@ from django.db import transaction
 from docxtpl import *
 from docx2pdf import *
 from PyPDF2 import *
-from datetime import date
+import aspose.words as aw
 from datetime import datetime
 import pythoncom
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -62,7 +59,7 @@ def VisualizarReportesSemestralesGrupalesTutor(request):
 
 @login_required()
 @group_required('Tutor')
-@transaction.atomic
+# @transaction.atomic
 def CrearReporteSemestralGrupal(request, grupo_id):
     tutor = PersonalTec.objects.get(user_id = request.user.id)
     try:
@@ -91,6 +88,7 @@ def CrearReporteSemestralGrupal(request, grupo_id):
         for indice, form in enumerate(formularios2):
             ele = [(tutorados[indice].id, tutorados[indice])]
             form.fields['tutorado'].choices = ele
+            form.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : noTutorados}
         return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
             'gruops': request.user.groups.all(),
             'title': 'Seleccionar Grupos Para Reporte Semestral',
@@ -101,102 +99,191 @@ def CrearReporteSemestralGrupal(request, grupo_id):
     else:
         formularios2 = formularios(request.POST)
         if formularios2.is_valid():
+            for indice, form in enumerate(formularios2):
+                if form.cleaned_data['tutorado'] != tutorados[indice]:
+                    for indice2, form2 in enumerate(formularios2):
+                        ele = [(tutorados[indice2].id, tutorados[indice2])]
+                        form2.fields['tutorado'].choices = ele
+                        form2.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : noTutorados}
+
+                        form2.fields['tutoriaGrupal'].initial = form.cleaned_data['tutoriaGrupal']
+                        form2.fields['tutoriaIndividual'].initial = form.cleaned_data['tutoriaIndividual']
+                        form2.fields['observaciones'].initial = form.cleaned_data['observaciones']
+                        form2.fields['asistencia'].initial = form.cleaned_data['asistencia']
+                        form2.fields['credito'].initial = form.cleaned_data['credito']
+                        form2.fields['estudianteCanalizado'].initial = form.cleaned_data['estudianteCanalizado']
+                    return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
+                        'gruops': request.user.groups.all(),
+                        'title': 'Seleccionar Grupos Para Reporte Semestral',
+                        'tutor': tutor,
+                        'realizado': 0,
+                        'form': formularios2,
+                        'error': 'Opción de tutorado inválida. Vuelva a enviar, ya se ha corregido.'
+                    })
+                if 0 > form.cleaned_data['estudianteCanalizado'] or form.cleaned_data['estudianteCanalizado'] > noTutorados:
+                    for indice2, form2 in enumerate(formularios2):
+                        ele = [(tutorados[indice2].id, tutorados[indice2])]
+                        form2.fields['tutorado'].choices = ele
+                        form2.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : noTutorados}
+
+                        form2.fields['tutoriaGrupal'].initial = form.cleaned_data['tutoriaGrupal']
+                        form2.fields['tutoriaIndividual'].initial = form.cleaned_data['tutoriaIndividual']
+                        form2.fields['observaciones'].initial = form.cleaned_data['observaciones']
+                        form2.fields['asistencia'].initial = form.cleaned_data['asistencia']
+                        form2.fields['credito'].initial = form.cleaned_data['credito']
+                        form2.fields['estudianteCanalizado'].initial = form.cleaned_data['estudianteCanalizado']
+                    return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
+                        'gruops': request.user.groups.all(),
+                        'title': 'Seleccionar Grupos Para Reporte Semestral',
+                        'tutor': tutor,
+                        'realizado': 0,
+                        'form': formularios2,
+                        'error': 'El número de estudiantes canalizados debe estar entre 0 y ' + str(noTutorados)
+                    })
             try:
-                instancias = formularios2.save(commit = False)
-                estadoAceptado = Estado.objects.get(estado = 'Aceptado')
-                reporteGrupal = ReporteSemestralGrupalV2()
-                reporteGrupal.ano = tutor.idInstitucion.anoActual
-                reporteGrupal.periodo = tutor.idInstitucion.periodoActual
-                reporteGrupal.grupo_id = grupo_id
-                reporteGrupal.tutor_id = tutor.id
-                reporteGrupal.estado_id = estadoAceptado.id
-                reporteGrupal.save()
-                for item in instancias:
-                    item.reporte_id = reporteGrupal.id
-                    item.save()
-                
-                ahora = datetime.now()
+                with transaction.atomic():
+                    instancias = formularios2.save(commit = False)
+                    estadoAceptado = Estado.objects.get(estado = 'Aceptado')
+                    reporteGrupal = ReporteSemestralGrupalV2()
+                    reporteGrupal.ano = tutor.idInstitucion.anoActual
+                    reporteGrupal.periodo = tutor.idInstitucion.periodoActual
+                    reporteGrupal.grupo_id = grupo_id
+                    reporteGrupal.tutor_id = tutor.id
+                    reporteGrupal.estado_id = estadoAceptado.id
+                    reporteGrupal.save()
+                    for item in instancias:
+                        item.reporte_id = reporteGrupal.id
+                        item.save()
+                    
+                    ahora = datetime.now()
 
-                coordTutoDeptAcade = PersonalTec.objects.filter(idDepartamentoAcademico_id = tutor.idDepartamentoAcademico.id)
-                coordTutoDeptAcade2 = []
-                for coor in coordTutoDeptAcade:
-                    if pertenece_cualquier_grupo(coor.user, ['Coordinador de Tutoria del Departamento Académico']):
-                        coordTutoDeptAcade2.append(coor)
-                
-                jefeDeptAcade2 = []
-                for coor in coordTutoDeptAcade:
-                    if pertenece_cualquier_grupo(coor.user, ['Jefe de Departamento Académico']):
-                        jefeDeptAcade2.append(coor)
+                    coordTutoDeptAcade = PersonalTec.objects.filter(idDepartamentoAcademico_id = tutor.idDepartamentoAcademico.id)
+                    coordTutoDeptAcade2 = []
+                    for coor in coordTutoDeptAcade:
+                        if pertenece_cualquier_grupo(coor.user, ['Coordinador de Tutoria del Departamento Académico']):
+                            coordTutoDeptAcade2.append(coor)
+                    
+                    jefeDeptAcade2 = []
+                    for coor in coordTutoDeptAcade:
+                        if pertenece_cualquier_grupo(coor.user, ['Jefe de Departamento Académico']):
+                            jefeDeptAcade2.append(coor)
 
-                context = {
-                    'departamento': tutor.idDepartamentoAcademico.departamentoAcademico,
-                    'tutor': tutor.user.first_name + ' ' + tutor.user.last_name,
-                    'fecha': ahora.strftime("%d/%m/%Y"),
-                    'hora': ahora.strftime("%H:%M:%S"),
-                    'nombreGrupo': grupo.grupo,
-                    'tutoradosInfo': instancias,
-                    'coordTutoDeptAcade': coordTutoDeptAcade2[0].user,
-                    'jefeDeptAcade': jefeDeptAcade2[0].user
-                }
+                    context = {
+                        'departamento': tutor.idDepartamentoAcademico.departamentoAcademico,
+                        'tutor': tutor.user.first_name + ' ' + tutor.user.last_name,
+                        'fecha': ahora.strftime("%d/%m/%Y"),
+                        'hora': ahora.strftime("%H:%M:%S"),
+                        'nombreGrupo': grupo.grupo,
+                        'tutoradosInfo': instancias,
+                        'coordTutoDeptAcade': coordTutoDeptAcade2[0].user,
+                        'jefeDeptAcade': jefeDeptAcade2[0].user
+                    }
 
-                templateReporte = DocxTemplate("Tutoria/static/Templates/Template_ReporteSemestralGrupalTutor.docx")
-                nombre = tutor.user.username + "ReporteSemestralGrupal" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
-                inicioRuta = "Tutoria/static/borrar/"
-                inicioRutaReporte = "Tutoria/static/Archivos/Reportes/"
-                templateReporte.render(context)
-                templateReporte.save(inicioRuta + nombre + ".docx")
-                pythoncom.CoInitialize()
-                convert(inicioRuta + nombre + ".docx", inicioRutaReporte + nombre + ".pdf")
+                    templateReporte = DocxTemplate("Tutoria/static/Templates/Template_ReporteSemestralGrupalTutor.docx")
+                    nombre = tutor.user.username + "ReporteSemestralGrupal" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
+                    inicioRuta = "Tutoria/static/borrar/"
+                    inicioRutaReporte = "Tutoria/static/Archivos/Reportes/"
+                    templateReporte.render(context)
+                    templateReporte.save(inicioRuta + nombre + ".docx")
+                    pythoncom.CoInitialize()
+                    convert(inicioRuta + nombre + ".docx", inicioRutaReporte + nombre + ".pdf")
+                    print("189")
+                    estadoActivo = Estado.objects.get(estado = 'Activo')
+                    print("191")
+                    if grupo.idEstado_id == estadoActivo.id:
+                        print("a")
+                        coordTutoDeptAcade = PersonalTec.objects.filter(idDepartamentoAcademico_id = tutor.idDepartamentoAcademico.id)
+                        firmante = []
+                        for coor in coordTutoDeptAcade:
+                            if pertenece_cualquier_grupo(coor.user, ['Jefe de Departamento Académico']):
+                                firmante.append(coor)
+                        print("b")
+                        for est in instancias:
+                            if est.credito == True or est.credito == 1:
+                                templateCredito = DocxTemplate("Tutoria/static/Templates/Template_CreditoTutorado2.docx")
+                                nombreCredito = est.tutorado.user.username + "CreditoComplementario" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
+                                inicioRutaCredito = "media/Tutorado/Creditos/"
+                                inicioRutaCredito2 = "Tutorado/Creditos/"
+                                if est.tutorado.idInstitucion.periodoActual == 1:
+                                    semestredoc = "Enero - Julio"
+                                else:
+                                    semestredoc = "Agosto - Diciembre"
+                                print("c")
+                                context2 = {
+                                    'año': est.tutorado.idInstitucion.anoActual,
+                                    'frase_del_año': 'El mejor año para impulsar a México',
+                                    'códigoDocumento': 'FC-' + est.tutorado.user.username + '-' + str(est.id),
+                                    'fecha': ahora.strftime("%d/%B/%Y"),
+                                    'nombre_Alumno': est.tutorado.user.first_name + ' ' + est.tutorado.user.last_name,
+                                    'num_Control': est.tutorado.user.username,
+                                    'semestre': semestredoc,
+                                    'carrera': est.tutorado.idDepartamentoAcademico.departamentoAcademico,
+                                    'nombre_Tutor': tutor.user.first_name + ' ' + tutor.user.last_name,
+                                    'nombreFirmante': firmante[0].user.first_name + ' ' + firmante[0].user.last_name,
+                                    'puesto': 'Jefe del Departamento de Desarrollo Académico'
+                                }
+                                print("d")
+                                templateCredito.render(context2)
+                                print("e")
+                                templateCredito.save(inicioRuta + nombreCredito + ".docx")
+                                print("f")
+                                pythoncom.CoInitialize()
+                                print(inicioRuta + nombreCredito + ".docx")
+                                convert(inicioRuta + nombreCredito + ".docx", inicioRutaCredito + nombreCredito + ".pdf")
+                                # doc = aw.Document(inicioRuta + nombreCredito + ".docx")
+                                # doc.save(inicioRutaCredito + nombreCredito + ".pdf")
+                                print("g")
+                                creditoNuevo = Credito()
+                                print("1")
+                                creditoNuevo.archivo = inicioRutaCredito2 + nombreCredito + ".pdf"
+                                print("2")
+                                creditoNuevo.nombre_doc = 'Crédito complementario de tutorías ' + est.tutorado.user.username
+                                print("3")
+                                creditoNuevo.idEstado_id = estadoAceptado.id
+                                print("4")
+                                creditoNuevo.idTutorado_id = est.tutorado.id
+                                print("5")
+                                creditoNuevo.save()
+                                print("6")
+                    
+                    templateConst = DocxTemplate("Tutoria/static/Templates/Template_ConstanciaTutor.docx")
+                    nombreConst = tutor.user.username + "Constancia" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
+                    inicioRutaConst = "Tutoria/static/Archivos/Constancias/"
+                    context3 = {
+                        'tutor': tutor.user.first_name + tutor.user.last_name,
+                        'grupo': grupo.grupo
+                    }
+                    templateConst.render(context3)
+                    print("173")
+                    templateConst.save(inicioRuta + nombreConst + ".docx")
+                    print("175")
+                    pythoncom.CoInitialize()
+                    convert(inicioRuta + nombreConst + ".docx", inicioRutaConst + nombreConst + ".pdf")
 
-                estadoActivo = Estado.objects.get(estado = 'Activo')
-                if grupo.idEstado_id == estadoActivo.id:
-                    for est in instancias:
-                        if est.credito == True or est.credito == 1:
-                            templateCredito = DocxTemplate("Tutoria/static/Templates/Template_ConstanciaTutorado.docx")
-                            nombreCredito = est.tutorado.user.username + "CreditoComplementario" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
-                            inicioRutaCredito = "Tutoria/static/Archivos/Creditos/"
-                            context2 = {
-                                'tutorado': est.tutorado.user.first_name + est.tutorado.user.last_name
-                            }
-                            templateCredito.render(context2)
-                            templateCredito.save(inicioRuta + nombreCredito + ".docx")
-                            convert(inicioRuta + nombreCredito + ".docx", inicioRutaCredito + nombreCredito + ".pdf")
-                
-                templateConst = DocxTemplate("Tutoria/static/Templates/Template_ConstanciaTutor.docx")
-                nombreConst = tutor.user.username + "Constancia" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
-                inicioRutaConst = "Tutoria/static/Archivos/Constancias/"
-                context3 = {
-                    'tutor': tutor.user.first_name + tutor.user.last_name,
-                    'grupo': grupo.grupo
-                }
-                templateConst.render(context3)
-                print("173")
-                templateConst.save(inicioRuta + nombreConst + ".docx")
-                print("175")
-                convert(inicioRuta + nombreConst + ".docx", inicioRutaConst + nombreConst + ".pdf")
+                    print("178")
+                    reporteGrupal.archivo = "Archivos/Reportes/" + nombre + ".pdf"
+                    print("180")
+                    reporteGrupal.save()
+                    print("182")
+                    constancia = ConstanciaTutorV2()
+                    constancia.archivo = "Archivos/Constancias/" + nombreConst + ".pdf"
+                    constancia.ano = tutor.idInstitucion.anoActual
+                    constancia.periodo = tutor.idInstitucion.periodoActual
+                    constancia.grupo_id = grupo_id
+                    constancia.tutor_id = tutor.id
+                    constancia.estado_id = estadoAceptado.id
+                    constancia.save()
 
-                print("178")
-                reporteGrupal.archivo = "Archivos/Reportes/" + nombre + ".pdf"
-                print("180")
-                reporteGrupal.save()
-                print("182")
-                constancia = ConstanciaTutorV2()
-                constancia.archivo = "Archivos/Constancias/" + nombreConst + ".pdf"
-                constancia.ano = tutor.idInstitucion.anoActual
-                constancia.periodo = tutor.idInstitucion.periodoActual
-                constancia.grupo_id = grupo_id
-                constancia.tutor_id = tutor.id
-                constancia.estado_id = estadoAceptado.id
-                constancia.save()
-
-                return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
-                    'gruops': request.user.groups.all(),
-                    'title': 'Seleccionar Grupos Para Reporte Semestral',
-                    'tutor': tutor,
-                    'realizado': 1,
-                    'exito': 'Reporte enviado con éxito'
-                })
+                    return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
+                        'gruops': request.user.groups.all(),
+                        'title': 'Seleccionar Grupos Para Reporte Semestral',
+                        'tutor': tutor,
+                        'realizado': 1,
+                        'exito': 'Reporte enviado con éxito'
+                    })
             except:
+                # handle_exception()
+                # transaction.set_rollback(True)
                 return render(request, 'SistemaDeDocumentos/Tutor_CrearReporteSemestralGrupal.html',{
                     'gruops': request.user.groups.all(),
                     'title': 'Seleccionar Grupos Para Reporte Semestral',

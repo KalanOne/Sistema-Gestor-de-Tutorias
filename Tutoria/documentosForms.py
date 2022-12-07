@@ -15,11 +15,12 @@ class FormTutoradoReporteSemestralGrupalCreditoV2(forms.ModelForm):
             'tutoriaIndividual': (''),
             'observaciones': (''),
             'asistencia': (''),
-            'credito': (''),
+            'credito': ('(Si/No)'),
             'estudianteCanalizado': ('')
         }
         widgets = {
-            'estudianteCanalizado': forms.Textarea(attrs={'rows' : 2})
+            'estudianteCanalizado': forms.NumberInput(attrs={'min' : 0}),
+            'asistencia': forms.NumberInput(attrs={'min' : 0, 'max' : 100})
         }
 
 class FormReporteSemestralDepartamentalV2(forms.ModelForm):
