@@ -32,8 +32,10 @@ urlpatterns = [
     path('Cambiar/Contrasena/', views.cambiarContraseña, name='cambiarContraseña'),
     path('Todos/EditarInformacion/', views.editarInformacionTodos, name='editarInformacionTodos'),
 
+
     #pruebas
     #path('Registrar/Tutorados/<int:Grupoid>/', views.registrarTutorados, name = 'registrarTutorados'),
+    path('listadoPersonal/', views.listado_Personal, name='listadoPersonal'),
     
 
     # urls Para documentos

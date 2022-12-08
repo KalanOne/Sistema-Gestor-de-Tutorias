@@ -1368,3 +1368,16 @@ def registrarCoordinadorTutoria(request):
             'jefes':jefes,
             'existe':Existen
         })
+
+           ##    Tabla del personal 
+@login_required
+@group_required('Coordinación Institucional de Tutoría', 'Jefe de Desarrollo Académico', 'Subdirector Académico')
+def listado_Personal(request):
+    personal = PersonalMed.objects.all()  
+    personal2 = PersonalTec.objects.all()
+    print(personal)
+
+    return render(request, 'listado_Personal.html', {
+        'personal': personal,
+        'personal2': personal2,
+    })
