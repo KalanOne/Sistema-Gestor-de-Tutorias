@@ -325,3 +325,11 @@ class RegistroCitaMedico(forms.ModelForm):
         ordenMedi = Orden.objects.get(nombreOrden = 'Médico')
         motivos = Motivo.objects.filter(idOrden_id = ordenMedi.id)
         self.fields['idMotivo'].choices = [(motivo.id, motivo.nombre) for motivo in motivos]
+
+class CrearDepartamentoForm(forms.ModelForm):
+    class Meta:
+        model = DepartamentoAcademico
+        fields = {'departamentoAcademico','abreviacion'}
+        labels = {
+            'departamentoAcademico': ('Nombre del Departamento')
+        }

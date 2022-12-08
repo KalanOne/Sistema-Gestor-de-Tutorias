@@ -683,6 +683,8 @@ def listaTutor(request):
         encargado = PersonalTec.objects.get(user_id = request.user.id)
         escuela = encargado.idInstitucion
         departamento = encargado.idDepartamentoAcademico
+        ErrorusuariosExistentes=False
+        usuariosExistentes=[]
         try:
             nuevas_personas = request.FILES['archivo']  
         except MultiValueDictKeyError:
@@ -694,7 +696,7 @@ def listaTutor(request):
             persona_resource.import_data(dataset, dry_run=False)
             for tutor in registrarPersonalTec.objects.all():
                 if User.objects.filter(username=tutor.username).exists():
-                    print(tutor.username+" - Usuario ya existente")
+                    usuariosExistentes.append(tutor)
                 else:
                     try:
                         if tutor.username == "":
@@ -711,10 +713,37 @@ def listaTutor(request):
 
             limpiar = registrarPersonalTec.objects.all()         
             limpiar.delete()
-            return redirect ('listaTutor')
+
+            print(len(usuariosExistentes))
+
+            if len(usuariosExistentes)>=0:
+                ErrorusuariosExistentes=True
+
+            coordinador=PersonalTec.objects.get(user_id=request.user.id)
+            tutoresobtener = PersonalTec.objects.filter(idDepartamentoAcademico_id=coordinador.idDepartamentoAcademico_id, idInstitucion_id=coordinador.idInstitucion_id)
+            tutores=[]
+            for tutor in tutoresobtener:
+                if pertenece_cualquier_grupo(tutor.user, ['Tutor']):
+                    tutores.append(tutor)
+                    vacio=vacio+1
+            form=RegistrarPersonalTecForm()
+
+            return render(request, 'listaTutor.html',{
+                'gruops': request.user.groups.all(),
+                'title': 'Listar Tutores',
+                'tutores': tutores,
+                'vacio': vacio,
+                'form':form,
+                'usuarioExiste':usuariosExistentes,
+                'Errorusu':ErrorusuariosExistentes
+            })
+
+            #return redirect ('listaTutor')
         else:
             print("Error de excel")
             return redirect ('listaTutor')
+
+        return redirect ('listaTutor')
 
 
     
@@ -831,7 +860,7 @@ def verGruposDelTutor(request, Tutor):
             })
 
 @login_required
-@group_required('Jefe de Departamento Académico')
+@group_required('Jefe de Departamento Académico','Coordinador de Tutoria del Departamento Académico')
 def listarAlumnos(request, Grupoid):
     Error=False
     if request.method == 'GET':
@@ -854,11 +883,15 @@ def listarAlumnos(request, Grupoid):
         })
     else:
         Error=False
+        numControlError=False
+        usuExisteError=False
         persona_resource = ExcelResource()  
         dataset = Dataset()  
         encargado = PersonalTec.objects.get(user_id = request.user.id)
         escuela = encargado.idInstitucion
         departamento = encargado.idDepartamentoAcademico 
+        numinvalidos=[]
+        usuariosyaexistente=[]
 
         try:
             nuevas_personas = request.FILES['archivo']  
@@ -869,10 +902,10 @@ def listarAlumnos(request, Grupoid):
         result = persona_resource.import_data(dataset, dry_run=True)
 
         if not result.has_errors(): 
-            persona_resource.import_data(dataset, dry_run=False) # Actually import now  
+            persona_resource.import_data(dataset, dry_run=False)
             for Alumno in registrarAlumno.objects.all():
                 if User.objects.filter(username=Alumno.control).exists():
-                    print(Alumno.control+" - Usuario ya existente")
+                    usuariosyaexistente.append(Alumno)
                 else:
                     try:
                         try:
@@ -882,20 +915,52 @@ def listarAlumnos(request, Grupoid):
                         if Alumno.control == "":
                             print("Num control vacio")
                         else:
-                            password="sgttutorado"+Alumno.control
-                            usr=User.objects.create(username=Alumno.control, password=make_password(password), first_name=Alumno.nombres, last_name=Alumno.apellidos, email=Alumno.email)
-                            grupo=Group.objects.get(name="Tutorado")
-                            usr.groups.add(grupo.id)
-                            alm=Tutorado.objects.create(semestre=semestreAlumno,idGrupo_id=Grupoid, idDepartamentoAcademico=departamento, idInstitucion=escuela, user=usr)
-                            print(Alumno.control+"Registro exitoso")  
+                            
+                            currentDateTime = datetime.datetime.now()
+                            date = currentDateTime.date()
+                            year = date.strftime("%y")
+                            year=year+"12"
+                            if Alumno.control[:4] == year:
+                                password="sgttutorado"+Alumno.control
+                                usr=User.objects.create(username=Alumno.control, password=make_password(password), first_name=Alumno.nombres, last_name=Alumno.apellidos, email=Alumno.email)
+                                grupo=Group.objects.get(name="Tutorado")
+                                usr.groups.add(grupo.id)
+                                alm=Tutorado.objects.create(semestre=semestreAlumno,idGrupo_id=Grupoid, idDepartamentoAcademico=departamento, idInstitucion=escuela, user=usr)
+                                print(Alumno.control+"Registro exitoso") 
+                            else:
+                               numinvalidos.append(Alumno)
+                             
                     except:
                         print("Erro no pudo crear el usuario")
-
             limpiar = registrarAlumno.objects.all()         
             limpiar.delete()
 
-            
-            return redirect ('listarAlumnos',Grupoid)
+            if len(numinvalidos)>0:
+                numControlError=True
+            if len(usuariosyaexistente)>0:
+                usuExisteError=True
+
+            Error=False
+            listaAlumnos=Tutorado.objects.filter(idGrupo_id=Grupoid)
+            tieneAlumnos=False
+            if listaAlumnos.count() > 0:
+                tieneAlumnos=True        
+            form=RegistrarTutoradosForm()
+            form.fields['archivo'].label = 'Archivo de Alumnos'
+            return render(request, 'listarAlumnos.html', {
+                'gruops': request.user.groups.all(),
+                'title': 'Listar alumnos',
+                'lista': listaAlumnos,
+                'tieneAlumnos':tieneAlumnos,
+                'grupo': Grupoid,
+                'form':form,
+                'Error':Error,
+                'numControl':numinvalidos,
+                'Errornum':numControlError,
+                'usuarioExiste': usuariosyaexistente,
+                'Errorusu':usuExisteError
+            })
+            #return redirect ('listarAlumnos',Grupoid)
         else:
             print("Error") 
             return redirect ('listarAlumnos',Grupoid)
@@ -1367,4 +1432,35 @@ def registrarCoordinadorTutoria(request):
             'formpersonal': formpersonal,
             'jefes':jefes,
             'existe':Existen
+        })
+
+
+@login_required
+@group_required('Subdirector Académico','Jefe de Desarrollo Académico','Coordinación Institucional de Tutoría')
+def crearDepartamento(request):
+    if request.method=='GET':
+        form=CrearDepartamentoForm()
+        return render(request,'crearDepartamento.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Crear Departamento Académico',
+            'form':form
+        })
+    else:
+        noError=False
+        usr=PersonalTec.objects.get(user=request.user.id)
+        form=CrearDepartamentoForm(request.POST)
+        if form.is_valid:
+            post=form.save(commit=False)
+            post.idInstitucion=usr.idInstitucion
+            form.save()
+            noError=True
+        else:
+            noError=False
+        
+        form=CrearDepartamentoForm()
+        return render(request,'crearDepartamento.html',{
+            'gruops': request.user.groups.all(),
+            'title': 'Crear Departamento Académico',
+            'form': form,
+            'Error': noError
         })
