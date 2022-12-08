@@ -43,13 +43,13 @@
                     <form id="formIntegrar" action="" method="post">
                         {% csrf_token %}
                         {{form|crispy}}
-                        <button id="boton1" type="submit" class="btn btn-primary" style="background-color: #1b396a">Volver a integrar</button>
+                        <button id="boton1" type="submit" class="btn btn-primary">Volver a integrar</button>
                     </form>
                 {% else %}
                     <form id="formIntegrar" action="" method="post">
                         {% csrf_token %}
                         {{form|crispy}}
-                        <button id="boton1" type="submit" class="btn btn-primary" style="background-color: #1b396a">Integrar</button>
+                        <button id="boton1" type="submit" class="btn btn-primary">Integrar</button>
                     </form>
                 {% endif %}
             </div>

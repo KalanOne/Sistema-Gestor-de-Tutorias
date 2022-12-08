@@ -238,14 +238,14 @@
                                         <td><span class="badge text-bg-warning rounded-pill">Espera</span></td>
                                         <td>
                                             <div class="d-grid gap-2">
-                                                <a href="{% url 'Psicologo_AsignarCita' cita.id %}" class="btn btn-primary" role="button" style="background-color: #1b396a" >Asignar cita</a>
+                                                <a href="{% url 'Psicologo_AsignarCita' cita.id %}" class="btn btn-primary" role="button" >Asignar cita</a>
                                             </div>
                                         </td>
                                     {% elif cita.idEstado.estado == 'Citado' %}
                                         <td><span class="badge text-bg-warning rounded-pill">Citado</span></td>
                                         <td>
                                             <div class="d-grid gap-2">
-                                                <a class="btn btn-primary" role="button" style="background-color: #1b396a" onclick="asigConclusion({{cita.id}})" data-bs-toggle="modal" data-bs-target="#modalConcluirCita">Concluir</a>
+                                                <a class="btn btn-primary" role="button" onclick="asigConclusion({{cita.id}})" data-bs-toggle="modal" data-bs-target="#modalConcluirCita">Concluir</a>
                                             </div>
                                         </td>
                                     {% elif cita.idEstado.estado == 'Atendido' %}
