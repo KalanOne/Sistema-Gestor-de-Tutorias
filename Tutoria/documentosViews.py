@@ -246,12 +246,20 @@ def CrearReporteSemestralGrupal(request, grupo_id):
                                 creditoNuevo.save()
                                 print("6")
                     
-                    templateConst = DocxTemplate("Tutoria/static/Templates/Template_ConstanciaTutor.docx")
+                    templateConst = DocxTemplate("Tutoria/static/Templates/Template_ConstanciaTutor2.docx")
                     nombreConst = tutor.user.username + "Constancia" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
                     inicioRutaConst = "Tutoria/static/Archivos/Constancias/"
+                    if tutor.idInstitucion.periodoActual == 1:
+                        semestredoc = "Enero - Julio"
+                    else:
+                        semestredoc = "Agosto - Diciembre"
                     context3 = {
-                        'tutor': tutor.user.first_name + tutor.user.last_name,
-                        'grupo': grupo.grupo
+                        'nombre_asesor': tutor.user.first_name + " " + tutor.user.last_name,
+                        'grupo': grupo.grupo,
+                        'semestre': semestredoc,
+                        'ano': tutor.idInstitucion.anoActual,
+                        'fecha': ahora.strftime("%d/%B/%Y"),
+                        'expediente': tutor.user.username + ahora.strftime("--%d/%m/%Y--") + grupo.grupo
                     }
                     templateConst.render(context3)
                     print("173")
@@ -325,7 +333,6 @@ def SelectReportesSemestralesGrupalesCoordinador(request):
 
 @login_required()
 @group_required('Coordinador de Tutoria del Departamento Académico')
-@transaction.atomic
 def CrearReporteSemestralDepartamentalCoordinador(request):
     coordinador = PersonalTec.objects.get(user_id = request.user.id)
 
@@ -351,6 +358,29 @@ def CrearReporteSemestralDepartamentalCoordinador(request):
     if request.method == 'GET':
         formularios2 = formularios(queryset = TutorReporteSemestralDepartamentalV2.objects.none())
         for indice, form in enumerate(formularios2):
+            try:
+                reporteGrupal = ReporteSemestralGrupalV2.objects.get(grupo_id = grupos[indice].id, ano = coordinador.idInstitucion.anoActual, periodo = coordinador.idInstitucion.periodoActual)
+                print("id "+str(reporteGrupal.id))
+                reporteTutorado = TutoradoReporteSemestralGrupalV2.objects.filter(reporte_id = reporteGrupal.id)
+                maximoTutorados = 0
+                maximoGrupal = 0
+                maximoIndividual = 0
+                totalTutorados = reporteTutorado.count()
+                for cu in reporteTutorado:
+                    maximoTutorados = maximoTutorados + cu.estudianteCanalizado
+                    maximoGrupal = maximoGrupal + cu.tutoriaGrupal
+                    maximoIndividual = maximoIndividual + cu.tutoriaIndividual
+                maximoTutorados = int(maximoTutorados / totalTutorados)
+                maximoGrupal = int(maximoGrupal / totalTutorados)
+                form.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : maximoTutorados}
+                form.fields['estudianteCanalizado'].initial = maximoTutorados
+                form.fields['tutoriaGrupal'].widget.attrs={'min' : 0, 'max' : maximoGrupal}
+                form.fields['tutoriaGrupal'].initial = maximoGrupal
+                form.fields['tutoriaIndividual'].widget.attrs={'min' : 0, 'max' : maximoIndividual}
+                form.fields['tutoriaIndividual'].initial = maximoIndividual
+            except:
+                tutoradosTotales = Tutorado.objects.filter(idGrupo_id = grupos[indice].id)
+                form.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : tutoradosTotales.count()}
             ele1 = [(grupos[indice].id, grupos[indice].grupo)]
             ele2 = [(grupos[indice].idPersonalTec.id, grupos[indice].idPersonalTec)]
             form.fields['grupo'].choices = ele1
@@ -368,74 +398,157 @@ def CrearReporteSemestralDepartamentalCoordinador(request):
         formularioPrincipal = formularioPrincipal(request.POST)
 
         if formularios2.is_valid() and formularioPrincipal.is_valid():
+            for indice, form in enumerate(formularios2):
+                if form.cleaned_data['tutor'] != grupos[indice].idPersonalTec or form.cleaned_data['grupo'] != grupos[indice]:
+                    for indice2, form2 in enumerate(formularios2):
+                        try:
+                            reporteGrupal = ReporteSemestralGrupalV2.objects.get(grupo_id = grupos[indice2].id, ano = coordinador.idInstitucion.anoActual, periodo = coordinador.idInstitucion.periodoActual)
+                            reporteTutorado = TutoradoReporteSemestralGrupalV2.objects.filter(reporte_id = reporteGrupal.id)
+                            maximoTutorados = 0
+                            maximoGrupal = 0
+                            maximoIndividual = 0
+                            totalTutorados = reporteTutorado.count()
+                            for cu in reporteTutorado:
+                                maximoTutorados = maximoTutorados + cu.estudianteCanalizado
+                                maximoGrupal = maximoGrupal + cu.tutoriaGrupal
+                                maximoIndividual = maximoIndividual + cu.tutoriaIndividual
+                            maximoTutorados = int(maximoTutorados / totalTutorados)
+                            maximoGrupal = int(maximoGrupal / totalTutorados)
+                            form.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : maximoTutorados}
+                            form.fields['tutoriaGrupal'].widget.attrs={'min' : 0, 'max' : maximoGrupal}
+                            form.fields['tutoriaIndividual'].widget.attrs={'min' : 0, 'max' : maximoIndividual}
+                        except:
+                            tutoradosTotales = Tutorado.objects.filter(idGrupo_id = grupos[indice2].id)
+                            form.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : tutoradosTotales.count()}
+                        ele1 = [(grupos[indice2].id, grupos[indice2].grupo)]
+                        ele2 = [(grupos[indice2].idPersonalTec.id, grupos[indice2].idPersonalTec)]
+                        form.fields['grupo'].choices = ele1
+                        form.fields['tutor'].choices = ele2
+
+                        form2.fields['tutoriaGrupal'].initial = form.cleaned_data['tutoriaGrupal']
+                        form2.fields['tutoriaIndividual'].initial = form.cleaned_data['tutoriaIndividual']
+                        form2.fields['estudianteCanalizado'].initial = form.cleaned_data['estudianteCanalizado']
+                        form2.fields['areaCanalizada'].initial = form.cleaned_data['areaCanalizada']
+                    return render(request, 'SistemaDeDocumentos/CoordinadorTutoriaDepartamentoAcademico_CrearReporteSemestralDepartamental.html',{
+                        'gruops': request.user.groups.all(),
+                        'title': 'Seleccionar Grupos Para Reporte Semestral',
+                        'coordinador': coordinador,
+                        'realizado': 0,
+                        'form': formularios2,
+                        'formPrincipal': formularioPrincipal,
+                        'error': 'Opción de tutor o grupo inválida. Vuelva a enviar, ya se ha corregido.'
+                    })
+                tutoradosTotales = Tutorado.objects.filter(idGrupo_id = grupos[indice].id)
+                cantidad = tutoradosTotales.count()
+                if 0 > form.cleaned_data['estudianteCanalizado'] or form.cleaned_data['estudianteCanalizado'] > cantidad:
+                    for indice2, form2 in enumerate(formularios2):
+                        try:
+                            reporteGrupal = ReporteSemestralGrupalV2.objects.get(grupo_id = grupos[indice2].id, ano = coordinador.idInstitucion.anoActual, periodo = coordinador.idInstitucion.periodoActual)
+                            reporteTutorado = TutoradoReporteSemestralGrupalV2.objects.filter(reporte_id = reporteGrupal.id)
+                            maximoTutorados = 0
+                            maximoGrupal = 0
+                            maximoIndividual = 0
+                            totalTutorados = reporteTutorado.count()
+                            for cu in reporteTutorado:
+                                maximoTutorados = maximoTutorados + cu.estudianteCanalizado
+                                maximoGrupal = maximoGrupal + cu.tutoriaGrupal
+                                maximoIndividual = maximoIndividual + cu.tutoriaIndividual
+                            maximoTutorados = int(maximoTutorados / totalTutorados)
+                            maximoGrupal = int(maximoGrupal / totalTutorados)
+                            form.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : maximoTutorados}
+                            form.fields['tutoriaGrupal'].widget.attrs={'min' : 0, 'max' : maximoGrupal}
+                            form.fields['tutoriaIndividual'].widget.attrs={'min' : 0, 'max' : maximoIndividual}
+                        except:
+                            tutoradosTotales = Tutorado.objects.filter(idGrupo_id = grupos[indice].id)
+                            form.fields['estudianteCanalizado'].widget.attrs={'min' : 0, 'max' : tutoradosTotales.count()}
+                        ele1 = [(grupos[indice2].id, grupos[indice2].grupo)]
+                        ele2 = [(grupos[indice2].idPersonalTec.id, grupos[indice2].idPersonalTec)]
+                        form.fields['grupo'].choices = ele1
+                        form.fields['tutor'].choices = ele2
+
+                        form2.fields['tutoriaGrupal'].initial = form.cleaned_data['tutoriaGrupal']
+                        form2.fields['tutoriaIndividual'].initial = form.cleaned_data['tutoriaIndividual']
+                        form2.fields['estudianteCanalizado'].initial = form.cleaned_data['estudianteCanalizado']
+                        form2.fields['areaCanalizada'].initial = form.cleaned_data['areaCanalizada']
+                    return render(request, 'SistemaDeDocumentos/CoordinadorTutoriaDepartamentoAcademico_CrearReporteSemestralDepartamental.html',{
+                        'gruops': request.user.groups.all(),
+                        'title': 'Seleccionar Grupos Para Reporte Semestral',
+                        'coordinador': coordinador,
+                        'realizado': 0,
+                        'form': formularios2,
+                        'formPrincipal': formularioPrincipal,
+                        'error': 'El número de estudiantes canalizados debe estar entre 0 y ' + str(cantidad) + ' para el grupo ' + grupos[indice].grupo
+                    })
+            print("Todo es valido")
             try:
-                instancias = formularios2.save(commit = False)
-                estadoAceptado = Estado.objects.get(estado = 'Aceptado')
-                formularioPrinNuevo = formularioPrincipal.save(commit = False)
-                formularioPrinNuevo.ano = coordinador.idInstitucion.anoActual
-                formularioPrinNuevo.periodo = coordinador.idInstitucion.periodoActual
-                formularioPrinNuevo.departamento_id = coordinador.idDepartamentoAcademico.id
-                formularioPrinNuevo.coordinador_id = coordinador.id
-                formularioPrinNuevo.estado_id = estadoAceptado.id
-                formularioPrinNuevo.save()
-                print(formularioPrinNuevo.id)
+                with transaction.atomic():
+                    instancias = formularios2.save(commit = False)
+                    estadoAceptado = Estado.objects.get(estado = 'Aceptado')
+                    formularioPrinNuevo = formularioPrincipal.save(commit = False)
+                    formularioPrinNuevo.ano = coordinador.idInstitucion.anoActual
+                    formularioPrinNuevo.periodo = coordinador.idInstitucion.periodoActual
+                    formularioPrinNuevo.departamento_id = coordinador.idDepartamentoAcademico.id
+                    formularioPrinNuevo.coordinador_id = coordinador.id
+                    formularioPrinNuevo.estado_id = estadoAceptado.id
+                    formularioPrinNuevo.save()
+                    print(formularioPrinNuevo.id)
 
-                for item in instancias:
-                    item.reporte_id = formularioPrinNuevo.id
-                    item.save()
+                    for item in instancias:
+                        item.reporte_id = formularioPrinNuevo.id
+                        item.save()
 
-                ahora = datetime.now()
+                    ahora = datetime.now()
 
-                coordTutoDeptAcade = PersonalTec.objects.filter(idDepartamentoAcademico_id = coordinador.idDepartamentoAcademico.id)
-                coordTutoDeptAcade2 = []
-                for coor in coordTutoDeptAcade:
-                    if pertenece_cualquier_grupo(coor.user, ['Coordinador de Tutoria del Departamento Académico']):
-                        coordTutoDeptAcade2.append(coor)
-                
-                jefeDeptAcade2 = []
-                for coor in coordTutoDeptAcade:
-                    if pertenece_cualquier_grupo(coor.user, ['Jefe de Departamento Académico']):
-                        jefeDeptAcade2.append(coor)
+                    coordTutoDeptAcade = PersonalTec.objects.filter(idDepartamentoAcademico_id = coordinador.idDepartamentoAcademico.id)
+                    coordTutoDeptAcade2 = []
+                    for coor in coordTutoDeptAcade:
+                        if pertenece_cualquier_grupo(coor.user, ['Coordinador de Tutoria del Departamento Académico']):
+                            coordTutoDeptAcade2.append(coor)
+                    
+                    jefeDeptAcade2 = []
+                    for coor in coordTutoDeptAcade:
+                        if pertenece_cualquier_grupo(coor.user, ['Jefe de Departamento Académico']):
+                            jefeDeptAcade2.append(coor)
 
-                context = {
-                    'departamento': coordinador.idDepartamentoAcademico.departamentoAcademico,
-                    'coordinador': coordinador.user.first_name + ' ' + coordinador.user.last_name,
-                    'fecha': ahora.strftime("%d/%m/%Y"),
-                    'hora': ahora.strftime("%H:%M:%S"),
-                    'tutores': instancias,
-                    'coordTutoDeptAcade': coordTutoDeptAcade2[0].user,
-                    'jefeDeptAcade': jefeDeptAcade2[0].user,
-                    'actividad1': formularioPrinNuevo.actividad1,
-                    'actividad2': formularioPrinNuevo.actividad2,
-                    'actividad3': formularioPrinNuevo.actividad3,
-                    'actividad4': formularioPrinNuevo.actividad4,
-                    'actividad5': formularioPrinNuevo.actividad5,
-                    'actividad6': formularioPrinNuevo.actividad6,
-                    'actividad7': formularioPrinNuevo.actividad7,
-                    'actividad8': formularioPrinNuevo.actividad8,
-                    'actividad9': formularioPrinNuevo.actividad9,
-                    'actividad10': formularioPrinNuevo.actividad10,
-                    'acciones': formularioPrinNuevo.acciones
-                }
+                    context = {
+                        'departamento': coordinador.idDepartamentoAcademico.departamentoAcademico,
+                        'coordinador': coordinador.user.first_name + ' ' + coordinador.user.last_name,
+                        'fecha': ahora.strftime("%d/%m/%Y"),
+                        'hora': ahora.strftime("%H:%M:%S"),
+                        'tutores': instancias,
+                        'coordTutoDeptAcade': coordTutoDeptAcade2[0].user,
+                        'jefeDeptAcade': jefeDeptAcade2[0].user,
+                        'actividad1': formularioPrinNuevo.actividad1,
+                        'actividad2': formularioPrinNuevo.actividad2,
+                        'actividad3': formularioPrinNuevo.actividad3,
+                        'actividad4': formularioPrinNuevo.actividad4,
+                        'actividad5': formularioPrinNuevo.actividad5,
+                        'actividad6': formularioPrinNuevo.actividad6,
+                        'actividad7': formularioPrinNuevo.actividad7,
+                        'actividad8': formularioPrinNuevo.actividad8,
+                        'actividad9': formularioPrinNuevo.actividad9,
+                        'actividad10': formularioPrinNuevo.actividad10,
+                        'acciones': formularioPrinNuevo.acciones
+                    }
 
-                templateReporte = DocxTemplate("Tutoria/static/Templates/Template_ReporteSemestralDepartamentalCoord.docx")
-                nombre = coordinador.user.username + "ReporteSemestralDepartamental" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
-                inicioRuta = "Tutoria/static/borrar/"
-                inicioRutaReporte = "Tutoria/static/Archivos/Reportes/"
-                templateReporte.render(context)
-                templateReporte.save(inicioRuta + nombre + ".docx")
-                pythoncom.CoInitialize()
-                convert(inicioRuta + nombre + ".docx", inicioRutaReporte + nombre + ".pdf")
-                formularioPrinNuevo.archivo = "Archivos/Reportes/" + nombre + ".pdf"
-                formularioPrinNuevo.save()
+                    templateReporte = DocxTemplate("Tutoria/static/Templates/Template_ReporteSemestralDepartamentalCoord.docx")
+                    nombre = coordinador.user.username + "ReporteSemestralDepartamental" + ahora.strftime("__%d_%m_%Y_%H_%M_%S")
+                    inicioRuta = "Tutoria/static/borrar/"
+                    inicioRutaReporte = "Tutoria/static/Archivos/Reportes/"
+                    templateReporte.render(context)
+                    templateReporte.save(inicioRuta + nombre + ".docx")
+                    pythoncom.CoInitialize()
+                    convert(inicioRuta + nombre + ".docx", inicioRutaReporte + nombre + ".pdf")
+                    formularioPrinNuevo.archivo = "Archivos/Reportes/" + nombre + ".pdf"
+                    formularioPrinNuevo.save()
 
-                return render(request, 'SistemaDeDocumentos/CoordinadorTutoriaDepartamentoAcademico_CrearReporteSemestralDepartamental.html',{
-                    'gruops': request.user.groups.all(),
-                    'title': 'Seleccionar Grupos Para Reporte Semestral',
-                    'coordinador': coordinador,
-                    'realizado': 1,
-                    'exito': 'Reporte enviado con éxito'
-                })
+                    return render(request, 'SistemaDeDocumentos/CoordinadorTutoriaDepartamentoAcademico_CrearReporteSemestralDepartamental.html',{
+                        'gruops': request.user.groups.all(),
+                        'title': 'Seleccionar Grupos Para Reporte Semestral',
+                        'coordinador': coordinador,
+                        'realizado': 1,
+                        'exito': 'Reporte enviado con éxito'
+                    })
             except:
                 for indice, form in enumerate(formularios2):
                     ele1 = [(grupos[indice].id, grupos[indice].grupo)]

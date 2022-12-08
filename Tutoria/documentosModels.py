@@ -29,8 +29,8 @@ class TutoradoReporteSemestralGrupalV2(models.Model):
         ('Insuficiente', 'Insuficiente')
     ]
     tutorado = models.ForeignKey('Tutorado', on_delete = models.CASCADE)
-    tutoriaGrupal = models.CharField(max_length = 200)
-    tutoriaIndividual = models.CharField(max_length = 200)
+    tutoriaGrupal = models.IntegerField()
+    tutoriaIndividual = models.IntegerField()
     observaciones = models.CharField(max_length = 20,choices = desempeno)
     estudianteCanalizado = models.IntegerField()
     asistencia = models.FloatField()
@@ -76,9 +76,9 @@ class ReporteSemestralDepartamentalV2(models.Model):
         ordering= ['id']
 
 class TutorReporteSemestralDepartamentalV2(models.Model):
-    tutoriaGrupal = models.CharField(max_length = 200)
-    tutoriaIndividual = models.CharField(max_length = 200)
-    estudianteCanalizado = models.TextField()
+    tutoriaGrupal = models.IntegerField()
+    tutoriaIndividual = models.IntegerField()
+    estudianteCanalizado = models.IntegerField()
     areaCanalizada = models.TextField()
     grupo = models.ForeignKey('Grupo', on_delete = models.CASCADE)
     reporte = models.ForeignKey('ReporteSemestralDepartamentalV2', on_delete = models.CASCADE)

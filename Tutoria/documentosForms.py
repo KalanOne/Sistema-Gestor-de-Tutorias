@@ -20,6 +20,8 @@ class FormTutoradoReporteSemestralGrupalCreditoV2(forms.ModelForm):
         }
         widgets = {
             'estudianteCanalizado': forms.NumberInput(attrs={'min' : 0}),
+            'tutoriaGrupal': forms.NumberInput(attrs={'min' : 0}),
+            'tutoriaIndividual': forms.NumberInput(attrs={'min' : 0}),
             'asistencia': forms.NumberInput(attrs={'min' : 0, 'max' : 100})
         }
 
@@ -66,7 +68,9 @@ class FormTutorReporteSemestralDepartamentalV2(forms.ModelForm):
             'grupo': ''
         }
         widgets = {
-            'estudianteCanalizado': forms.Textarea(attrs={'rows' : 2}),
+            'estudianteCanalizado': forms.NumberInput(attrs={'min' : 0}),
+            'tutoriaGrupal': forms.NumberInput(attrs={'min' : 0}),
+            'tutoriaIndividual': forms.NumberInput(attrs={'min' : 0}),
             'areaCanalizada': forms.Textarea(attrs={'rows' : 2})
         }
 
