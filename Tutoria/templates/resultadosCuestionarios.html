@@ -1,34 +1,44 @@
-{% extends 'layout/basicCNMenu.html' %}
-
-{% block content %}
-    <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 g-4">
-            {% for cuesitonario in cuesitonarios %}
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-header text-white text-center" style="background: #1b396a;">
-                            <h5>{{ cuesitonario.nombre }}</h5>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                {% for tutorado in tutorados %}
-                                    <li class="list-group-item">
-                                        {{ tutorado.user.first_name }}:
-                                        {% for respuesta in respuestas %}
-                                            {% if respuesta.idTutorado_id == tutorado.id %}
-                                                {% if respuesta.idCuestionario_id == cuesitonario.id %}
-                                                <a href="{{ respuesta.archivo.url }}" class="link-success text-decoration-none ms-2" target="_blank"><i class="bi bi-eye"></i></a>
-                                                <a href="{{ respuesta.archivo.url }}" class="link-success text-decoration-none ms-2" download=""><i class="bi bi-download"></i></a>
+{% extends 'layout/basicCNMenu.html' %}{% block content %}
+    {% if hayCuestionarios %}
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 g-4">
+                {% for cuesitonario in cuesitonarios %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-header text-white text-center" style="background: #1b396a;">
+                                <h5>{{ cuesitonario.nombre }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    {% for tutorado in tutorados %}
+                                        <li class="list-group-item">
+                                            {{ tutorado.user.first_name }}:
+                                            {% for respuesta in respuestas %}
+                                                {% if respuesta.idTutorado_id == tutorado.id %}
+                                                    {% if respuesta.idCuestionario_id == cuesitonario.id %}
+                                                    <a href="{{ respuesta.archivo.url }}" class="link-success text-decoration-none ms-2" target="_blank"><i class="bi bi-eye"></i></a>
+                                                    <a href="{{ respuesta.archivo.url }}" class="link-success text-decoration-none ms-2" download=""><i class="bi bi-download"></i></a>
+                                                    {% endif %}
                                                 {% endif %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </li>
-                                {% endfor %}
-                            </ul>
+                                            {% endfor %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
+    {% else %}
+        <div class="container">
+            <div class="row">
+            <div class="col-1 col-md-3"></div>
+            <div class="col-10 col-md-6 bg-light shadow p-3 mb-5 rounded">
+                <h6 class="text-center">No hay cuestionarios creados</h6>
+            </div>
+            <div class="col-1 col-md-3"></div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

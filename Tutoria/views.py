@@ -147,16 +147,21 @@ def cierreSesion(request):
 @login_required
 @group_required('Tutorado')
 def cuestionariosTutorado(request):
+    hayCuestionarios=False
     tutorado = Tutorado.objects.get(user_id = request.user.id)
     if tutorado.idGrupo is None:
         return redirect('paginaInicio')
     fecha = datetime.datetime.now()
     cuestionarios = Cuestionario.objects.filter(idGrupo = tutorado.idGrupo.id, fechaLimite__gte = fecha.strftime("%Y-%m-%d"))
+    if cuestionarios.count()>0:
+        hayCuestionarios=True
+
     return render(request, 'cuestionariosTutorado.html', {
         'gruops': request.user.groups.all(),
         'title': 'Cuestionarios',
         'cuentaGrupo': 1,
-        'cuestionarios': cuestionarios
+        'cuestionarios': cuestionarios,
+        'haycuestionarios': hayCuestionarios
     })
 
 @login_required
@@ -530,18 +535,25 @@ def crearCuestionario(request):
 @login_required
 @group_required('Tutor')
 def resultadosCuestionarios(request):
+    hayResultados=False
     tutor = PersonalTec.objects.get(user_id = request.user.id)
     estadoCerrado = Estado.objects.get(estado = 'Cerrado')
     grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id).exclude(idEstado_id = estadoCerrado.id)
+
+    if grupos.count()>0:
+        hayResultados=True
+
     return render(request, 'Listado_Grupos_Tutor_Cuestionarios.html', {
         'gruops': request.user.groups.all(),
         'title': 'Ver resultados de Cuestionarios',
-        'grupos': grupos
+        'grupos': grupos,
+        'hayResultados': hayResultados
     })
 
 @login_required
 @group_required('Tutor')
 def verResultadosCuestionariosGrupo(request, grupo_id):
+    hayCuestionarios=False
     tutor = PersonalTec.objects.get(user_id = request.user.id)
     try:
         grupo = Grupo.objects.get(idPersonalTec_id = tutor.id, id = grupo_id)
@@ -549,6 +561,10 @@ def verResultadosCuestionariosGrupo(request, grupo_id):
         return redirect('verResultadosCuestionarios')
     tutorados = Tutorado.objects.filter(idGrupo_id = grupo_id)
     cuesitonarios = Cuestionario.objects.filter(idGrupo_id = grupo_id)
+
+    if cuesitonarios.count()>0:
+        hayCuestionarios=True
+
     arr = []
     for cues in cuesitonarios:
        arr.append(cues.id)
@@ -559,19 +575,26 @@ def verResultadosCuestionariosGrupo(request, grupo_id):
         'title': 'Ver resultados de Cuestionarios',
         'tutorados': tutorados,
         'cuesitonarios': cuesitonarios,
-        'respuestas': respuestas
+        'respuestas': respuestas,
+        'hayCuestionarios' : hayCuestionarios
     })
 
 @login_required
 @group_required('Tutor')
 def gruposTutor(request):
+    hayGrupos=False
     tutor = PersonalTec.objects.get(user_id = request.user.id)
     estadoCerrado = Estado.objects.get(estado = 'Cerrado')
     grupos = Grupo.objects.filter(idPersonalTec_id = tutor.id).exclude(idEstado_id = estadoCerrado.id)
+
+    if grupos.count()>0:
+        hayGrupos=True
+
     return render(request, 'Listado_Grupos_Tutor_Tutorados.html', {
         'gruops': request.user.groups.all(),
         'title': 'Ver grupos',
-        'grupos': grupos
+        'grupos': grupos,
+        'hayGrupos': hayGrupos
     })
 
 @login_required
