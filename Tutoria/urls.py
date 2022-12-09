@@ -66,7 +66,7 @@ urlpatterns = [
     path('JefeDesarrolloAcademico/V2/ProgramaInstitucional/Integrar/', documentosViews.IntegrarProgramaInstitucionalTutorialJefe, name = 'JefeDesarrolloAcademico_IntregarProgramaInstitucionalTutorialV2'),
     path('JefeDesarrolloAcademico/V2/ProgramaInstitucional/Visualizar/', documentosViews.VisualizarProgramaInstitucionalTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarProgramaInstitucionalTutorialV2'),
     path('JefeDesarrolloAcademico/V2/PlanAccionTutorial/Visualizar/', documentosViews.VisualizarPlanAccionTutorialJefe, name = 'JefeDesarrolloAcademico_VisualizarPlanAccionTutorialV2'),
-     path('JefeDesarrolloAcademico/Registrar/JefeDepartamentoAcademico/', views.registrarJefeDepartamentoAcademico, name = 'registrarJefeDepartamentoAcademico'),
+    path('JefeDesarrolloAcademico/Registrar/JefeDepartamentoAcademico/', views.registrarJefeDepartamentoAcademico, name = 'registrarJefeDepartamentoAcademico'),
 
 
     # Psicologo y medico
@@ -95,4 +95,5 @@ urlpatterns = [
     path('Credito/editar/<int:dato>/', views.editar_credito, name = 'editar_credito'),
     path('Credito/revisar/<int:dato>/', views.revisar_credito, name = 'revisar_credito'),
 
+    path('Crear/Departamento/', views.crearDepartamento, name = 'crearDepartamento'),
 ]

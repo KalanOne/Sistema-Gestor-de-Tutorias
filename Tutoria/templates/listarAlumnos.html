@@ -28,8 +28,10 @@
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header text-white" style="background-color: #1B396A;">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Alumnos</h1>
+        <div class="modal-header text-white" style="background-color: #1b396a">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Agregar Alumnos
+          </h1>
           <button
             type="button"
             class="btn-close"
@@ -63,14 +65,45 @@
       </div>
     </div>
   </div>
-  {% if tieneAlumnos == True %}
+  {% if tieneAlumnos == True %} 
+
+    {% if Errornum == True%}
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <div>Numeros de control no validos:</div>
+        {% for numinval in numControl %}
+          <div>{{numinval.control}} - {{numinval.nombres}} {{numinval.apellidos}}</div>
+        {% endfor %}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    {% endif %} 
+
+    {% if Errorusu == True%} 
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <div>Usuarios ya existentes:</div>
+        {% for usuexis in usuarioExiste %}
+          <div>{{usuexis.control}} - {{usuexis.nombres}} {{usuexis.apellidos}}</div>
+        {% endfor %}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    {% endif %}
+
   <div class="table-resposive">
     <table
       class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white"
       id="tabla"
     >
       <thead>
-        <tr class="text-white" style="background-color: #1B396A;">
+        <tr class="text-white" style="background-color: #1b396a">
           <th scope="col" class="text-center">N°Control</th>
           <th scope="col" class="text-center">Nombre</th>
           <th scope="col" class="text-center">Apellidos</th>

@@ -1,59 +1,87 @@
-{% extends 'layout/basicCNMenu.html' %}{% load static %} {% block content %}
+{% extends 'layout/basicCNMenu.html' %}{% load static %} {% block content %}{%load crispy_forms_tags %}
 
-<form method="POST">
-  {% csrf_token %}
-  <div class="container p-1">
-    <div class="row">
-      <div class="col-1"></div>
-      <div class="col-10 fw-semibold">
-        <div class="container">
-          <div
-            class="row text-white text-center py-1"
-            style="background-color: #1b396a"
+<div class="container">
+  <div class="card">
+    <form method='POST'>
+      {% csrf_token %}
+      <div class="card-header px-4 border-0 bg-primary">
+        <h4 class="fw-bold mb-0 text-white text-center">
+          Perfil
+          <a
+            class="mx-2 justify-content-end"
+            href="{% url 'editarInformacionTodos' %}"
+            style="text-decoration: none; color: white"
           >
-            <h4>Información Personal</h4>
+            <i class="bi bi-pencil-square"></i>
+          </a>
+          <a
+            class="mx-2 justify-content-end"
+            href="{% url 'cambiarContraseña' %}"
+            style="text-decoration: none; color: white"
+          >
+            <i class="bi bi-key-fill"></i>
+          </a>
+        </h4>
+      </div>
+
+      <div class="card-body px-5 mt-3">
+        {% comment %} Informacion Personal {% endcomment %}
+        <div class="row">
+          <div class="col-md-3">
+            <h5>
+              Información Personal
+              <a
+                class="mx-2 justify-content-end"
+                href="{% url 'editarInformacion' %}"
+                style="text-decoration: none; color: white"
+              >
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              <a
+                class="mx-2 justify-content-end"
+                href="{% url 'cambiarContraseña' %}"
+                style="text-decoration: none; color: white"
+              >
+                <i class="bi bi-key-fill"></i>
+              </a>
+            </h5>
           </div>
-          <div class="row">
-            <div class="container py-3" style="background-color: #d9d9d9">
-              <div class="row">
-                <div class="col-3" style="text-align: right">Nombre:</div>
-                <div class="col-8">{{formu.first_name}}</div>
-              </div>
-              <br />
-              <div class="row">
-                <div class="col-3" style="text-align: right">Apellidos:</div>
-                <div class="col-8">{{formu.last_name}}</div>
-              </div>
-              <br />
-              <div class="row">
-                <div class="col-3" style="text-align: right">Domicilio:</div>
-                <div class="col-8">{{formperfilPersonalTec.domicilio}}</div>
-              </div>
-              <br />
-              <div class="row">
-                <div class="col-3" style="text-align: right">Teléfono:</div>
-                <div class="col-8">{{formperfilPersonalTec.telefono}}</div>
-              </div>
-              <br />
-              <div class="row">
-                <div class="col-3" style="text-align: right">
-                  Correo Personal:
-                </div>
-                <div class="col-8">{{formperfilPersonalTec.correoPersonal}}</div>
-              </div>
+          <div class="col-md-9">
+            {{formu.first_name|as_crispy_field}}
+            {{formu.last_name|as_crispy_field}}
+            {{formperfilPersonalTec.domicilio|as_crispy_field}}
+            {{formperfilPersonalTec.telefono|as_crispy_field}}
+            {{formperfilPersonalTec.correoPersonal|as_crispy_field}}
+            {{formperfilPersonalTec.edificio|as_crispy_field}}
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-1" />
+
+      <div class="card-body px-5">
+        {% comment %} Botones {% endcomment %}
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-9">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a
+                class="btn btn-sm btn-danger text-center m-1"
+                href="{% url 'perfilTodos' %}"
+                >Cancelar</a
+              >
+              <button
+                type="submit"
+                class="btn btn-sm btn-primary text-center m-1"
+              >
+                Enviar
+              </button>
             </div>
           </div>
         </div>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
-          <a
-            class="btn btn-sm btn-danger text-center m-1"
-            href="{% url 'perfilTutorado' %}"
-            >Cancelar</a
-          >
-          <button type="submit" class="btn btn-sm btn-primary text-center m-1">Enviar</button>
-        </div>
       </div>
-    </div>
+    </form>
   </div>
-</form>
+  <br>
+</div>
 {% endblock content %}

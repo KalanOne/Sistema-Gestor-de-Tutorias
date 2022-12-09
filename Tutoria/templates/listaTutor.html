@@ -61,6 +61,20 @@
     </div>
   </div>
   {% else %}
+    {% if Errorusu == True%} 
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <div>Usuarios ya existentes:</div>
+        {% for usuexis in usuarioExiste %}
+          <div>{{usuexis.username}} - {{usuexis.nombres}} {{usuexis.apellidos}}</div>
+        {% endfor %}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    {% endif %}
   <div class="table-resposive">
     <table
       class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white"

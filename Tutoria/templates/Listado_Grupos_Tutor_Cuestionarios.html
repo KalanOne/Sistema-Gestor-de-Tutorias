@@ -1,24 +1,43 @@
-{% extends 'layout/basicCNMenu.html' %}
-
-{% block content %}
+{% extends 'layout/basicCNMenu.html' %} {% block content %}
+<div class="container">
+  {% if hayResultados %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for grupo in grupos %}
+        <div class="col">
+        <div class="card h-100">
+            <div
+            class="card-header text-white text-center"
+            style="background: #1b396a"
+            >
+            <h5>{{ grupo.grupo }}</h5>
+            </div>
+            <div class="card-body">
+            <div class="card-text">
+                <p>Tutor: {{ grupo.idPersonalTec.user.first_name }}</p>
+                <p>Estado: {{ grupo.idEstado.estado }}</p>
+                <a
+                class="btn btn-primary"
+                href="{% url 'verResultadosCuestionariosGrupo' grupo.id %}"
+                role="button"
+                style="background: #1b396a"
+                >Ver cuestionarios</a
+                >
+            </div>
+            </div>
+        </div>
+        </div>
+        {% endfor %}
+    </div>
+  {% else %}
     <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-            {% for grupo in grupos %}
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-header text-white text-center" style="background: #1b396a;">
-                            <h5>{{ grupo.grupo }}</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-text">
-                                <p>Tutor: {{ grupo.idPersonalTec.user.first_name }}</p>
-                                <p>Estado: {{ grupo.idEstado.estado }}</p>
-                                <a class="btn btn-primary" href="{% url 'verResultadosCuestionariosGrupo' grupo.id %}" role="button" style="background: #1b396a;">Ver cuestionarios</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+        <div class="row">
+        <div class="col-1 col-md-3"></div>
+        <div class="col-10 col-md-6 bg-light shadow p-3 mb-5 rounded">
+            <h6 class="text-center">No hay grupos activos</h6>
+        </div>
+        <div class="col-1 col-md-3"></div>
         </div>
     </div>
+  {% endif %}
+</div>
 {% endblock content %}
