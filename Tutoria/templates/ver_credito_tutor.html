@@ -9,46 +9,54 @@
     <div class="col-1 col-md-3"></div>
   </div>
   {% else %} 
-  {% for Creditos in Credito %}
-  <div class="row mb-3">
-    <div class="col-12 col-md-2"></div>
-    <div class="col-12 col-md-8" id="Credito">
-      <div class="row p-1 rounded-top" style="background-color: #1b396a">
-        <h5 class="text-center text-white">{{ Creditos.nombre_doc }}</h5>
-      </div>
-      <div class="row py-1 bg-white rounded-bottom">
-        <p>
-          Alumno: {{Creditos.idTutorado.user.first_name}}
-          {{Creditos.idTutorado.user.last_name}}
-        </p>
-        <p>Estado: {{Creditos.idEstado}}</p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
-          <div class="row">
-            <div class="col">
-              <a
-                class="btn btn-primary"
-                href="{{Creditos.archivo.url}}"
-                target="”_blank”"
-                role="button"
-                >Abrir</a
-              >
-              <a
-                class="btn btn-primary"
-                href="{% url 'revisar_credito' Creditos.id %}"
-                role="button"
-                >Revisar</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-2"></div>
+  <div class="row mb-5">
+    <h1 class="text-center">Lista De Créditos</h1>
   </div>
-  {% endfor %} 
+  <div class="table-resposive">
+    <table
+      class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white"
+      id="tabla"
+    >
+      <thead>
+        <tr class="text-white bg-primary">
+          <th scope="col" class="text-center">Nombre</th>
+          <th scope="col" class="text-center">Apellidos</th>
+          <th scope="col" class="text-center">Credito</th>
+          <th scope="col" class="text-center">Estado</th>
+          <th scope="col" class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="table-secondary">
+        {% for Creditos in Credito %}
+        <tr>
+          <td class="text-center">{{Creditos.idTutorado.user.first_name}}</td>
+          <td class="text-center">{{Creditos.idTutorado.user.last_name}}</td>
+          <td class="text-center">{{ Creditos.nombre_doc }}</td>
+          <td class="text-center">{{Creditos.idEstado}}</td>
+          <td class="text-center">
+            <div class="row text">
+              <div class="col">
+                <a
+                  class="mx-2"
+                  href="{{Creditos.archivo.url}}"
+                  target="”_blank”"
+                  style="text-decoration: none; color: black"
+                  ><i class="bi bi-eye-fill"></i></a
+                >
+                <a
+                  class="mx-2"
+                  href="{% url 'revisar_credito' Creditos.id %}"
+                  style="text-decoration: none; color: black"
+                  ><i class="bi bi-pencil-square"></i></a
+                >
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% endif %}
 </div>
-{% endblock content %} {% block JS %}
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdn.rawgit.com/JacobLett/bootstrap4-latest/504729ba/bootstrap-4-latest.min.js"></script>
-{% endblock JS %}
+{% endblock content %}

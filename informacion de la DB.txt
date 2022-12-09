@@ -18,9 +18,9 @@ Jefe de Desarrollo Académico:
     sgtjefedesarrolloaurora.ma
 
 Coordinación Institucional de Tutoría:
-    Mirian Jiménez García
+    Miriam Jiménez García
     miriam.ji
-    mirian.ji@morelia.tecnm.mx
+    miriam.ji@morelia.tecnm.mx
     sgtcoordinacioninstitucionalmiriam.ji
 
 Coordinador de Tutoria del Departamento Académico:
@@ -92,29 +92,45 @@ Tutor:
         adrian.ro@morelia.tecnm.mx
         sgtprofeadrian.ro
 
+Encargado de Créditos Complementarios:
+    ISC:
+        Nikita Prashkov Polk
+        nikita.pr
+        nikita.pr@morelia.tecnm.mx
+        mansion123
+    IMC:
+        Gabriela Ferreyra Ortiz
+        gabriela.fe
+        gabriela.fe@morelia.tecnm.mx
+        mansion123
+    IBQ:
+        Denisse García Hernandez
+        denisse.ga
+        denisse.ga@morelia.tecnm.mx
+        mansion123
         
 Tutorados:
     ISC1:
         Diego Ruiz Ayala
-        diego.ru
+        22121075
         diego.ru@morelia.tecnm.mx
-        sgttutoradodiego.ru
+        sgttutorado22121075
 
         Angel Gallegos Perez
-        angel.ga
+        22121072
         angel.ga@morelia.tecnm.mx
-        sgttutoradoangel.ga
+        sgttutorado22121072
 
     ISC2:
         Pablo Juarez Castillo
-        pablo.ju
+        22121073
         pablo.ju@morelia.tecnm.mx
-        sgttutoradopablo.ju
+        sgttutorado22121073
 
         Arturo Martinez Fuentes
-        arturo.ma
+        22121074
         arturo.ma@morelia.tecnm.mx
-        sgttutoradoarturo.ma
+        sgttutorado22121074
 
     IMC:(Dentro)
         David Avila Villa

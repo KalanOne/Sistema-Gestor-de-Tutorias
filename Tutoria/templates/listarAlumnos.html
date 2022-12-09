@@ -1,5 +1,8 @@
 {% extends 'layout/basicCNMenu.html' %} {% load static %}{% block content %}{%load crispy_forms_tags %}
 <div class="container">
+  <div class="row mb-5">
+      <h1 class="text-center">Lista De Alumnos Del Grupo</h1>
+  </div>
   <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
     <div class="row">
       <div class="col">
@@ -137,6 +140,35 @@
     </table>
   </div>
   {% else %}
+  {% if Errornum == True%}
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <div>Numeros de control no validos:</div>
+        {% for numinval in numControl %}
+          <div>{{numinval.control}} - {{numinval.nombres}} {{numinval.apellidos}}</div>
+        {% endfor %}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    {% endif %} 
+
+    {% if Errorusu == True%} 
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <div>Usuarios ya existentes:</div>
+        {% for usuexis in usuarioExiste %}
+          <div>{{usuexis.control}} - {{usuexis.nombres}} {{usuexis.apellidos}}</div>
+        {% endfor %}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    {% endif %}
   <div class="container">
     <div class="row">
       <div class="col-1 col-md-3"></div>

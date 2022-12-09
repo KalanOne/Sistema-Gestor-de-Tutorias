@@ -677,7 +677,7 @@ def solicitudPsicologigaTutor(request, grupo_id, tutorado_id):
 
 # Jefe de Departamento Académico
 @login_required
-@group_required('Jefe de Departamento Académico')
+@group_required('Jefe de Departamento Académico','Coordinador de Tutoria del Departamento Académico')
 def listaTutor(request):
     if request.method == "GET":
         vacio=0
@@ -746,7 +746,7 @@ def listaTutor(request):
 
             print(len(usuariosExistentes))
 
-            if len(usuariosExistentes)>=0:
+            if len(usuariosExistentes)>0:
                 ErrorusuariosExistentes=True
 
             coordinador=PersonalTec.objects.get(user_id=request.user.id)
@@ -778,7 +778,7 @@ def listaTutor(request):
 
     
 @login_required
-@group_required('Jefe de Departamento Académico')
+@group_required('Jefe de Departamento Académico','Coordinador de Tutoria del Departamento Académico')
 def crearGrupo(request, Tutor):
     if request.method == 'GET':
         grupoform=GrupoForm()
@@ -823,7 +823,7 @@ def crearGrupo(request, Tutor):
         
 
 @login_required
-@group_required('Jefe de Departamento Académico')
+@group_required('Jefe de Departamento Académico','Coordinador de Tutoria del Departamento Académico')
 def verGruposDelTutor(request, Tutor):
     if request.method=="GET":
         sobrecargaGrupo=False
@@ -931,12 +931,14 @@ def listarAlumnos(request, Grupoid):
         imported_data = dataset.load(nuevas_personas.read())  
         result = persona_resource.import_data(dataset, dry_run=True)
 
-        if not result.has_errors(): 
+        print(result.has_errors())
+        if not result.has_errors():
             persona_resource.import_data(dataset, dry_run=False)
             for Alumno in registrarAlumno.objects.all():
                 if User.objects.filter(username=Alumno.control).exists():
                     usuariosyaexistente.append(Alumno)
                 else:
+                    print("Entro al segundo else")
                     try:
                         try:
                             semestreAlumno=Alumno.semestre
@@ -1102,9 +1104,11 @@ def editar_credito(request, dato):
     if request.method == 'POST':  
         credito=Credito.objects.get(id=dato)
         form=SubirCreditoForm(request.POST, request.FILES, instance=credito)
+        estado=Estado.objects.get(estado='Espera')
         if form.is_valid():
             print("es valido")
             editaCredito = form.save(commit = False)
+            editaCredito.idEstado=estado
             editaCredito.save()
         else:
             print("no es valido") 
