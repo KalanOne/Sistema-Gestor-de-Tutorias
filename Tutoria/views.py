@@ -1464,7 +1464,6 @@ def registrarCoordinadorTutoria(request):
             'existe':Existen
         })
 
-           ##    Tabla del personal 
 @login_required
 @group_required('Coordinación Institucional de Tutoría', 'Jefe de Desarrollo Académico', 'Subdirector Académico')
 def listado_Personal(request):
@@ -1497,9 +1496,6 @@ def listado_Personal(request):
 def VisualizarConstanciaTutor(request):
     tutor = PersonalTec.objects.get(user_id = request.user.id)
     constancias = ConstanciaTutorV2.objects.filter(tutor_id = tutor.id)
-
-    for c in constancias:
-        print(c.archivo)
 
     return render(request, 'SistemaDeDocumentos/Tutor_VisualizarCosntancia.html', {
         'gruops': request.user.groups.all(),
