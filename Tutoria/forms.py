@@ -43,6 +43,64 @@ class EditarUserForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={'class':'form-control', 'id':'User_last_name','required':'true'}),
         }
 
+class EditarUserTutoradoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = {'first_name','last_name'}
+        widgets = {
+            'first_name': forms.TextInput(attrs={'required':'true'}),
+            'last_name': forms.TextInput(attrs={'required':'true'}),
+        }
+        labels = {
+            'first_name': ('Nombre'),
+            'last_name': ('Apellidos'),
+        }
+
+class EditarUserPersonalTecForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = {'first_name','last_name'}
+        widgets = {
+            'first_name': forms.TextInput(attrs={'required':'true'}),
+            'last_name': forms.TextInput(attrs={'required':'true'}),
+        }
+        labels = {
+            'first_name': ('Nombre'),
+            'last_name': ('Apellidos'),
+        }
+
+class MostrarUserTutoradoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = {'username','first_name','last_name','email'}
+        widgets = {
+            'username': forms.TextInput(attrs={'required':'true'}),
+            'first_name': forms.TextInput(attrs={'required':'true'}),
+            'last_name': forms.TextInput(attrs={'required':'true'}),
+            'email': forms.EmailInput(attrs={'required':'true'}),
+        }
+        labels = {
+            'username': ('Numero de Control'),
+            'first_name': ('Nombre'),
+            'last_name': ('Apellidos'),
+            'email': ('Correo Institucional')
+        }
+
+class MostrarUserTodosForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = {'first_name','last_name','email'}
+        widgets = {
+            'first_name': forms.TextInput(attrs={'required':'true'}),
+            'last_name': forms.TextInput(attrs={'required':'true'}),
+            'email': forms.EmailInput(attrs={'required':'true'}),
+        }
+        labels = {
+            'first_name': ('Nombre'),
+            'last_name': ('Apellidos'),
+            'email': ('Correo Institucional')
+        }
+
 class PerfilTutoradoForm(forms.ModelForm):
     class Meta:
         model = Tutorado
@@ -52,6 +110,27 @@ class PerfilTutoradoForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'class':'form-control', 'id':'Tutorado_telefono'}),
             'correoPersonal': forms.TextInput(attrs={'class':'form-control', 'id':'Tutorado_correoPersonal'}),
             'semestre': forms.TextInput(attrs={'class':'form-control', 'id':'Tutorado_semestre'})
+        }
+
+class MostrarPerfilTutoradoForm(forms.ModelForm):
+    class Meta:
+        model = Tutorado
+        fields = {'domicilio','telefono','correoPersonal','semestre'}
+        widgets = {
+            'domicilio': forms.TextInput(attrs={'required':'true'}),
+            'telefono': forms.TextInput(attrs={'required':'true'}),
+            'correoPersonal': forms.TextInput(attrs={'required':'true'}),
+            'semestre': forms.EmailInput(attrs={'required':'true'}),
+        }
+
+class EditarPerfilTutoradoForm(forms.ModelForm):
+    class Meta:
+        model = Tutorado
+        fields = {'domicilio','telefono','correoPersonal'}
+        widgets = {
+            'domicilio': forms.TextInput(attrs={'required':'true'}),
+            'telefono': forms.TextInput(attrs={'required':'true'}),
+            'correoPersonal': forms.TextInput(attrs={'required':'true'})
         }
 
 class PadreMadreTutorForm(forms.ModelForm):
@@ -72,6 +151,14 @@ class GrupoForm(forms.ModelForm):
             'grupo': forms.TextInput(attrs={'class':'form-control', 'id':'Grupo_grupo'})
         }
 
+class MostrarGrupoForm(forms.ModelForm):
+    class Meta:
+        model = Grupo
+        fields = {'grupo'}
+        widgets = {
+            'grupo': forms.TextInput()
+        }
+
 class DepartamentoAcademicoForm(forms.ModelForm):
     class Meta:
         model = DepartamentoAcademico
@@ -79,6 +166,27 @@ class DepartamentoAcademicoForm(forms.ModelForm):
         widgets = {
             'departamentoAcademico': forms.TextInput(attrs={'class':'form-control', 'id':'DepartamentoAcademico_departamentoAcademico'}),
             'abreviacion': forms.TextInput(attrs={'class':'form-control', 'id':'DepartamentoAcademico_abreviacion'})
+        }
+
+class MostrarPadreMadreForm(forms.ModelForm):
+    class Meta:
+        model = PadreMadreTutor
+        fields = {'nombre','apellidos','telefonotutor'}
+        labels = {
+            'telefonotutor': ('Telefono del Tutor')
+        }
+
+class EditarPadreMadreForm(forms.ModelForm):
+    class Meta:
+        model = PadreMadreTutor
+        fields = {'nombre','apellidos','telefonotutor'}
+
+class MostrarDepartamentoAcademicoForm(forms.ModelForm):
+    class Meta:
+        model = DepartamentoAcademico
+        fields = {'departamentoAcademico'}
+        labels = {
+            'departamentoAcademico': ('Departamento Académico')
         }
 
 class PerfilPersonalTecForm(forms.ModelForm):
@@ -100,6 +208,28 @@ class EditarPerfilPersonalTecForm(forms.ModelForm):
             'domicilio': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_domicilio'}),
             'telefono': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_telefono'}),
             'correoPersonal': forms.TextInput(attrs={'class':'form-control', 'id':'PersonalTec_correoPersonal'}),
+        }
+
+class MostrarPerfilPersonalTecForm(forms.ModelForm):
+    class Meta:
+        model = PersonalTec
+        fields = {'domicilio','telefono', 'correoPersonal','edificio'}
+        widgets = {
+            'domicilio': forms.TextInput(attrs={'required':'true'}),
+            'telefono': forms.TextInput(attrs={'required':'true'}),
+            'correoPersonal': forms.TextInput(attrs={'required':'true'}),
+            'edificio': forms.TextInput(attrs={'required':'true'})
+        }
+
+class EditarPerfilPersonalTecForm(forms.ModelForm):
+    class Meta:
+        model = PersonalTec
+        fields = {'domicilio','telefono', 'correoPersonal','edificio'}
+        widgets = {
+            'domicilio': forms.TextInput(attrs={'required':'true'}),
+            'telefono': forms.TextInput(attrs={'required':'true'}),
+            'correoPersonal': forms.TextInput(attrs={'required':'true'}),
+            'edificio': forms.TextInput(attrs={'required':'true'})
         }
 
 class EnviarCuestionario(forms.ModelForm):

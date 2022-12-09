@@ -1,26 +1,39 @@
 {% extends 'layout/basicCNMenu.html' %}{% block content %}{% load crispy_forms_tags %}
 <div class="container">
-  <form method="POST">
-    {% csrf_token %}
-    <div class="row">
-      <div class="col-2"></div>
-      <div class="col-8">
-        {{changeform|crispy }} {% if error == True %}
-        <div class="alert alert-danger alert-dismissible" role="alert">
-          <div> Error, verifique las contraseñas </div>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-          ></button>
-        </div>
-        {% endif %}
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" type="submit">Enviar</button>
-        </div>
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <div class="card">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="card-header px-4 border-0 bg-primary">
+            <h4 class="fw-bold mb-0 text-white text-center">Contraseña</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-8">
+                {{changeform|crispy }} {% if error == True %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                  <div>Error, verifique las contraseñas</div>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                {% endif %}
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-primary" type="submit">Enviar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
-  </form>
+    <div class="col2"></div>
+  </div>
 </div>
 {% endblock content %}

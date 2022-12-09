@@ -168,26 +168,41 @@ def cuestionariosTutorado(request):
 @group_required('Tutorado')
 def perfilTutorado(request):
     #obtener objetos
-    usuario = User.objects.get(id = request.user.id)
-    tutorado = Tutorado.objects.get(user_id = request.user.id)
-    departamentoacademico = DepartamentoAcademico.objects.get(id = tutorado.idDepartamentoAcademico_id)
+    usuarios = User.objects.get(id = request.user.id)
+    usuario=MostrarUserTutoradoForm(instance=usuarios)
+    tutorados = Tutorado.objects.get(user_id = request.user.id)
+    tutorado=MostrarPerfilTutoradoForm(instance=tutorados)
+    departamentoacademicos = DepartamentoAcademico.objects.get(id = tutorados.idDepartamentoAcademico_id)
+    departamentoacademico= MostrarDepartamentoAcademicoForm(instance=departamentoacademicos)
     
-    if tutorado.idGrupo is None:
+    if tutorados.idGrupo is None:
         cuentaGrupo = 0
     else:
         cuentaGrupo = 1
 
     try:
-        padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
+        padremadretutors = PadreMadreTutor.objects.get(id = tutorados.idPadreMadreTutor_id)
+        padremadretutor= MostrarPadreMadreForm(instance=padremadretutors)
     except:
-        padremadretutor = None
+        padremadretutor= MostrarPadreMadreForm()
     
     try:
-        grupo = Grupo.objects.get(id = tutorado.idGrupo_id)
+        grupos = Grupo.objects.get(id = tutorados.idGrupo_id)
+        grupo= MostrarGrupoForm(instance=grupos)
     except:
-        grupo = None
+        grupo= MostrarGrupoForm()
 
-        
+    for fieldname in usuario.fields:
+        usuario.fields[fieldname].disabled = True
+    for fieldname in tutorado.fields:
+        tutorado.fields[fieldname].disabled = True
+    for fieldname in departamentoacademico.fields:
+        departamentoacademico.fields[fieldname].disabled = True
+    for fieldname in padremadretutor.fields:
+        padremadretutor.fields[fieldname].disabled = True
+    for fieldname in grupo.fields:
+        grupo.fields[fieldname].disabled = True
+
     return render(request, 'perfilTutorado.html',{
         'gruops': request.user.groups.all(),
         'title': 'Perfil',
@@ -271,91 +286,24 @@ def enviarCuestionarioTutorado(request, cuestionario_id):
 @login_required
 @group_required('Tutorado')
 def editarInformacion(request):
-    #obtener tutorado
-    tutorado = Tutorado.objects.get(user_id = request.user.id)
-    if tutorado.idGrupo is None:
-        cuentaGrupo = 0
-    else:
-        cuentaGrupo = 1
-           
-    #obtener objetos
-    usuario = User.objects.get(id = request.user.id)
-    tutorado = Tutorado.objects.get(user_id = request.user.id)
 
-    #crear formulario de padremadretutor si existe o no
-    try:
-        padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
-        padremadretutorform = PadreMadreTutorForm(instance = padremadretutor) 
-    except:
-        padremadretutorform = PadreMadreTutorForm() 
-
-    #autorellenar forms con el instance
-    usuarioform = UserForm(instance = usuario)
-    perfilTutoradoform = PerfilTutoradoForm(instance = tutorado)
-    
-    #acciones para cuando se mande el form
-    if request.method == 'POST':
-        
-        #se crean formularios con los datos que ya tiene para despues solo modificar los que se manda por post
-        usuarioformpost=UserForm()
-        usuarioformpost=usuarioform
-        perfilTutoradoformpost=PerfilTutoradoForm()
-        perfilTutoradoformpost=perfilTutoradoform
-
-        #valida si el form que se lleno anteriormente es valido y se modifican los valores recibido en post
-        if usuarioformpost.is_valid:
-            post=usuarioformpost.save(commit=False)
-            post.first_name=request.POST['first_name']
-            post.last_name=request.POST['last_name']
-            post.save()
-            
+    if request.method=='GET':
+        tutorado = Tutorado.objects.get(user_id = request.user.id)
+        usuario = User.objects.get(id = request.user.id)
+        usuarioform = EditarUserTutoradoForm(instance = usuario)
+        perfilTutoradoform = EditarPerfilTutoradoForm(instance = tutorado)
         try:
-            #se intenta obtener el objeto PadreMadreTutor para saber si existe o no
-            padremadretutorPost = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
-
-            padremadretutorformpost=PadreMadreTutorForm() 
-            padremadretutorformpost=padremadretutorform
-
-            #valida si el form que se lleno anteriormente es valido y se modifican los valores recibido en post
-            if padremadretutorformpost.is_valid:
-                post=padremadretutorformpost.save(commit=False)
-                post.nombre=request.POST['nombre']
-                post.apellidos=request.POST['apellidos']
-                post.telefonotutor=request.POST['telefonotutor']
-                post.save()
-
-            #valida si el form que se lleno anteriormente es valido y se modifican los valores recibido en post
-            if perfilTutoradoformpost.is_valid:
-                post=perfilTutoradoformpost.save(commit=False)
-                post.domicilio=request.POST['domicilio']
-                post.telefono=request.POST['telefono']
-                post.correoPersonal=request.POST['correoPersonal']
-                post.save()
+            padremadretutor = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
+            padremadretutorform = MostrarPadreMadreForm(instance = padremadretutor) 
         except:
-            #obtenemos id del siguiente tutor que se va a registrar
-            try:
-                next_tutor = PadreMadreTutor.objects.order_by('-id').first().id + 1
-            except:
-                next_tutor=1
-            
-            #obtenemos datos del formulario para despues registrar un nuevo tutor
-            nombre=request.POST['nombre']
-            apellidos=request.POST['apellidos']
-            telefonotutor=request.POST['telefonotutor']
-            pmt=PadreMadreTutor.objects.create(nombre=nombre,apellidos=apellidos,telefonotutor=telefonotutor)
+            padremadretutorform = MostrarPadreMadreForm() 
 
-            #valida si el form que se lleno anteriormente es valido y se modifican los valores recibido en post
-            if perfilTutoradoformpost.is_valid:
-                post=perfilTutoradoformpost.save(commit=False)
-                post.domicilio=request.POST['domicilio']
-                post.telefono=request.POST['telefono']
-                post.correoPersonal=request.POST['correoPersonal']
-                post.idPadreMadreTutor_id=next_tutor
-                post.save()
-
-        return redirect('perfilTutorado')
-    
-    return render(request, 'editarInformacion.html',{
+        if tutorado.idGrupo is None:
+            cuentaGrupo = 0
+        else:
+            cuentaGrupo = 1
+           
+        return render(request, 'editarInformacion.html',{
             'gruops': request.user.groups.all(),
             'title': 'Perfil',
             'cuentaGrupo': cuentaGrupo,
@@ -363,6 +311,54 @@ def editarInformacion(request):
             'formPerfilTutorado': perfilTutoradoform,
             'formpadremadretutor': padremadretutorform,
         })
+    else:
+        tutorado = Tutorado.objects.get(user_id = request.user.id)
+        usuario = User.objects.get(id = request.user.id)
+        usuarioformpost=EditarUserTutoradoForm(request.POST,instance=usuario)
+        perfilTutoradoformpost=EditarPerfilTutoradoForm(request.POST,instance=tutorado)
+
+        if usuarioformpost.is_valid():
+            print('usuario valido')
+            post=usuarioformpost.save(commit=False)
+            post.save()
+        else:
+            print('usuario no valido')
+
+        try:
+            padremadretutorPost = PadreMadreTutor.objects.get(id = tutorado.idPadreMadreTutor_id)
+            padremadretutorformpost=EditarPadreMadreForm(request.POST, instance=padremadretutorPost)
+
+            if padremadretutorformpost.is_valid():
+                print('tutor valido')
+                post=padremadretutorformpost.save(commit=False)
+                post.save()
+            else:
+                print('tutor no valido')
+
+            if perfilTutoradoformpost.is_valid():
+                print('tutorado valido')
+                post=perfilTutoradoformpost.save(commit=False)
+                post.save()
+            else:
+                print('tutorado no valido')
+
+        except:
+            #si no existe el tutor, aqui se crea
+            nombre=request.POST['nombre']
+            apellidos=request.POST['apellidos']
+            telefonotutor=request.POST['telefonotutor']
+            pmt=PadreMadreTutor.objects.create(nombre=nombre,apellidos=apellidos,telefonotutor=telefonotutor)
+
+            if perfilTutoradoformpost.is_valid():
+                print('tutorado valido 2')
+                post=perfilTutoradoformpost.save(commit=False)
+                post.idPadreMadreTutor=pmt
+                post.save()
+            else:
+                print('tutorado no valido 2')
+
+        return redirect('perfilTutorado')
+
 
 @login_required
 @group_required('Tutorado')
@@ -435,12 +431,22 @@ def misCitasTutorado(request):
 @login_required
 def perfilTodos(request):
     #obtener objetos
-    usuario=User.objects.get(id=request.user.id)
-    personaltec=PersonalTec.objects.get(user_id=request.user.id)
+    usuarios=User.objects.get(id=request.user.id)
+    personaltecs=PersonalTec.objects.get(user_id=request.user.id)
+    usuario=MostrarUserTodosForm(instance=usuarios)
+    personaltec=MostrarPerfilPersonalTecForm(instance=personaltecs)
     try:
-        departamentoacademico=DepartamentoAcademico.objects.get(id=personaltec.idDepartamentoAcademico_id)
+        departamentoacademicos=DepartamentoAcademico.objects.get(id=personaltecs.idDepartamentoAcademico_id)
+        departamentoacademico=MostrarDepartamentoAcademicoForm(instance=departamentoacademicos)
     except:
-        departamentoacademico=''
+        departamentoacademico=MostrarDepartamentoAcademicoForm()
+
+    for fieldname in usuario.fields:
+        usuario.fields[fieldname].disabled = True
+    for fieldname in personaltec.fields:
+        personaltec.fields[fieldname].disabled = True
+    for fieldname in departamentoacademico.fields:
+        departamentoacademico.fields[fieldname].disabled = True
 
     return render(request, 'perfilTodos.html',{
         'gruops': request.user.groups.all(),
@@ -457,8 +463,8 @@ def editarInformacionTodos(request):
         usuario=User.objects.get(id=request.user.id)
         personaltec=PersonalTec.objects.get(user_id=request.user.id)
 
-        usuarioform = UserForm(instance = usuario)
-        formpersonaltec= PerfilPersonalTecForm(instance=personaltec)
+        usuarioform = EditarUserPersonalTecForm(instance = usuario)
+        formpersonaltec= EditarPerfilPersonalTecForm(instance=personaltec)
 
 
         return render(request, 'editarInformacionTodos.html',{
@@ -472,7 +478,7 @@ def editarInformacionTodos(request):
         usuario=User.objects.get(id=request.user.id)
         personaltec=PersonalTec.objects.get(user_id=request.user.id)
 
-        usuarioform = EditarUserForm(request.POST, instance=usuario)
+        usuarioform = EditarUserPersonalTecForm(request.POST, instance=usuario)
         formpersonaltec= EditarPerfilPersonalTecForm(request.POST, instance=personaltec)
 
         if usuarioform.is_valid():
