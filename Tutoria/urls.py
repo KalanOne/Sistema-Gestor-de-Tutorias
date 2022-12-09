@@ -35,7 +35,7 @@ urlpatterns = [
 
     #pruebas
     #path('Registrar/Tutorados/<int:Grupoid>/', views.registrarTutorados, name = 'registrarTutorados'),
-    path('listadoPersonal/', views.listado_Personal, name='listadoPersonal'),
+    path('Personal/', views.listado_Personal, name='listadoPersonal'),
     
 
     # urls Para documentos

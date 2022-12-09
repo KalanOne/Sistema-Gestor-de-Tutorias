@@ -6,6 +6,7 @@ from .models import *
 from .forms import *
 import datetime
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import *
 from tablib import Dataset 
 from django.utils.datastructures import MultiValueDictKeyError
 from Tutoria.resources import *
@@ -1373,11 +1374,26 @@ def registrarCoordinadorTutoria(request):
 @login_required
 @group_required('Coordinación Institucional de Tutoría', 'Jefe de Desarrollo Académico', 'Subdirector Académico')
 def listado_Personal(request):
-    personal = PersonalMed.objects.all()  
-    personal2 = PersonalTec.objects.all()
-    print(personal)
+    coordinador = PersonalTec.objects.get(user_id = request.user.id)
+    grupos = []
+    personal = PersonalMed.objects.filter(idInstitucion_id = coordinador.idInstitucion.id)  
+    personal2 = PersonalTec.objects.filter(idInstitucion_id = coordinador.idInstitucion.id)
+
+    for p in personal:
+        for a in p.user.groups.all():
+            grupos.append({"id": p.user.id, "puesto": a})
+
+    for p in personal2:
+        for a in p.user.groups.all():
+            grupos.append({"id": p.user.id, "puesto": a})
+    
+    # for p in grupos:
+    #     print(p)
 
     return render(request, 'listado_Personal.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Registrar Coordinador de Tutoria del Departamento Académico',
         'personal': personal,
         'personal2': personal2,
+        'grupitosUser': grupos
     })
