@@ -72,20 +72,6 @@
             </li>
 
             {% for group in gruops %}
-                  {% if group.name == 'Jefe de Desarrollo Académico' %}
-                    <li class="nav-item"><a class="nav-link"
-                       href="{% url 'listadoPersonal' %}">Personal</a></li>
-                    {% endif %}
-
-                    {% if group.name == 'Coordinación Institucional de Tutoría'%}
-                    <li class="nav-item"><a class="nav-link"
-                       href="{% url 'listadoPersonal' %}">Personal</a></li>
-                    {% endif %}
-
-                    {% if group.name == 'Subdirector Académico' %}
-                    <li class="nav-item"><a class="nav-link"
-                       href="{% url 'listadoPersonal' %}">Personal</a></li>
-                    {% endif %}
 
                 {% if group.name == 'Tutorado' %}
                     {% if cuentaGrupo == 1 %}
@@ -123,11 +109,23 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'registrarCoordinadorTutoria' %}">Registrar Coordinador de Tutoría del Departamento Académico</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'crearDepartamento' %}">Crear Departamento</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listadoPersonal' %}">Personal</a>
+                        </li>
                     {% endif %}
 
                     {% if group.name == 'Jefe de Desarrollo Académico' %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'registrarJefeDepartamentoAcademico' %}">Registrar Jefe de Departamento Académico</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'crearDepartamento' %}">Crear Departamento</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listadoPersonal' %}">Personal</a>
                         </li>
                     {% endif %}
 
@@ -149,6 +147,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'crearDepartamento' %}">Crear Departamento</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listadoPersonal' %}">Personal</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
