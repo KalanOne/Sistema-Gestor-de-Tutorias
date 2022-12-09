@@ -6,6 +6,7 @@ from .models import *
 from .forms import *
 import datetime
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import *
 from tablib import Dataset 
 from django.utils.datastructures import MultiValueDictKeyError
 from Tutoria.resources import *
@@ -1463,6 +1464,48 @@ def registrarCoordinadorTutoria(request):
             'existe':Existen
         })
 
+           ##    Tabla del personal 
+@login_required
+@group_required('Coordinación Institucional de Tutoría', 'Jefe de Desarrollo Académico', 'Subdirector Académico')
+def listado_Personal(request):
+    coordinador = PersonalTec.objects.get(user_id = request.user.id)
+    grupos = []
+    personal = PersonalMed.objects.filter(idInstitucion_id = coordinador.idInstitucion.id)  
+    personal2 = PersonalTec.objects.filter(idInstitucion_id = coordinador.idInstitucion.id)
+
+    for p in personal:
+        for a in p.user.groups.all():
+            grupos.append({"id": p.user.id, "puesto": a})
+
+    for p in personal2:
+        for a in p.user.groups.all():
+            grupos.append({"id": p.user.id, "puesto": a})
+    
+    # for p in grupos:
+    #     print(p)
+
+    return render(request, 'listado_Personal.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Personal',
+        'personal': personal,
+        'personal2': personal2,
+        'grupitosUser': grupos
+    })
+
+@login_required
+@group_required('Tutor')
+def VisualizarConstanciaTutor(request):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    constancias = ConstanciaTutorV2.objects.filter(tutor_id = tutor.id)
+
+    for c in constancias:
+        print(c.archivo)
+
+    return render(request, 'SistemaDeDocumentos/Tutor_VisualizarCosntancia.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Constancias',
+        'constancias': constancias
+    })
 
 @login_required
 @group_required('Subdirector Académico','Jefe de Desarrollo Académico','Coordinación Institucional de Tutoría')

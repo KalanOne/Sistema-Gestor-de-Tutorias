@@ -32,14 +32,17 @@ urlpatterns = [
     path('Cambiar/Contrasena/', views.cambiarContraseña, name='cambiarContraseña'),
     path('Todos/EditarInformacion/', views.editarInformacionTodos, name='editarInformacionTodos'),
 
+
     #pruebas
     #path('Registrar/Tutorados/<int:Grupoid>/', views.registrarTutorados, name = 'registrarTutorados'),
+    path('Personal/', views.listado_Personal, name='listadoPersonal'),
     
 
     # urls Para documentos
     path('Tutor/V2/ReporteSemestral/Grupos/', documentosViews.SelectGruposReporteSemestral, name = 'Tutor_SelectGruposReporteSemestralV2'),
     path('Tutor/V2/ReporteSemestral/Grupal/Visualizar/', documentosViews.VisualizarReportesSemestralesGrupalesTutor, name = 'Tutor_VerReportesSemestralesV2'),
     path('Tutor/V2/ReporteSemestral/Grupos/<int:grupo_id>/', documentosViews.CrearReporteSemestralGrupal, name = 'Tutor_CrearReporteSemestralV2'),
+    path('Tutor/V2/Constancias/', views.VisualizarConstanciaTutor, name = 'constanciasTutor'),
 
 
 

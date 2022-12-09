@@ -1,0 +1,64 @@
+{% extends 'layout/basicCNMenu.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row mb-5">
+            <h1 class="text-center">Personal</h1>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="table-resposive">
+                    <table class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
+                        <thead>
+                            <tr class="text-white bg-primary">
+                                <th scope="col" class="text-center">Nombre</th>
+                                <th scope="col" class="text-center">Apellidos</th>
+                                <th scope="col" class="text-center">Institución</th>
+                                <th scope="col" class="text-center">Departamento</th>
+                                <th scope="col" class="text-center">Puesto(s)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-secondary">
+                            {% for trabajador in personal2 %}
+                                <tr>
+                                    <td class="text-center">{{ trabajador.user.first_name }}</td>
+                                    <td class="text-center">{{ trabajador.user.last_name }}</td>
+                                    <td class="text-center">{{ trabajador.idInstitucion.nombreInstitucion }}</td>
+                                    <td class="text-center">{{ trabajador.idDepartamentoAcademico.departamentoAcademico }} -
+                                    {{ trabajador.idDepartamentoAcademico.abreviacion }}</td>
+                                    <td class="text-center">
+                                        {% for gr in grupitosUser %}
+                                            {% if trabajador.user.id == gr.id %}
+                                                {{gr.puesto}} 
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+            
+                            {% for trabajador in personal %}
+                                <tr>
+                                    <td class="text-center">{{ trabajador.user.first_name }}</td>
+                                    <td class="text-center">{{ trabajador.user.last_name }}</td>
+                                    <td class="text-center">{{ trabajador.idInstitucion.nombreInstitucion }}</td>
+                                    <td class="text-center">{{ trabajador.idDepartamentoAcademico.departamentoAcademico }} -
+                                    {{ trabajador.idDepartamentoAcademico.abreviacion }}</td>
+                                    <td class="text-center">
+                                        {% for gr in grupitosUser %}
+                                            {% if trabajador.user.id == gr.id %}
+                                                {{gr.puesto}} 
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+{% endblock %}

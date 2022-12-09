@@ -70,7 +70,23 @@
                 ><i class="bi bi-house"></i
               ></a>
             </li>
+
             {% for group in gruops %}
+                  {% if group.name == 'Jefe de Desarrollo Académico' %}
+                    <li class="nav-item"><a class="nav-link"
+                       href="{% url 'listadoPersonal' %}">Personal</a></li>
+                    {% endif %}
+
+                    {% if group.name == 'Coordinación Institucional de Tutoría'%}
+                    <li class="nav-item"><a class="nav-link"
+                       href="{% url 'listadoPersonal' %}">Personal</a></li>
+                    {% endif %}
+
+                    {% if group.name == 'Subdirector Académico' %}
+                    <li class="nav-item"><a class="nav-link"
+                       href="{% url 'listadoPersonal' %}">Personal</a></li>
+                    {% endif %}
+
                 {% if group.name == 'Tutorado' %}
                     {% if cuentaGrupo == 1 %}
                         <li class="nav-item">
@@ -145,6 +161,7 @@
                         </li>
                     {% endif %}
 
+                    
                     {% if group.name == 'Psicológico' %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'Psicologo_VisualizarCitas' %}">Citas</a>
@@ -205,6 +222,7 @@
                                 <a class="nav-link" href="{% url 'perfilTodos' %}">Perfil</a>
                             </li>
                         {% endif %}
+                        
                     {% endif %}
                 {% endif %}
             {% endfor %}
