@@ -1392,8 +1392,23 @@ def listado_Personal(request):
 
     return render(request, 'listado_Personal.html', {
         'gruops': request.user.groups.all(),
-        'title': 'Registrar Coordinador de Tutoria del Departamento Académico',
+        'title': 'Personal',
         'personal': personal,
         'personal2': personal2,
         'grupitosUser': grupos
+    })
+
+@login_required
+@group_required('Tutor')
+def VisualizarConstanciaTutor(request):
+    tutor = PersonalTec.objects.get(user_id = request.user.id)
+    constancias = ConstanciaTutorV2.objects.filter(tutor_id = tutor.id)
+
+    for c in constancias:
+        print(c.archivo)
+
+    return render(request, 'SistemaDeDocumentos/Tutor_VisualizarCosntancia.html', {
+        'gruops': request.user.groups.all(),
+        'title': 'Constancias',
+        'constancias': constancias
     })

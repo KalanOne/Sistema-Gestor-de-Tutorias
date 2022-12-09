@@ -2,30 +2,28 @@
 {% load static %}
 {% block content %}
     <div class="container">
-        <div class="row mb-5"><h1 class="text-center">Reportes Semestrales Grupales Enviados</h1></div>
+        <div class="row mb-5"><h1 class="text-center">Constancias</h1></div>
         <div class="row mb-3">
             <div class="table-responsive">
                 <table class="table table-hover datatable mb-0 shadow-4 rounded-4 overflow-hidden bg-white" id="tabla">
                     <thead>
-                        <tr class="text-white" style="background-color: #1B396A;">
+                        <tr class="text-white bg-primary">
                             <th scope="col">#</th>
                             <th scope="col">Grupo</th>
-                            <th scope="col">Tutor</th>
-                            <th scope="col">Fecha</th>
                             <th scope="col">Año</th>
                             <th scope="col">Periodo</th>
+                            <th scope="col">Fecha</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for reporte in reportes %}
+                        {% for reporte in constancias %}
                             <tr>
                                 <th scope="row">{{reporte.id}}</th>
                                 <td>{{reporte.grupo.grupo}}</td>
-                                <td>{{reporte.grupo.idPersonalTec.user.first_name}} {{reporte.grupo.idPersonalTec.user.last_name}}</td>
-                                <td>{{reporte.fecha}}</td>
                                 <td>{{reporte.ano}}</td>
                                 <td>{{reporte.periodo}}</td>
+                                <td>{{reporte.fecha}}</td>
                                 <td>
                                     <div class="d-grid gap-2">
                                         <a href="{% static reporte.archivo %}" class="btn btn-primary" role="button" target="_blank">Ver</a>
